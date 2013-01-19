@@ -3,6 +3,10 @@ yoda-lang
 
 I'm not a Star Wars fan, but most of the students in the 2013 Compilers class said traditional languages were boring.
 
+## EXAMPLES
+
+Yoda on the left; JavaScript on the right.
+
 One line complete hello world script
 
     "Hello, republic" you print                     console.log("Hello, republic");
@@ -226,3 +230,18 @@ Math
 
 Classes
 
+## SYNTAX
+
+The official syntax is coming soon.  For now, here is a brief EBNF for the macrosyntax.
+
+    SCRIPT       &rarr;  STMT+
+    STMT         &rarr;  DEC 
+                 |  ASSIGNMENT
+                 |  CONDITIONAL
+                 |  LOOP
+                 |  PROCCALL
+    DEC          &rarr;  EXP  ','  ID  is
+                 |  BLOCK  given  PARAMS  ID  gives
+    ASSIGNMENT   &rarr;  EXP  ','  ID  is
+    
+                
