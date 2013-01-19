@@ -88,7 +88,7 @@ Function declaration, one parameter
 Function declaration, two parameters
 
     {x + y} given x and y, plus gives               var plus = function (x, y) {
-                                                      return x + x;
+                                                      return x + y;
                                                     };
 Function declaration, zero parameters
 
@@ -225,41 +225,78 @@ Closure
 
 Objects
 
+    {1 is x and 5 is y}, point is                   var point = {"x": 1, "y": 2};
+    
+    {                                               var circle = {
+      0, x is and                                     x: 0,
+      0, y is and                                     y: 0,
+      "black", color is and                           color: "black",
+      1, radius is                                    radius: 1,
+      {                                               area: function ()
+        radius ** 2 * the pi                            return Math.pow(this.radius, 2) * Math.PI;
+      }, given nothing area gives                     }
+    }, circle is                                    };
+    
+    like circle, c1 is                              var c1 = Object.create(circle);
+    
 Math
 
-Classes
+    3.abs
+    2.3.floor
+    2.cos
+    the PI
 
 ### SYNTAX
 
-The official syntax is coming soon.  For now, here is a brief EBNF for the macrosyntax.
+Here is a brief EBNF for the macrosyntax.  Here syntax categories and compound tokens are shown in all caps, and reserved word tokens are shown in lowercase.  Symbols are always quoted.  The meta symbols are the usual ones: `|` for alternatives, `*` for zero or more, `+` for one or more, `?` for zero or one, and parentheses for grouping.
 
-    SCRIPT        &rarr;  (STMT BR)+
-    STMT          &rarr;  DEC 
+The tokens `NUMLIT`, `STRLIT`, `ID`, and `BR` are defined in the microsyntax below.
+
+    SCRIPT        →  (STMT BR)+
+    STMT          →  DEC 
                   |  ASSIGNMENT
                   |  PRINTSTMT
                   |  RETURNSTMT
                   |  CONDITIONAL
-                  |  LOOP
+                  |  FORLOOP
+                  |  WHILELOOP
                   |  PROCCALL
-    DEC           &rarr;  EXP ',' ID is
+    DEC           →  EXP ',' ID is
                   |  BLOCK given PARAMS ID gives
-    ASSIGNMENT    &rarr;  EXP ',' ID is
-    PRINTSTMT     &rarr;  EXP you print
-    RETURNSTMT    &rarr;  EXP you return
-    CONDITIONAL   &rarr;  BLOCK if EXPR BR (else BLOCK if EXPR BR)* else BLOCK
-    LOOP          &rarr;  FORLOOP | WHILELOOP
-    FORLOOP       &rarr;  BLOCK as through RANGE ID runs
-    WHILELOOP     &rarr;  BLOCK while EXP
-    PROCCALL      &rarr;  ARGS you ID
-    BLOCK         &rarr;  '{' STMT '}'
-                  |  '{' (STMT BR)+ '}'
-    EXP           &rarr; EXP1 ('|' EXP1)*
-    EXP1          &rarr; EXP2 ('&' EXP2)*
-    EXP2          &rarr; EXP3 (RELOP EXP3)?
-    EXP3          &rarr; EXP4 (MULOP EXP4)*
-    EXP4          &rarr; EXP5 (ADDOP EXP5)*
-    EXP5          &rarr; UNARYOP? EXP6
-    EXP6          &rarr; LIT | ID | ARRAY | OBJECT | ANONSUBROG | FUNCALL
+    PARAMS        →  nothing
+                  |  ID (and ID)*
+    ASSIGNMENT    →  EXP (and EXP*) ',' ID (and ID)* is
+                  |  like EXP, ID is
+    PRINTSTMT     →  EXP you print
+    RETURNSTMT    →  EXP you return
+    CONDITIONAL   →  BLOCK if EXPR BR (else BLOCK if EXPR BR)* else BLOCK
+    FORLOOP       →  BLOCK as through RANGE ID runs
+    WHILELOOP     →  BLOCK while EXP
+    PROCCALL      →  ARGS you ID
+    BLOCK         →  '{' STMT '}'
+                  →  '{' (STMT BR)+ '}'
+    EXP           →  EXP1 ('|' EXP1)*
+    EXP1          →  EXP2 ('&' EXP2)*
+    EXP2          →  EXP3 (RELOP EXP3)?
+    EXP3          →  EXP4 (MULOP EXP4)*
+    EXP4          →  EXP5 (ADDOP EXP5)*
+    EXP5          →  UNARYOP? EXP6
+    EXP6          →  EXP7 ('[' EXP (':' EXP)? ']')?
+    EXP7          →  EXP8 ('.' ID)?
+    EXP8          →  LIT | ID | ARRAY | OBJECT | ANONFUN | FUNCALL
+    LIT           →  true | false | NUMLIT | STRLIT
+    ARRAY         →  '[' ']'
+                  |  '[' BR? EXP (',' BR? EXP)* BR? ']'
+    OBJECT        →
+    ANONFUN       →
+    FUNCALL       →  (ID | ANONFUN) ARGS
+    RELOP         →  '<' | '<=' | '=' | '!=' | '>=' | '>'
+    MULOP         →  '*' | '/'
+    ADDOP         →  '+' | '-' | '^'
+    UNARYOP       →  '-' | '!'
+    
+The Microsyntax is informally defined as follows:
+    
     
     
     
