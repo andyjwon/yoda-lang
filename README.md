@@ -1,6 +1,6 @@
 # yoda-lang
 
-I'm not a Star Wars fan, but most of the students in the 2013 Compilers class said traditional languages were boring.
+I'm not a Star Wars fan, but most of the students in the 2013 Compilers class said traditional languages were boring.  They're probably right.
 
 ### EXAMPLES
 
@@ -13,18 +13,18 @@ One line complete hello world script
 Declaration
 
     "strong", force is                              var force = strong;
-    100, score is                                   var score = 100;
+    800, years_traing_jedi is                       var years_training_jedi = 100;
 
 Parallel declaration
 
-    3 and 5, x and y are                            _1 = 3;
-                                                    _2 = 5;
+    3 and 5, x and y are                            var _1 = 3;
+                                                    var _2 = 5;
                                                     x = _1;
                                                     y = _2;
 
 Constants (compile-time error to update)
 
-    10, NUMBER_OF_DIGITS must be                    var NUMBER_OF_DIGITS = 10;
+    "disbelief", REASON_FOR_FAILURE must be         var REASON_FOR_FAILURE = "disbelief"
     1 and 2, UNO and DOS must be                    var UNO = 1;
                                                     var DOS = 2;
                                                     
@@ -60,7 +60,7 @@ Arrays
     p[0] you print                                  console.log(p[0]);
     p, q is                                         var q = p;
     [4, true, "000", q], a is                       var a = [4, true, "000", q];
-    length a, you print                             console.log(a.length);
+    a.length, you print                             console.log(a.length);
 
 Last element (indices start at 0 from the left, -1 from the right)
 
@@ -69,14 +69,7 @@ Last element (indices start at 0 from the left, -1 from the right)
 Slice, first index inclusive, last index exclusive
 
     a[3:6]                                          a.slice(3,6)
-
-Unshift, shift, push, pop
-    
-    3 ^ a                                           [3].concat(a)
-    3 ^= a                                          a.unshift(3)
-    a[1]                                            a.slice(1)
-    a ^ 3                                           a.concat([3])
-    a ^= 3                                          a.push([3])
+    a[1:]                                           a.slice(1)
     a[1:-1]                                         a.slice(1, a.length - 1)
 
 Function declaration, one parameter
@@ -92,7 +85,7 @@ Function declaration, two parameters
                                                     };
 Function declaration, zero parameters
 
-    {0} given nothing zero gives                    var zero = function () {
+    {0} given nothing, zero gives                   var zero = function () {
                                                       return 0;
                                                     };
 Function declaration, multiline
@@ -107,44 +100,50 @@ Function declaration, multiline
 
 Function call
 
-    square(8)                                       square(8)
-    plus(7, 4)                                      plus(7, 4) 
-    square(plus(8, 2 - square(11)))                 square(plus(8, 2 - square(11)))
-    bmi(155, 71) + zero() you print                 console.log(bmi(155, 71) + zero());
+    (8)square                                       square(8)
+    (7, 4)plus                                      plus(7, 4) 
+    ((8, (2 - (11)square))plus)square               square(plus(8, 2 - square(11)))
+    (155, 71)bmi + zero() you print                 console.log(bmi(155, 71) + zero());
  
 Procedure declaration (function that does not return anything)
 
     {                                               var greet_her = function (name) {
       "Hello, " ^ name you print                      console.log("Hello, " + name);
-    } given name greet_her does                     };
+    } given name, greet_her does                    };
 
     {                                               var greet = function () {
       "Hello" you print                               console.log("Hello");
-    } given nothing greet does                      };
+    } given nothing, greet does                     };
     
-Procedure call
-
-    "Alice" you greet_her                           greet_her("Alice");
-    
-    you greet                                       greet();
- 
-Multiline subroutine declaration
-
     {                                               var counter = function () {
       "one" you print                                 console.log("one");
       "two" you print                                 console.log("two");
       "three" you print                               console.log("three");
-    } given nothing counter does                    };
+    } given nothing, counter does                   };
 
+    {                                               var echo = function (s, n) {
+      {s you print} n times                           for (var _1 = 0; _1 < n; _1++) {
+    } given s and n, echo does                          console.log(s);
+                                                      }
+                                                    }
+
+Procedure call
+
+    "Alice" greet_her you must                      greet_her("Alice");
+    
+    greet you must                                  greet();
+    
+    ("NO", 5) echo you must                         echo("NO", 5);
+ 
 Function as parameter
 
-    {f(f(x))} given f and x, twice gives            var twice = function (x) {
+    {((x)f)f} given f and x, twice gives            var twice = function (x) {
                                                       return f(f(x));
                                                     };
                                                     
 Anonymous function
 
-    twice({x * x} given x, 9)                       twice(function (x) {return x * x;}, 9)
+    ({x * x} given x, 9) twice                      twice(function (x) {return x * x;}, 9)
                                                     
 If statements
 
@@ -200,7 +199,7 @@ Function with multiple returns
         {false you return} if n % d = 0               }
       } as through 3 to sqrt(n) d runs                for (var d = 3; d <= Math.sqrt(n); d++) {
       true you return                                   if (n % d === 0) {
-    } given n is_prime gives                              return false;
+    } given n, is_prime gives                             return false;
                                                         }
                                                       }
                                                       return true;
@@ -221,7 +220,7 @@ Closure
     {                                               var counter = function (i) {
       0, i is                                         var i = 0;
       {i += 1} given nothing you return               return function () {i += 1;};
-    } given i counter gives                         };
+    } given i, counter gives                        };
 
 Objects
 
@@ -258,11 +257,12 @@ The tokens `NUMLIT`, `STRLIT`, `ID`, and `BR` are defined in the microsyntax bel
                   |  PRINTSTMT
                   |  RETURNSTMT
                   |  CONDITIONAL
+                  |  TIMESLOOP
                   |  FORLOOP
                   |  WHILELOOP
                   |  PROCCALL
     DEC           →  EXP ',' ID is
-                  |  BLOCK given PARAMS ID gives
+                  |  BLOCK given PARAMS ',' ID gives
     PARAMS        →  nothing
                   |  ID (and ID)*
     ASSIGNMENT    →  EXP (and EXP*) ',' ID (and ID)* is
@@ -270,6 +270,7 @@ The tokens `NUMLIT`, `STRLIT`, `ID`, and `BR` are defined in the microsyntax bel
     PRINTSTMT     →  EXP you print
     RETURNSTMT    →  EXP you return
     CONDITIONAL   →  BLOCK if EXPR BR (else BLOCK if EXPR BR)* else BLOCK
+    TIMESLOOP     →  BLOCK EXP times
     FORLOOP       →  BLOCK as through RANGE ID runs
     WHILELOOP     →  BLOCK while EXP
     PROCCALL      →  ARGS you ID
