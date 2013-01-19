@@ -1,9 +1,8 @@
-yoda-lang
-=========
+# yoda-lang
 
 I'm not a Star Wars fan, but most of the students in the 2013 Compilers class said traditional languages were boring.
 
-## EXAMPLES
+### EXAMPLES
 
 Yoda on the left; JavaScript on the right.
 
@@ -230,18 +229,38 @@ Math
 
 Classes
 
-## SYNTAX
+### SYNTAX
 
 The official syntax is coming soon.  For now, here is a brief EBNF for the macrosyntax.
 
-    SCRIPT       &rarr;  STMT+
-    STMT         &rarr;  DEC 
-                 |  ASSIGNMENT
-                 |  CONDITIONAL
-                 |  LOOP
-                 |  PROCCALL
-    DEC          &rarr;  EXP  ','  ID  is
-                 |  BLOCK  given  PARAMS  ID  gives
-    ASSIGNMENT   &rarr;  EXP  ','  ID  is
+    SCRIPT        &rarr;  (STMT BR)+
+    STMT          &rarr;  DEC 
+                  |  ASSIGNMENT
+                  |  PRINTSTMT
+                  |  RETURNSTMT
+                  |  CONDITIONAL
+                  |  LOOP
+                  |  PROCCALL
+    DEC           &rarr;  EXP ',' ID is
+                  |  BLOCK given PARAMS ID gives
+    ASSIGNMENT    &rarr;  EXP ',' ID is
+    PRINTSTMT     &rarr;  EXP you print
+    RETURNSTMT    &rarr;  EXP you return
+    CONDITIONAL   &rarr;  BLOCK if EXPR BR (else BLOCK if EXPR BR)* else BLOCK
+    LOOP          &rarr;  FORLOOP | WHILELOOP
+    FORLOOP       &rarr;  BLOCK as through RANGE ID runs
+    WHILELOOP     &rarr;  BLOCK while EXP
+    PROCCALL      &rarr;  ARGS you ID
+    BLOCK         &rarr;  '{' STMT '}'
+                  |  '{' (STMT BR)+ '}'
+    EXP           &rarr; EXP1 ('|' EXP1)*
+    EXP1          &rarr; EXP2 ('&' EXP2)*
+    EXP2          &rarr; EXP3 (RELOP EXP3)?
+    EXP3          &rarr; EXP4 (MULOP EXP4)*
+    EXP4          &rarr; EXP5 (ADDOP EXP5)*
+    EXP5          &rarr; UNARYOP? EXP6
+    EXP6          &rarr; LIT | ID | ARRAY | OBJECT | ANONSUBROG | FUNCALL
+    
+    
     
                 
