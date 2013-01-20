@@ -10,14 +10,14 @@ One line complete hello world script
 
     "Hello, republic" you print                     console.log("Hello, republic");
 
-Declaration
+Variable Declaration
 
-    "strong", force is                              var force = strong;
-    800, years_traing_jedi is                       var years_training_jedi = 100;
+    "strong", force begins                          var force = strong;
+    800, years_traing_jedi begins                   var years_training_jedi = 100;
 
 Parallel declaration
 
-    3 and 5, x and y are                            var _1 = 3;
+    3 and 5, x and y begin                          var _1 = 3;
                                                     var _2 = 5;
                                                     x = _1;
                                                     y = _2;
@@ -25,13 +25,11 @@ Parallel declaration
 Constants (compile-time error to update)
 
     "disbelief", REASON_FOR_FAILURE must be         var REASON_FOR_FAILURE = "disbelief"
-    1 and 2, UNO and DOS must be                    var UNO = 1;
-                                                    var DOS = 2;
                                                     
-Assignment is not distinguishable from initialization.  All that is, was always.
+Assignment is not initialization
 
-    1, x is                                         var x = 1;
-    x + 1, x is                                     x = x + 1;
+    1, x begins                                     var x = 1;
+    x + 1, x becomes                                x = x + 1;
     x you print                                     console.log(x);
 
 Arithmetic expression
@@ -40,9 +38,9 @@ Arithmetic expression
 
 Swap
 
-    3, x is                                         x = 3;
-    10, y is                                        y = 10;
-    x and y, y and x are                            _1 = x;
+    3, x begins                                     x = 3;
+    10, y begins                                    y = 10;
+    x and y, y and x become                         _1 = x;
                                                     _2 = y;
                                                     y = _1;
                                                     x = _2;
@@ -56,10 +54,10 @@ Booleans
 
 Arrays
 
-    [2, 3, 5, 7, 11], p is                          var p = [2, 3, 5, 7, 11];
+    [2, 3, 5, 7, 11], p begins                      var p = [2, 3, 5, 7, 11];
     p[0] you print                                  console.log(p[0]);
-    p, q is                                         var q = p;
-    [4, true, "000", q], a is                       var a = [4, true, "000", q];
+    p, q begins                                     var q = p;
+    [4, true, "000", q], a begins                   var a = [4, true, "000", q];
     a.length, you print                             console.log(a.length);
 
 Last element (indices start at 0 from the left, -1 from the right)
@@ -91,10 +89,10 @@ Function declaration, zero parameters
 Function declaration, multiline
 
     {                                               var bmi = function (pounds, inches) {
-      0.45359237, KILOGRAMS_PER_POUND is              var KILOGRAMS_PER_POUND = 0.45359237;
-      0.0254, METERS_PER_INCH is                      var METERS_PER_INCH = 0.0254;
-      pounds * KILOGRAMS_PER_POUND, kilos is          var kilos = pounds * KILOGRAMS_PER_POUND;
-      inches * METERS_PER_INCH, meters is             var inches = inches * METERS_PER_INCH;
+      0.45359237, KILOGRAMS_PER_POUND begins          var KILOGRAMS_PER_POUND = 0.45359237;
+      0.0254, METERS_PER_INCH begins                  var METERS_PER_INCH = 0.0254;
+      pounds * KILOGRAMS_PER_POUND, kilos begins      var kilos = pounds * KILOGRAMS_PER_POUND;
+      inches * METERS_PER_INCH, meters begins         var inches = inches * METERS_PER_INCH;
       kilos / (meters * meters) you return            return kilos / (meters * meters)
     } given pounds and inches, bmi gives            };
 
@@ -143,6 +141,8 @@ Function as parameter
                                                     
 Anonymous function
 
+    {3 * x} given x                                 function (x) {return 3 * x;}
+
     ({x * x} given x, 9) twice                      twice(function (x) {return x * x;}, 9)
                                                     
 If statements
@@ -173,7 +173,7 @@ For loops
       x * x you print                                 console.log(x * x);
     } as through 1 to 10 by 2 x runs                }
     
-    [spot, sparky, spike], pet_list is              var pet_list = [spot, sparky, spike]
+    [spot, sparky, spike], pet_list begins          var pet_list = [spot, sparky, spike]
     {                                               for (var _1 = 0; _1 < pet_list.length; _1++) {
       dog.bark();                                     var dog = pet_list[i];
       dog.run();                                      dog.bark();
@@ -184,8 +184,8 @@ For loops
 While loops
 
     {                                               while (n != 1) {
-      {3 * n + 1, n is} if n % 2 = 0                  if (n % 2 === 0) {
-      else {n / 2, n is}                                n = 3 * n + 1;
+      {3 * n + 1, n becomes} if n % 2 = 0             if (n % 2 === 0) {
+      else {n / 2, n becomes}                           n = 3 * n + 1;
     } while n != 1                                    } else {
                                                         n = n / 2;
                                                       }
@@ -211,32 +211,36 @@ List comprehension
     
     [x / 2 for x in a]
     
-    [[x, y] for x in 3.range for y in 5.range]
+    [[x, y] for x in 0:3 for y in 4:5]
     
-    [x ** 2 for x in 20.range if x % 2 == 0]
+    [x ** 2 for x in 0:20 if x % 2 == 0]
     
 Closure
 
     {                                               var counter = function (i) {
-      0, i is                                         var i = 0;
+      0, i begins                                     var i = 0;
       {i += 1} given nothing you return               return function () {i += 1;};
     } given i, counter gives                        };
 
 Objects
 
-    {1 is x and 5 is y}, point is                   var point = {"x": 1, "y": 2};
+    with 1 for x and 5 for y hmm                    {x: 1, y: 5};
     
-    {                                               var circle = {
-      0, x is and                                     x: 0,
-      0, y is and                                     y: 0,
-      "black", color is and                           color: "black",
-      1, radius is                                    radius: 1,
+    with nothing hmm                                {}
+    
+    with nothing hmm, universe begins               var universe = {}
+    
+    with                                            var circle = {
+      0 for x and                                     x: 0,
+      0 for y and                                     y: 0,
+      "black" for color and                           color: "black",
+      1 for radius and                                radius: 1,
       {                                               area: function ()
-        radius ** 2 * the pi                            return Math.pow(this.radius, 2) * Math.PI;
+        radius ** 2 * PI                                return Math.pow(this.radius, 2) * Math.PI;
       }, given nothing area gives                     }
-    }, circle is                                    };
+    hmm, circle begins                              };
     
-    like circle, c1 is                              var c1 = Object.create(circle);
+    from circle, c1 begins                          var c1 = Object.create(circle);
     
 Math
 
@@ -261,12 +265,15 @@ The tokens `NUMLIT`, `STRLIT`, `ID`, and `BR` are defined in the microsyntax bel
                   |  FORLOOP
                   |  WHILELOOP
                   |  PROCCALL
-    DEC           →  EXP ',' ID is
-                  |  BLOCK given PARAMS ',' ID gives
+    DEC           →  VARDEC | CONSTDEC | PROCDEC | FUNDEC
+    VARDEC        →  EXP (and EXP*) ',' ID (and ID)* (begin | begins)
+                  |  from EXP, ID begins
+    CONSTDEC      →  EXP, ID must be
+    PROCDEC       →  BLOCK given PARAMS ',' ID does
+    FUNDEC        →  BLOCK given PARAMS ',' ID gives
     PARAMS        →  nothing
                   |  ID (and ID)*
-    ASSIGNMENT    →  EXP (and EXP*) ',' ID (and ID)* is
-                  |  like EXP, ID is
+    ASSIGNMENT    →  EXP (and EXP*) ',' ID (and ID)* (become | becomes)
     PRINTSTMT     →  EXP you print
     RETURNSTMT    →  EXP you return
     CONDITIONAL   →  BLOCK if EXPR BR (else BLOCK if EXPR BR)* else BLOCK
