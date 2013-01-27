@@ -56,12 +56,12 @@ Null/Null Test
 
 Booleans
 
-    true                                            true
-    false                                           false
-    < 4 3 is?                                       4 < 3
+    true                                                true
+    false                                               false
+    < 4 3 is?                                           4 < 3
     > x 5 is?
     != n 1 is?
-    = 3 5 is? & >= x 9 is? | != 1 / y 4 is? & !found  3 === 5 & x >= 9 | 1 != y / 4 & !found
+    = 3 5 is? & >= x 9 is? | != 1 / y 4 is? & !found    3 === 5 & x >= 9 | 1 != y / 4 & !found
 
 Falsehood
 
