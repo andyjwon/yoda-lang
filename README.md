@@ -58,10 +58,10 @@ Booleans
 
     true                                                true
     false                                               false
-    < 4 3 is?                                           4 < 3
-    > x 5 is?
-    != n 1 is?
-    = 3 5 is? & >= x 9 is? | != 1 / y 4 is? & !found    3 === 5 & x >= 9 | 1 != y / 4 & !found
+    < 3 4 is?                                           4 < 3
+    > 5 x is?
+    != 1 n is?
+    = 5 3 is? & >= 9 x is? | != / y 4 1 is? & !found    3 === 5 & x >= 9 | 1 != y / 4 & !found
 
 Falsehood
 
@@ -184,23 +184,27 @@ Anonymous function
                                                     
 Conditional Expressions
 
-    {3 you print} if x > 2                          if (x > 2) {console.log(3);}
+    {3 you print} if > 2 x is?                          if (x > 2) {console.log(3);}
     
-    {false you return} if !found                    if (!found) {return false;}
+    {give back false you must} if !found                if (!found) {return false;}
 
-    {"A" you return} if grade >= 90                 if (grade >= 90) {
-    else {"B" you return} if grade >= 80              return "A";
-    else {"C" you return} if grade >= 70            } else if (grade >= 80) {
-    else {"D" you return} if grade >= 60              return "B";
-    else {"F you return}                            } else if (grade >= 70) {
-                                                      return "C";
-                                                    } else if (grade >= 60) {
-                                                      return "D";
-                                                    } else {
-                                                      return "F";
-                                                    }
+    {give back "A" you must} if >= 90 grade is?         if (grade >= 90) {
+    else {give back "B" you must} if >= 80 grade is?      return "A";
+    else {give back "C" you must} if >= 70 grade is?    } else if (grade >= 80) {
+    else {give back "D" you must} if >= 60 grade is?      return "B";
+    else {give back "F" you must}                       } else if (grade >= 70) {
+                                                          return "C";
+                                                        } else if (grade >= 60) {
+                                                          return "D";
+                                                        } else {
+                                                          return "F";
+                                                        }
 
-    < 5 y hmm? y++ hmm y--                          5 < y ? y++ : y--;
+    < 5 y hmm? y++ hmm y--                              5 < y ? y++ : y--;
+
+Switch Statement
+
+    **to be determined**
 
 For loops
 
@@ -289,6 +293,10 @@ Math
     the PI                                          Math.PI
     ** x 2                                          Math.pow(x, 2);
     __ x                                            Math.sqrt(x);
+
+Binary, Octal, and Hex Literals
+
+    0x, 0b, 0o                                      0x, parseInt("1001", 2), parseInt("1001", 8)
 
 ### SYNTAX
 
