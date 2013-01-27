@@ -29,12 +29,16 @@ Constants (compile-time error to update)
 Assignment is not initialization
 
     1, x begins                                     var x = 1;
-    x + 1, x becomes                                x = x + 1;
+    + x 1, x becomes                                x = x + 1;
     x you print                                     console.log(x);
+
+Parallel Assignment
+
+    3 and 5, x and y become                         x = 3; y = 5;
 
 Arithmetic expression
 
-    y / (4 - x) * 2.5                               y / (4 - x) * 2.5
+    / y * (- 4  x) 2.5                               y / (4 - x) * 2.5
 
 Swap
 
@@ -45,12 +49,23 @@ Swap
                                                     y = _1;
                                                     x = _2;
 
+Null/Null Test
+
+    null                                            null
+    null x is?                                      x === null
+
 Booleans
 
     true                                            true
     false                                           false
-    4 < 3                                           4 < 3
-    3 = 5 & x >= 9 | 1 != y / 4 & !found            3 === 5 & x >= 9 | 1 != y / 4 & !found
+    < 4 3 is?                                       4 < 3
+    > x 5 is?
+    != n 1 is?
+    = 3 5 is? & >= x 9 is? | != 1 / y 4 is? & !found  3 === 5 & x >= 9 | 1 != y / 4 & !found
+
+Falsehood
+
+    0, 0.0, "", false, null                          0, "", false, null, undefined, NaN
 
 Arrays
 
@@ -69,6 +84,28 @@ Slice, first index inclusive, last index exclusive
     a[3:6]                                          a.slice(3,6)
     a[1:]                                           a.slice(1)
     a[1:-1]                                         a.slice(1, a.length - 1)
+
+String Literals
+
+    "hi"                                            "hi"
+
+String Literal Escapes
+
+    "\""                                            "\""
+
+Are strings mutable?
+
+    "yoda", x begins                                var x = "yoda";
+    += x " loves pie"                               x += " loves pie";
+
+String Comparison
+
+    = "hi" "bye" is?                                "hi" === "bye"
+
+String Concatenation
+
+   + "hi" "bye"                                     "hi" + "bye"
+
 
 Function declaration, one parameter
 
@@ -145,7 +182,7 @@ Anonymous function
 
     ({x * x} given x, 9) twice                      twice(function (x) {return x * x;}, 9)
                                                     
-If statements
+Conditional Expressions
 
     {3 you print} if x > 2                          if (x > 2) {console.log(3);}
     
@@ -162,7 +199,9 @@ If statements
                                                     } else {
                                                       return "F";
                                                     }
-    
+
+    < 5 y hmm? y++ hmm y--                          5 < y ? y++ : y--;
+
 For loops
 
     {x you print} as through 1 to 10 x runs         for (var x = 1; i <= 10; i++) {
@@ -236,7 +275,7 @@ Objects
       "black" for color and                           color: "black",
       1 for radius and                                radius: 1,
       {                                               area: function ()
-        radius ** 2 * PI                                return Math.pow(this.radius, 2) * Math.PI;
+        * ** radius 2 PI                                return Math.pow(this.radius, 2) * Math.PI;
       }, given nothing area gives                     }
     hmm, circle begins                              };
     
@@ -248,6 +287,8 @@ Math
     2.3.floor
     2.cos
     the PI
+    ** x 2
+     x
 
 ### SYNTAX
 
