@@ -130,7 +130,7 @@ Function declaration, multiline
       0.0254, METERS_PER_INCH begins                  var METERS_PER_INCH = 0.0254;
       pounds * KILOGRAMS_PER_POUND, kilos begins      var kilos = pounds * KILOGRAMS_PER_POUND;
       inches * METERS_PER_INCH, meters begins         var inches = inches * METERS_PER_INCH;
-      kilos / (meters * meters) you return            return kilos / (meters * meters)
+      give back kilos / (meters * meters) you must    return kilos / (meters * meters)
     } given pounds and inches, bmi gives            };
 
 Function call
@@ -178,9 +178,9 @@ Function as parameter
                                                     
 Anonymous function
 
-    {3 * x} given x                                 function (x) {return 3 * x;}
+    {* 3 x} given x                                 function (x) {return 3 * x;}
 
-    ({x * x} given x, 9) twice                      twice(function (x) {return x * x;}, 9)
+    ({* x x} given x, 9) twice                      twice(function (x) {return x * x;}, 9)
                                                     
 Conditional Expressions
 
@@ -204,7 +204,7 @@ Conditional Expressions
 
 Switch Statement
 
-    **to be determined**
+    *to be determined*
 
 For loops
 
@@ -213,7 +213,7 @@ For loops
                                                     }
     
     {                                               for (var x = 1; i <= 10; i += 2) {
-      x * x you print                                 console.log(x * x);
+      * x x you print                                 console.log(x * x);
     } as through 1 to 10 by 2 x runs                }
     
     [spot, sparky, spike], pet_list begins          var pet_list = [spot, sparky, spike]
@@ -227,9 +227,9 @@ For loops
 While loops
 
     {                                               while (n != 1) {
-      {3 * n + 1, n becomes} if n % 2 = 0             if (n % 2 === 0) {
-      else {n / 2, n becomes}                           n = 3 * n + 1;
-    } while n != 1                                    } else {
+      {+ * 3 n 1, n becomes} if = 0 % n 2 is?         if (n % 2 === 0) {
+      else {/ n 2, n becomes}                           n = 3 * n + 1;
+    } while != 1 n is?                                } else {
                                                         n = n / 2;
                                                       }
                                                     }
@@ -237,11 +237,11 @@ While loops
 Function with multiple returns
 
     {                                               var isPrime = function (n) {
-      {false you return} if max < 2                   if (max < 2) { 
+      {give back false you must} if < 2 max is?       if (max < 2) { 
       {                                                 return false;
-        {false you return} if n % d = 0               }
-      } as through 3 to sqrt(n) d runs                for (var d = 3; d <= Math.sqrt(n); d++) {
-      true you return                                   if (n % d === 0) {
+        {give back false you must} if = 0 % n d is?   }
+      } as through 3 to __ n d runs                   for (var d = 3; d <= Math.sqrt(n); d++) {
+      give back true you must                           if (n % d === 0) {
     } given n, is_prime gives                             return false;
                                                         }
                                                       }
@@ -250,19 +250,19 @@ Function with multiple returns
                                                         
 List comprehension
 
-    [x * x for x in [1, 2, 3, 4]]
+    [* x x for x in [1, 2, 3, 4]]
     
-    [x / 2 for x in a]
+    [/ x 2 for x in a]
     
     [[x, y] for x in 0:3 for y in 4:5]
     
-    [x ** 2 for x in 0:20 if x % 2 == 0]
+    [** x 2 for x in 0:20 if = 0 % x 2 is?]
     
 Closure
 
     {                                               var counter = function (i) {
       0, i begins                                     var i = 0;
-      {i += 1} given nothing you return               return function () {i += 1;};
+      give back {+= i 1} given nothing you must       return function () {i += 1;};
     } given i, counter gives                        };
 
 Objects
