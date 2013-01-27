@@ -283,12 +283,12 @@ Objects
     
 Math
 
-    3.abs
-    2.3.floor
-    2.cos
-    the PI
-    ** x 2
-     x
+    3.abs                                           Math.abs(3);
+    2.3.floor                                       Math.floor(2.3);
+    2.cos                                           Math.cos(2);
+    the PI                                          Math.PI
+    ** x 2                                          Math.pow(x, 2);
+    __ x                                            Math.sqrt(x);
 
 ### SYNTAX
 
