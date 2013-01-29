@@ -267,29 +267,29 @@ Closure
 
 Objects
 
-    with 1 for x and 5 for y hmm                    {x: 1, y: 5};
+    {{: x 1 , : y 5}}                               {x: 1, y: 5};
     
-    with nothing hmm                                {}
+    {{}}                                            {}
     
-    with nothing hmm, universe begins               var universe = {}
+    {{}}, universe begins                           var universe = {}
     
-    with                                            var circle = {
-      0 for x and                                     x: 0,
-      0 for y and                                     y: 0,
-      "black" for color and                           color: "black",
-      1 for radius and                                radius: 1,
+    {{                                              var circle = {
+      : x 0,                                          x: 0,
+      : y 0,                                          y: 0,
+      : color "black",                                color: "black",
+      : radius 1,                                     radius: 1,
       {                                               area: function ()
         * ** radius 2 PI                                return Math.pow(this.radius, 2) * Math.PI;
       }, given nothing area gives                     }
-    hmm, circle begins                              };
+    }}, circle begins                               };
     
-    from circle, c1 begins                          var c1 = Object.create(circle);
+    {{circle}}, c1 begins                          var c1 = Object.create(circle);
     
 Math
 
-    3.abs                                           Math.abs(3);
-    2.3.floor                                       Math.floor(2.3);
-    2.cos                                           Math.cos(2);
+    (3)abs                                           Math.abs(3);
+    (2.3)floor                                       Math.floor(2.3);
+    (2)cos                                           Math.cos(2);
     the PI                                          Math.PI
     ** x 2                                          Math.pow(x, 2);
     __ x                                            Math.sqrt(x);
@@ -315,45 +315,55 @@ The tokens `NUMLIT`, `STRLIT`, `ID`, and `BR` are defined in the microsyntax bel
                   |  WHILELOOP
                   |  PROCCALL
     DEC           →  VARDEC | CONSTDEC | PROCDEC | FUNDEC
-    VARDEC        →  EXP (and EXP*) ',' ID (and ID)* (begin | begins)
+    VARDEC        →  EXP (and EXP)* ',' ID (and ID)* (begin | begins)
                   |  from EXP, ID begins
-    CONSTDEC      →  EXP, ID must be
+    CONSTDEC      →  EXP ',' ID must be
     PROCDEC       →  BLOCK given PARAMS ',' ID does
     FUNDEC        →  BLOCK given PARAMS ',' ID gives
     PARAMS        →  nothing
                   |  ID (and ID)*
-    ASSIGNMENT    →  EXP (and EXP*) ',' ID (and ID)* (become | becomes)
+    ASSIGNMENT    →  EXP (and EXP)* ',' ID (and ID)* (become | becomes)
     PRINTSTMT     →  EXP you print
-    RETURNSTMT    →  EXP you return
+    RETURNSTMT    →  give back EXP you must
     CONDITIONAL   →  BLOCK if EXPR BR (else BLOCK if EXPR BR)* else BLOCK
     TIMESLOOP     →  BLOCK EXP times
     FORLOOP       →  BLOCK as through RANGE ID runs
     WHILELOOP     →  BLOCK while EXP
-    PROCCALL      →  ARGS you ID
-    BLOCK         →  '{' STMT '}'
-                  →  '{' (STMT BR)+ '}'
+    PROCCALL      →  (ARGS)* ID you must
+    BLOCK         →  '{' (STMT)+ '}'
+                  |  '{' (STMT BR)+ '}'
     EXP           →  EXP1 ('|' EXP1)*
     EXP1          →  EXP2 ('&' EXP2)*
-    EXP2          →  EXP3 (RELOP EXP3)?
-    EXP3          →  EXP4 (MULOP EXP4)*
-    EXP4          →  EXP5 (ADDOP EXP5)*
+    EXP2          →  RELOP EXP3 EXP3 is?
+    EXP3          →  (MULOP EXP4)* EXP4
+    EXP4          →  (ADDOP EXP5)* EXP5
     EXP5          →  UNARYOP? EXP6
-    EXP6          →  EXP7 ('[' EXP (':' EXP)? ']')?
-    EXP7          →  EXP8 ('.' ID)?
-    EXP8          →  LIT | ID | ARRAY | OBJECT | ANONFUN | FUNCALL
+    EXP6          →  EXP7 hmm'?' EXP hmm EXP
+    EXP7          →  LIT | ID | ARRAY | OBJECT | ANONFUN | FUNCALL
     LIT           →  true | false | NUMLIT | STRLIT
     ARRAY         →  '[' ']'
                   |  '[' BR? EXP (',' BR? EXP)* BR? ']'
-    OBJECT        →
-    ANONFUN       →
-    FUNCALL       →  (ID | ANONFUN) ARGS
+    OBJECT        →  '{{'(':' ID EXP)*'}}'
+    ANONFUN       →  BLOCK given ARGS
+    FUNCALL       →  '('ARGS')'(ID | ANONFUN)
     RELOP         →  '<' | '<=' | '=' | '!=' | '>=' | '>'
     MULOP         →  '*' | '/'
     ADDOP         →  '+' | '-' | '^'
-    UNARYOP       →  '-' | '!'
+    UNARYOP       →  '!'
     
 The Microsyntax is informally defined as follows:
     
+    ARGS      →  ARGS1 (',' ARGS1)*
+    ARGS1     →  EXP7
+    
+    ID        →  STRLIT(STRLIT | NUMLIT)*
+    BR        →
+    
+    NUMLIT    → [0-9]+
+    STRLIT    → [a-Z]+([-_]?[a-Z])*
+    
+    COMMENTS  → '^^' ()* NEWLINE
+                 |  '^^*' ()* '*^^'
     
     
     
