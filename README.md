@@ -357,7 +357,7 @@ The Microsyntax is informally defined as follows:
     ARGS1     →  EXP7
     
     ID        →  STRLIT(STRLIT | NUMLIT)*
-    BR        →
+    BR        → NEWLINE
     
     NUMLIT    → [0-9]+
     STRLIT    → [a-Z]+([-_]?[a-Z])*
