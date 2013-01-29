@@ -267,13 +267,13 @@ Closure
 
 Objects
 
-    {{: x 1 , : y 5}}                               {x: 1, y: 5};
+    {: x 1 , : y 5}, training begins                {x: 1, y: 5};
     
-    {{}}                                            {}
+    {}, training begins                             {}
     
-    {{}}, universe begins                           var universe = {}
+    {}, universe training begins                    var universe = {}
     
-    {{                                              var circle = {
+    {                                               var circle = {
       : x 0,                                          x: 0,
       : y 0,                                          y: 0,
       : color "black",                                color: "black",
@@ -281,9 +281,9 @@ Objects
       {                                               area: function ()
         * ** radius 2 PI                                return Math.pow(this.radius, 2) * Math.PI;
       }, given nothing area gives                     }
-    }}, circle begins                               };
+    }, circle training begins                       };
     
-    {{circle}}, c1 begins                          var c1 = Object.create(circle);
+    {} as circle,c1 training begins                 var c1 = Object.create(circle);
     
 Math
 
@@ -343,7 +343,7 @@ The tokens `NUMLIT`, `STRLIT`, `ID`, and `BR` are defined in the microsyntax bel
     LIT           →  true | false | NUMLIT | STRLIT
     ARRAY         →  '[' ']'
                   |  '[' BR? EXP (',' BR? EXP)* BR? ']'
-    OBJECT        →  '{{'(':' ID EXP)*'}}'
+    OBJECT        →  '{'(':' ID EXP)*'}' (as ??object type??)? ',' ID training begins
     ANONFUN       →  BLOCK given ARGS
     FUNCALL       →  '('ARGS')'(ID | ANONFUN)
     RELOP         →  '<' | '<=' | '=' | '!=' | '>=' | '>'
