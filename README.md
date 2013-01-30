@@ -283,7 +283,7 @@ Objects
       }, given nothing area gives                     }
     }, circle training begins                       };
 
-    {} as circle,c1 training begins                 var c1 = Object.create(circle);
+    {} to be circle, c1 training begins             var c1 = Object.create(circle);
 
 Math
 
@@ -353,7 +353,7 @@ The tokens `NUMLIT`, `STRLIT`, `ID`, and `BR` are defined in the microsyntax bel
     LIT           →  true | false | NUMLIT | STRLIT
     ARRAY         →  '[' ']'
                   |  '[' BR? EXP (',' BR? EXP)* BR? ']'
-    OBJECT        →  '{'(':' ID EXP)*'}' (as ??object type??)? ',' ID training begins
+    OBJECT        →  '{'(':' ID EXP)*'}' (to be ID)? ',' ID? training begins
     ANONFUN       →  BLOCK given ARGS
     FUNCALL       →  '('ARGS')'(ID | ANONFUN)
     RELOP         →  '<' | '<=' | '=' | '!=' | '>=' | '>'
