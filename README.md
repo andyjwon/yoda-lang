@@ -13,9 +13,9 @@ One line complete hello world script
 Variable Declaration
 
     "strong", force begins                          var force = strong;
-    800, years_traing_jedi begins                   var years_training_jedi = 100;
+    800, years_training_jedi begins                 var years_training_jedi = 100;
 
-Parallel declaration
+Parallel Declaration
 
     3 and 5, x and y begin                          var _1 = 3;
                                                     var _2 = 5;
@@ -36,7 +36,7 @@ Parallel Assignment
 
     3 and 5, x and y become                         x = 3; y = 5;
 
-Arithmetic expression
+Arithmetic Expression
 
     / y * (- 4  x) 2.5                               y / (4 - x) * 2.5
 
@@ -104,7 +104,7 @@ String Comparison
 
 String Concatenation
 
-   + "hi" "bye"                                     "hi" + "bye"
+    + "hi" "bye"                                    "hi" + "bye"
 
 
 Function declaration, one parameter
@@ -334,13 +334,21 @@ The tokens `NUMLIT`, `STRLIT`, `ID`, and `BR` are defined in the microsyntax bel
                   |  '{' (STMT BR)+ '}'
     EXP           →  EXP1 ('|' EXP1)*
     EXP1          →  EXP2 ('&' EXP2)*
+                  |  '('EXP1')'
     EXP2          →  EXP3
                   |  RELOP EXP3 EXP3 is'?'
-    EXP3          →  (MULOP EXP4)* EXP4
-    EXP4          →  (ADDOP EXP5)* EXP5
+                  |  '('EXP2')'
+    EXP3          →  MULOP EXP4 (EXP4)+
+                  |  EXP4
+                  |  '('EXP3')'
+    EXP4          →  ADDOP EXP5 (EXP5)+
+                  |  EXP5
+                  |  '('EXP4')'
     EXP5          →  UNARYOP? EXP6
+                  |  '('EXP5')'
     EXP6          →  EXP7
                   |  EXP hmm'?' EXP hmm EXP
+                  |  '('EXP6')'
     EXP7          →  LIT | ID | ARRAY | OBJECT | ANONFUN | FUNCALL
     LIT           →  true | false | NUMLIT | STRLIT
     ARRAY         →  '[' ']'
