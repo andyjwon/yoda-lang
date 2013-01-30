@@ -355,17 +355,17 @@ The tokens `NUMLIT`, `STRLIT`, `ID`, and `BR` are defined in the microsyntax bel
 
 The Microsyntax is informally defined as follows:
 
-    ARGS      →  ARGS1 (',' ARGS1)*
-    ARGS1     →  EXP7
+    ARGS          →  ARGS1 (',' ARGS1)*
+    ARGS1         →  EXP7
 
-    ID        →  STRLIT(STRLIT | NUMLIT)*
-    BR        → NEWLINE
+    ID            →  [a-Z]+([-_a-Z0-9])*
+    BR            →  NEWLINE
 
-    NUMLIT    → [0-9]+
-    STRLIT    → [a-Z]+([-_]?[a-Z])*
+    NUMLIT        →  [0-9]+('.'[0-9]*)?
+    STRLIT        →  '"' (^(")* ('\''"')?)? '"'
 
-    COMMENTS  → '^^' ()* NEWLINE
-                 |  '^^*' ()* '*^^'
+    COMMENTS      →  '^^' ()* NEWLINE
+                  |  '^^*' ()* '*^^'
 
 
 
