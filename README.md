@@ -13,9 +13,9 @@ One line complete hello world script
 Variable Declaration
 
     "strong", force begins                          var force = strong;
-    800, years_traing_jedi begins                   var years_training_jedi = 100;
+    800, years_training_jedi begins                 var years_training_jedi = 100;
 
-Parallel declaration
+Parallel Declaration
 
     3 and 5, x and y begin                          var _1 = 3;
                                                     var _2 = 5;
@@ -25,7 +25,7 @@ Parallel declaration
 Constants (compile-time error to update)
 
     "disbelief", REASON_FOR_FAILURE must be         var REASON_FOR_FAILURE = "disbelief"
-                                                    
+
 Assignment is not initialization
 
     1, x begins                                     var x = 1;
@@ -36,7 +36,7 @@ Parallel Assignment
 
     3 and 5, x and y become                         x = 3; y = 5;
 
-Arithmetic expression
+Arithmetic Expression
 
     / y * (- 4  x) 2.5                               y / (4 - x) * 2.5
 
@@ -52,7 +52,7 @@ Swap
 Null/Null Test
 
     null                                            null
-    null x is?                                      x === null
+    = null x is?                                    x === null
 
 Booleans
 
@@ -73,7 +73,7 @@ Arrays
     p[0] you print                                  console.log(p[0]);
     p, q begins                                     var q = p;
     [4, true, "000", q], a begins                   var a = [4, true, "000", q];
-    a.length, you print                             console.log(a.length);
+    a.()length, you print                           console.log(a.length);
 
 Last element (indices start at 0 from the left, -1 from the right)
 
@@ -96,7 +96,7 @@ String Literal Escapes
 Are strings mutable?
 
     "yoda", x begins                                var x = "yoda";
-    += x " loves pie"                               x += " loves pie";
+    + x " loves pie", x becomes                     x += " loves pie";
 
 String Comparison
 
@@ -104,7 +104,7 @@ String Comparison
 
 String Concatenation
 
-   + "hi" "bye"                                     "hi" + "bye"
+    + "hi" "bye"                                    "hi" + "bye"
 
 
 Function declaration, one parameter
@@ -136,20 +136,20 @@ Function declaration, multiline
 Function call
 
     (8)square                                       square(8)
-    (7, 4)plus                                      plus(7, 4) 
+    (7, 4)plus                                      plus(7, 4)
     ((8, (2 - (11)square))plus)square               square(plus(8, 2 - square(11)))
-    (155, 71)bmi + zero() you print                 console.log(bmi(155, 71) + zero());
- 
+    (155, 71)bmi + ()zero you print                 console.log(bmi(155, 71) + zero());
+
 Procedure declaration (function that does not return anything)
 
     {                                               var greet_her = function (name) {
-      "Hello, " ^ name you print                      console.log("Hello, " + name);
+      + "Hello, " name you print                      console.log("Hello, " + name);
     } given name, greet_her does                    };
 
     {                                               var greet = function () {
       "Hello" you print                               console.log("Hello");
     } given nothing, greet does                     };
-    
+
     {                                               var counter = function () {
       "one" you print                                 console.log("one");
       "two" you print                                 console.log("two");
@@ -157,7 +157,7 @@ Procedure declaration (function that does not return anything)
     } given nothing, counter does                   };
 
     {                                               var echo = function (s, n) {
-      {s you print} n times                           for (var _1 = 0; _1 < n; _1++) {
+      {s you print} as through 0 to n _1 runs           for (var _1 = 0; _1 < n; _1++) {
     } given s and n, echo does                          console.log(s);
                                                       }
                                                     }
@@ -169,23 +169,24 @@ Procedure call
     ()greet                                       greet();
     
     ("NO", 5)echo                                 echo("NO", 5);
- 
+
+
 Function as parameter
 
     {((x)f)f} given f and x, twice gives            var twice = function (x) {
                                                       return f(f(x));
                                                     };
-                                                    
+
 Anonymous function
 
     {* 3 x} given x                                 function (x) {return 3 * x;}
 
-    ({* x x} given x, 9) twice                      twice(function (x) {return x * x;}, 9)
-                                                    
+    ({* x x} given x, 9)twice                       twice(function (x) {return x * x;}, 9)
+
 Conditional Expressions
 
     {3 you print} if > 2 x is?                          if (x > 2) {console.log(3);}
-    
+
     {give back false you must} if !found                if (!found) {return false;}
 
     {give back "A" you must} if >= 90 grade is?         if (grade >= 90) {
@@ -202,28 +203,24 @@ Conditional Expressions
 
     < 5 y hmm? y++ hmm y--                              5 < y ? y++ : y--;
 
-Switch Statement
-
-    *to be determined*
-
 For loops
 
     {x you print} as through 1 to 10 x runs         for (var x = 1; i <= 10; i++) {
                                                       console.log(x);
                                                     }
-    
+
     {                                               for (var x = 1; i <= 10; i += 2) {
       * x x you print                                 console.log(x * x);
     } as through 1 to 10 by 2 x runs                }
-    
+
     [spot, sparky, spike], pet_list begins          var pet_list = [spot, sparky, spike]
     {                                               for (var _1 = 0; _1 < pet_list.length; _1++) {
-      dog.bark();                                     var dog = pet_list[i];
-      dog.run();                                      dog.bark();
-      dog.sit();                                      dog.run();
+      dog.()bark;                                     var dog = pet_list[i];
+      dog.()run;                                      dog.bark();
+      dog.()sit;                                      dog.run();
     } as through pet_list dog runs                    dog.sit();
                                                     }
-                                                    
+
 While loops
 
     {                                               while (n != 1) {
@@ -233,31 +230,21 @@ While loops
                                                         n = n / 2;
                                                       }
                                                     }
-                                                    
+
 Function with multiple returns
 
     {                                               var isPrime = function (n) {
-      {give back false you must} if < 2 max is?       if (max < 2) { 
+      {give back false you must} if < 2 max is?       if (max < 2) {
       {                                                 return false;
         {give back false you must} if = 0 % n d is?   }
-      } as through 3 to __ n d runs                   for (var d = 3; d <= Math.sqrt(n); d++) {
+      } as through 3 to (n)sqrt d runs                   for (var d = 3; d <= Math.sqrt(n); d++) {
       give back true you must                           if (n % d === 0) {
     } given n, is_prime gives                             return false;
                                                         }
                                                       }
                                                       return true;
                                                     }
-                                                        
-List comprehension
 
-    [* x x for x in [1, 2, 3, 4]]
-    
-    [/ x 2 for x in a]
-    
-    [[x, y] for x in 0:3 for y in 4:5]
-    
-    [** x 2 for x in 0:20 if = 0 % x 2 is?]
-    
 Closure
 
     {                                               var counter = function (i) {
@@ -268,31 +255,31 @@ Closure
 Objects
 
     {: x 1 , : y 5}, training begins                {x: 1, y: 5};
-    
+
     {}, training begins                             {}
-    
+
     {}, universe training begins                    var universe = {}
-    
+
     {                                               var circle = {
       : x 0,                                          x: 0,
       : y 0,                                          y: 0,
       : color "black",                                color: "black",
       : radius 1,                                     radius: 1,
       {                                               area: function ()
-        * ** radius 2 PI                                return Math.pow(this.radius, 2) * Math.PI;
+        * (radius, 2)power ()PI                         return Math.pow(this.radius, 2) * Math.PI;
       }, given nothing area gives                     }
     }, circle training begins                       };
-    
-    {} as circle,c1 training begins                 var c1 = Object.create(circle);
-    
+
+    {} to be circle, c1 training begins             var c1 = Object.create(circle);
+
 Math
 
-    (3)abs                                           Math.abs(3);
-    (2.3)floor                                       Math.floor(2.3);
-    (2)cos                                           Math.cos(2);
-    the PI                                          Math.PI
-    ** x 2                                          Math.pow(x, 2);
-    __ x                                            Math.sqrt(x);
+    (3)abs                                          Math.abs(3);
+    (2.3)floor                                      Math.floor(2.3);
+    (2)cos                                          Math.cos(2);
+    ()PI                                            Math.PI
+    (x, 2)power                                     Math.pow(x, 2);
+    (x)sqrt                                         Math.sqrt(x);
 
 Binary, Octal, and Hex Literals
 
@@ -305,7 +292,7 @@ Here is a brief EBNF for the macrosyntax.  Here syntax categories and compound t
 The tokens `NUMLIT`, `STRLIT`, `ID`, and `BR` are defined in the microsyntax below.
 
     SCRIPT        →  (STMT BR)+
-    STMT          →  DEC 
+    STMT          →  DEC
                   |  ASSIGNMENT
                   |  PRINTSTMT
                   |  RETURNSTMT
@@ -314,6 +301,7 @@ The tokens `NUMLIT`, `STRLIT`, `ID`, and `BR` are defined in the microsyntax bel
                   |  FORLOOP
                   |  WHILELOOP
                   |  PROCCALL
+                  |  EXP
     DEC           →  VARDEC | CONSTDEC | PROCDEC | FUNDEC
     VARDEC        →  EXP (and EXP)* ',' ID (and ID)* (begin | begins)
                   |  from EXP, ID begins
@@ -325,46 +313,61 @@ The tokens `NUMLIT`, `STRLIT`, `ID`, and `BR` are defined in the microsyntax bel
     ASSIGNMENT    →  EXP (and EXP)* ',' ID (and ID)* (become | becomes)
     PRINTSTMT     →  EXP you print
     RETURNSTMT    →  give back EXP you must
-    CONDITIONAL   →  BLOCK if EXPR BR (else BLOCK if EXPR BR)* else BLOCK
+    CONDITIONAL   →  BLOCK if EXPR (BR (else BLOCK if EXPR BR)* else BLOCK)?
     TIMESLOOP     →  BLOCK EXP times
     FORLOOP       →  BLOCK as through RANGE ID runs
     WHILELOOP     →  BLOCK while EXP
     PROCCALL      →  FUNCALL
     BLOCK         →  '{' (STMT)+ '}'
                   |  '{' (STMT BR)+ '}'
-    EXP           →  '(' EXP1 ('|' EXP1)* ')'
-    EXP1          →  '(' EXP2 ('&' EXP2)* ')'
-    EXP2          →  '(' RELOP EXP3 EXP3 is? ')'
-    EXP3          →  '(' (MULOP EXP4)* EXP4 ')'
-    EXP4          →  '(' (ADDOP EXP5)* EXP5 ')'
-    EXP5          →  '(' UNARYOP? EXP6 ')'
-    EXP6          →  '(' EXP7 hmm'?' EXP hmm EXP ')'
-    EXP7          →  LIT | ID | ARRAY | OBJECT | ANONFUN | FUNCALL
-    LIT           →  true | false | NUMLIT | STRLIT
+    EXP           →  EXP ('|' EXP)*
+                  |  '('EXP')'
+    EXP1          →  EXP1 ('&' EXP1)*
+                  |  '('EXP1')'
+    EXP2          →  RELOP EXP2 EXP2 is'?'
+                  |  EXP3
+                  |  '('EXP2')'
+    EXP3          →  MULOP EXP3 (EXP3)+
+                  |  EXP4
+                  |  '('EXP3')'
+    EXP4          →  ADDOP EXP4 (EXP4)+
+                  |  EXP5
+                  |  '('EXP4')'
+    EXP5          →  UNARYOP? EXP5
+                  |  '('EXP5')'
+    EXP6          →  EXP6 hmm'?' EXP6 hmm EXP6
+                  |  EXP7
+                  |  '('EXP6')'
+    EXP7          →  LIT | ID | ARRAY | ARRAYLOOKUP | OBJECT | ANONFUN | FUNCALL
+    LIT           →  true | FALSE | NUMLIT | STRLIT
+>>>>>>> 6729ef0a0e386e3020fc587c4a218bbb2a95cdba
     ARRAY         →  '[' ']'
                   |  '[' BR? EXP (',' BR? EXP)* BR? ']'
-    OBJECT        →  '{'(':' ID EXP)*'}' (as ??object type??)? ',' ID training begins
+    ARRAYLOOKUP →  ID'['NUMLIT' (':' NUMLIT)?]'
+    OBJECT        →  '{'(':' ID EXP)*'}' (to be ID)? ',' ID? training begins
     ANONFUN       →  BLOCK given ARGS
-    FUNCALL       →  '('ARGS')'(ID | ANONFUN)
+    FUNCALL       →  (ID'.')?'('ARGS')'(ID | ANONFUN)
     RELOP         →  '<' | '<=' | '=' | '!=' | '>=' | '>'
     MULOP         →  '*' | '/'
     ADDOP         →  '+' | '-' | '^'
     UNARYOP       →  '!'
-    
+
 The Microsyntax is informally defined as follows:
-    
-    ARGS      →  ARGS1 (',' ARGS1)*
-    ARGS1     →  EXP7
-    
-    ID        →  STRLIT(STRLIT | NUMLIT)*
-    BR        → NEWLINE
-    
-    NUMLIT    → [0-9]+
-    STRLIT    → [a-Z]+([-_]?[a-Z])*
-    
-    COMMENTS  → '^^' ()* NEWLINE
-                 |  '^^*' ()* '*^^'
-    
-    
-    
-                
+
+    ARGS          →  ARGS1 (',' ARGS1)*
+    ARGS1         →  EXP7
+    RANGE             →  ((NUMLIT | ID | FUNCALL) (to | through))? (NUMLIT | ID | FUNCALL) (by EXP3)?
+
+    ID            →  [a-Z]+([-_a-Z0-9])*
+    BR            →  NEWLINE
+
+    FALSE         →  0 | 0.0 | '"''"' | false, null 
+    NUMLIT        →  (0x | 0b | 0o)? [0-9]+('.'[0-9]*)?
+    STRLIT        →  '"' (^(")* ('\''"')?)* '"'
+
+    COMMENTS      →  '^^' ()* NEWLINE
+                  |  '^^*' ()* '*^^'
+
+
+
+
