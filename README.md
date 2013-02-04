@@ -164,11 +164,11 @@ Procedure declaration (function that does not return anything)
 
 Procedure call
 
-    "Alice" greet_her you must                      greet_her("Alice");
+    ("Alice")greet_her                            greet_her("Alice");
     
-    greet you must                                  greet();
+    ()greet                                       greet();
     
-    ("NO", 5) echo you must                         echo("NO", 5);
+    ("NO", 5)echo                                 echo("NO", 5);
  
 Function as parameter
 
@@ -329,16 +329,16 @@ The tokens `NUMLIT`, `STRLIT`, `ID`, and `BR` are defined in the microsyntax bel
     TIMESLOOP     →  BLOCK EXP times
     FORLOOP       →  BLOCK as through RANGE ID runs
     WHILELOOP     →  BLOCK while EXP
-    PROCCALL      →  (ARGS)* ID you must
+    PROCCALL      →  FUNCALL
     BLOCK         →  '{' (STMT)+ '}'
                   |  '{' (STMT BR)+ '}'
-    EXP           →  EXP1 ('|' EXP1)*
-    EXP1          →  EXP2 ('&' EXP2)*
-    EXP2          →  RELOP EXP3 EXP3 is?
-    EXP3          →  (MULOP EXP4)* EXP4
-    EXP4          →  (ADDOP EXP5)* EXP5
-    EXP5          →  UNARYOP? EXP6
-    EXP6          →  EXP7 hmm'?' EXP hmm EXP
+    EXP           →  '(' EXP1 ('|' EXP1)* ')'
+    EXP1          →  '(' EXP2 ('&' EXP2)* ')'
+    EXP2          →  '(' RELOP EXP3 EXP3 is? ')'
+    EXP3          →  '(' (MULOP EXP4)* EXP4 ')'
+    EXP4          →  '(' (ADDOP EXP5)* EXP5 ')'
+    EXP5          →  '(' UNARYOP? EXP6 ')'
+    EXP6          →  '(' EXP7 hmm'?' EXP hmm EXP ')'
     EXP7          →  LIT | ID | ARRAY | OBJECT | ANONFUN | FUNCALL
     LIT           →  true | false | NUMLIT | STRLIT
     ARRAY         →  '[' ']'
