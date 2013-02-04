@@ -304,7 +304,7 @@ The tokens `NUMLIT`, `STRLIT`, `ID`, and `BR` are defined in the microsyntax bel
                   |  EXP
     DEC           →  VARDEC | CONSTDEC | PROCDEC | FUNDEC
     VARDEC        →  EXP (and EXP)* ',' ID (and ID)* (begin | begins)
-                  |  from EXP, ID begins
+                  |  from EXP',' ID begins
     CONSTDEC      →  EXP ',' ID must be
     PROCDEC       →  BLOCK given PARAMS ',' ID does
     FUNDEC        →  BLOCK given PARAMS ',' ID gives
