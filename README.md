@@ -320,27 +320,22 @@ The tokens `NUMLIT`, `STRLIT`, `ID`, and `BR` are defined in the microsyntax bel
     PROCCALL      →  FUNCALL
     BLOCK         →  '{' (STMT)+ '}'
                   |  '{' (STMT BR)+ '}'
-    EXP           →  EXP ('|' EXP)*
-                  |  '('EXP')'
-    EXP1          →  EXP1 ('&' EXP1)*
-                  |  '('EXP1')'
-    EXP2          →  RELOP EXP2 EXP2 is'?'
+    EXP           →  '(' EXP '|' EXP ')'
+                  | EXP1
+    EXP1          →  '(' EXP1 '&' EXP1 ')'
+                  |  EXP2
+    EXP2          →  '(' RELOP EXP2 EXP2 is'?' ')'
                   |  EXP3
-                  |  '('EXP2')'
-    EXP3          →  MULOP EXP3 (EXP3)+
+    EXP3          →  '(' MULOP EXP3 (EXP3)+ ')'
                   |  EXP4
-                  |  '('EXP3')'
-    EXP4          →  ADDOP EXP4 (EXP4)+
+    EXP4          →  '(' ADDOP EXP4 (EXP4)+ ')'
                   |  EXP5
-                  |  '('EXP4')'
-    EXP5          →  UNARYOP? EXP5
-                  |  '('EXP5')'
-    EXP6          →  EXP6 hmm'?' EXP6 hmm EXP6
+    EXP5          →  '(' UNARYOP? EXP5 ')'
+                  |  EXP6
+    EXP6          →  '(' EXP6 hmm'?' EXP6 hmm EXP6 ')'
                   |  EXP7
-                  |  '('EXP6')'
     EXP7          →  LIT | ID | ARRAY | ARRAYLOOKUP | OBJECT | ANONFUN | FUNCALL
     LIT           →  true | FALSE | NUMLIT | STRLIT
->>>>>>> 6729ef0a0e386e3020fc587c4a218bbb2a95cdba
     ARRAY         →  '[' ']'
                   |  '[' BR? EXP (',' BR? EXP)* BR? ']'
     ARRAYLOOKUP →  ID'['NUMLIT' (':' NUMLIT)?]'
