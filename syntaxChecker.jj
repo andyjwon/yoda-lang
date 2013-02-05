@@ -17,11 +17,11 @@ PARSER_END(SyntaxChecker)
 SKIP: { " " | "\t" | "\r" }
 TOKEN: {
     "(" | ")" | "+" | "*" | ":="
-    | <NUM: (["0"-"9"])+> | <ID: (["a"-"z"])+> | <BR: ("\n")>
-    | <ID: ((["a"-"z"] | ["A"-"Z"])+(["-""_"] | ["a"-"Z"] | ["0"-"9"])*)>
+    | <NUM: (["0"-"9"])+> | <BR: ("\n")>
+    | <ID: ((["a"-"z"] | ["A"-"Z"])+(["-"] | ["_"] | ["a"-"z"] | ["A"-"Z"] | ["0"-"9"])*)>
     | <NUMLIT: (("0x" | "0b" | "0o")? (["0"-"9"])+("."(["0"-"9"])*)?)>
     | <STRLIT: ("\"" ("^"("\"")* ("\\\"")?)* "\"") >
-    | <COMMENTS: (("<(-_-)>" ([.])* <BR>) | ("<(-.-)>" (.)* "<(-.-)>"))>
+    | <COMMENTS: (("<(-_-)>" (".")* <BR>) | ("<(-.-)>" (".")* "<(-.-)>"))>
 }
 
 void SCRIPT(): {} { (STMT() "\n")+ <EOF> }
@@ -39,7 +39,7 @@ void PARAMS(): {} { "nothing" | (<ID> ("and" <ID>)*) }
 void ASSIGNMENT(): {} { EXP() ("and" EXP())* "," <ID> ("and" <ID>)* ("become" | "becomes") }
 void PRINTSTMT(): {} { EXP() "you print" }
 void RETURNSTMT(): {} { "give back" EXP() "you must" }
-void CONDITIONAL(): {} { BLOCK() "if" EXPR() ("\n" ("else" BLOCK() "if" EXPR() "\n")* "else" BLOCK())? }
+void CONDITIONAL(): {} { BLOCK() "if" EXP() ("\n" ("else" BLOCK() "if" EXP() "\n")* "else" BLOCK())? }
 void TIMESLOOP(): {} { BLOCK() EXP() "times" }
 void FORLOOP(): {} { BLOCK() "as through" RANGE() <ID> "runs" }
 void WHILELOOP(): {} { BLOCK() "while" EXP() }
@@ -53,7 +53,7 @@ void EXP4(): {} { ( "(" ADDOP() EXP4() (EXP4())+ ")" ) | EXP5() }
 void EXP5(): {} { ("(" ( UNARYOP() )? EXP5() ")") |  EXP6() }
 void EXP6(): {} { ("(" EXP6() "hmm?" EXP6() "hmm" EXP6() ")") | EXP7() }
 void EXP7(): {} { LIT() | <ID> | ARRAY() | ARRAYLOOKUP() | OBJECT() | ANONFUN() | FUNCALL() }
-void LIT(): {} { "true" | FALSE() | <NUMLIT> | <STRLIT> }
+void LIT(): {} { <NUMLIT> | <STRLIT> }
 void ARRAY(): {} { ("[" "]") | ("[:" (<BR>)? EXP() ("," ("\n")? EXP())* ("\n")? "]") }
 void ARRAYLOOKUP(): {} { <ID> "[" <NUMLIT> (":" <NUMLIT>)? "]" }
 void OBJECT(): {} { "{" (":" <ID> EXP())* "}" ("to be" <ID>)? "," (<ID>)? "training begins" }
