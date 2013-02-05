@@ -1,6 +1,6 @@
 # yoda-lang
 
-I'm not a Star Wars fan, but most of the students in the 2013 Compilers class said traditional languages were boring.  They're probably right.
+A long time ago in a galaxy far, far away...
 
 ### EXAMPLES
 
@@ -62,7 +62,7 @@ Booleans
     > 5 x is?)
     (!= 1 n is?)
     (((= 5 3 is?) & (>= 9 x is?)) |                         3 === 5 & x >= 9 | 1 != y / 4 & !found
-     ((!= (/ y 4) 1 is?) & (!found)))                      
+     ((!= (/ y 4) 1 is?) & (!found)))
 
 Falsehood
 
@@ -165,9 +165,9 @@ Procedure declaration (function that does not return anything)
 Procedure call
 
     ("Alice")greet_her                                      greet_her("Alice");
-    
+
     ()greet                                                 greet();
-    
+
     ("NO", 5)echo                                           echo("NO", 5);
 
 Function as parameter
@@ -200,7 +200,7 @@ Conditional Expressions
                                                               return "F";
                                                             }
 
-    (< 5 y hmm? y++ hmm y--)                                5 < y ? y++ : y--;
+    ((< 5 y is?) hmm? y++ hmm y--)                          5 < y ? y++ : y--;
 
 For loops
 
@@ -325,43 +325,35 @@ The tokens `NUMLIT`, `STRLIT`, `ID`, and `BR` are defined in the microsyntax bel
                   |  EXP2
     EXP2          →  '(' RELOP EXP2 EXP2 is'?' ')'
                   |  EXP3
-    EXP3          →  '(' MULOP EXP3 (EXP3)+ ')'
+    EXP3          →  '(' NONRELOP EXP3 (EXP3)+ ')'
                   |  EXP4
-    EXP4          →  '(' ADDOP EXP4 (EXP4)+ ')'
+    EXP4          →  '(' UNARYOP? EXP4 ')'
                   |  EXP5
-    EXP5          →  '(' UNARYOP? EXP5 ')'
+    EXP5          →  '(' EXP5 hmm'?' EXP5 hmm EXP5 ')'
                   |  EXP6
-    EXP6          →  '(' EXP6 hmm'?' EXP6 hmm EXP6 ')'
-                  |  EXP7
-    EXP7          →  LIT | ID | ARRAY | ARRAYLOOKUP | OBJECT | ANONFUN | FUNCALL
+    EXP6          →  LIT | ID | ARRAY | ARRAYLOOKUP | OBJECT | ANONFUN | FUNCALL
     LIT           →  true | FALSE | NUMLIT | STRLIT
     ARRAY         →  '[' ']'
                   |  '[' BR? EXP (',' BR? EXP)* BR? ']'
-    ARRAYLOOKUP →  ID'['NUMLIT (':' NUMLIT)?]'
+    ARRAYLOOKUP   →  ID'['NUMLIT (':' NUMLIT)?]'
     OBJECT        →  '{'(':' ID EXP)*'}' (to be ID)? ',' ID? training begins
     ANONFUN       →  BLOCK given ARGS
     FUNCALL       →  (ID'.')?'('ARGS')'(ID | ANONFUN)
+    ARGS          →  ARGS1 (',' ARGS1)*
+    ARGS1         →  EXP6
     RELOP         →  '<' | '<=' | '=' | '!=' | '>=' | '>'
-    MULOP         →  '*' | '/'
-    ADDOP         →  '+' | '-' | '^'
+    NONRELOP      →  '*' | '/' | '+' | '-' | '^'
     UNARYOP       →  '!'
 
 The Microsyntax is informally defined as follows:
 
-    ARGS          →  ARGS1 (',' ARGS1)*
-    ARGS1         →  EXP7
-    RANGE             →  ((NUMLIT | ID | FUNCALL) (to | through))? (NUMLIT | ID | FUNCALL) (by EXP3)?
+    RANGE         →  ((NUMLIT | ID | FUNCALL) (to | through))? (NUMLIT | ID | FUNCALL) (by EXP3)?
 
     ID            →  [a-Z]+([-_a-Z0-9])*
     BR            →  NEWLINE
 
-    FALSE         →  0 | 0.0 | '"''"' | false | null 
     NUMLIT        →  (0x | 0b | 0o)? [0-9]+('.'[0-9]*)?
     STRLIT        →  '"' (^(")* ('\''"')?)* '"'
 
-    COMMENTS      →  '^^' ()* NEWLINE
-                  |  '^^*' ()* '*^^'
-
-
-
-
+    COMMENTS      →  '<(-_-)>' .* NEWLINE
+                  |  '<(-.-)>' .* '<(-.-)>'
