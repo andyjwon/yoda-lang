@@ -324,14 +324,13 @@ The tokens `NUMLIT`, `STRLIT`, `ID`, and `BR` are defined in the microsyntax bel
     EXP1          →  '(' EXP1 '&' EXP1 ')'
                   |  EXP2
     EXP2          →  '(' RELOP EXP2 EXP2 is'?' ')'
+                  |  '(' NONRELOP EXP2 (EXP2)+ ')'
                   |  EXP3
-    EXP3          →  '(' NONRELOP EXP3 (EXP3)+ ')'
+    EXP3          →  '(' UNARYOP? EXP3 ')'
                   |  EXP4
-    EXP4          →  '(' UNARYOP? EXP4 ')'
+    EXP4          →  '(' EXP4 hmm'?' EXP4 hmm EXP4 ')'
                   |  EXP5
-    EXP5          →  '(' EXP5 hmm'?' EXP5 hmm EXP5 ')'
-                  |  EXP6
-    EXP6          →  LIT | ID | ARRAY | ARRAYLOOKUP | OBJECT | ANONFUN | FUNCALL
+    EXP5          →  LIT | ID | ARRAY | ARRAYLOOKUP | OBJECT | ANONFUN | FUNCALL
     LIT           →  true | FALSE | NUMLIT | STRLIT
     ARRAY         →  '[' ']'
                   |  '[' BR? EXP (',' BR? EXP)* BR? ']'
