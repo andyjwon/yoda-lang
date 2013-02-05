@@ -338,7 +338,7 @@ The tokens `NUMLIT`, `STRLIT`, `ID`, and `BR` are defined in the microsyntax bel
     LIT           →  true | FALSE | NUMLIT | STRLIT
     ARRAY         →  '[' ']'
                   |  '[' BR? EXP (',' BR? EXP)* BR? ']'
-    ARRAYLOOKUP →  ID'['NUMLIT' (':' NUMLIT)?]'
+    ARRAYLOOKUP →  ID'['NUMLIT (':' NUMLIT)?]'
     OBJECT        →  '{'(':' ID EXP)*'}' (to be ID)? ',' ID? training begins
     ANONFUN       →  BLOCK given ARGS
     FUNCALL       →  (ID'.')?'('ARGS')'(ID | ANONFUN)
@@ -356,7 +356,7 @@ The Microsyntax is informally defined as follows:
     ID            →  [a-Z]+([-_a-Z0-9])*
     BR            →  NEWLINE
 
-    FALSE         →  0 | 0.0 | '"''"' | false, null 
+    FALSE         →  0 | 0.0 | '"''"' | false | null 
     NUMLIT        →  (0x | 0b | 0o)? [0-9]+('.'[0-9]*)?
     STRLIT        →  '"' (^(")* ('\''"')?)* '"'
 

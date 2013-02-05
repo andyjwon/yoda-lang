@@ -49,33 +49,28 @@ void EXP4(): {} { ("(" ADDOP() EXP4() (EXP4())+ ")" | EXP5() }
 void EXP5(): {} { ("(" UNARYOP()? EXP5() ")") |  EXP6() }
 void EXP6(): {} { ("(" EXP6() "hmm?" EXP6() "hmm" EXP6() ")") | EXP7() }
 void EXP7(): {} { LIT() | ID() | ARRAY() | ARRAYLOOKUP() | OBJECT() | ANONFUN() | FUNCALL() }
-    LIT           →  true | FALSE | NUMLIT | STRLIT
-    ARRAY         →  '[' ']'
-                  |  '[' BR? EXP (',' BR? EXP)* BR? ']'
-    ARRAYLOOKUP →  ID'['NUMLIT' (':' NUMLIT)?]'
-    OBJECT        →  '{'(':' ID EXP)*'}' (to be ID)? ',' ID? training begins
-    ANONFUN       →  BLOCK given ARGS
-    FUNCALL       →  (ID'.')?'('ARGS')'(ID | ANONFUN)
-    RELOP         →  '<' | '<=' | '=' | '!=' | '>=' | '>'
-    MULOP         →  '*' | '/'
-    ADDOP         →  '+' | '-' | '^'
-    UNARYOP       →  '!'
+void LIT(): {} { "true" | FALSE() | NUMLIT() | STRLIT() }
+void ARRAY(): {} { ("[" "]") | ("[: ("\n")? EXP() ("," ("\n")? EXP())* ("\n")? "]") }
+void ARRAYLOOKUP(): {} { ID() "[" NUMLIT() (":" NUMLIT())? "]" }
+void OBJECT(): {} { "{" (":" ID() EXP())* "}" ("to be" ID())? "," ID()? "training begins" }
+void ANONFUN(): {} { BLOCK() "given" ARGS() }
+void FUNCALL(): {} { (ID()".")?"("ARGS()")"(ID() | ANONFUN()) }
+void RELOP(): {} { "<" | "<=" | "=" | "!=" | ">=" | ">" }
+void MULOP(): {} { "*" | "/" }
+void ADDOP(): {} { "+" | "-" | "^" }
+void UNARYOP(): {} { "!" }
 
-The Microsyntax is informally defined as follows:
+void ARGS(): {} { ARGS1() ("," ARGS1())* }
+void ARGS1(): {} { EXP7 }
+void RANGE(): {} { ((NUMLIT() | ID() | FUNCALL()) ("to" | "through"))? (NUMLIT() | ID() | FUNCALL()) ("by" EXP3())? }
 
-    ARGS          →  ARGS1 (',' ARGS1)*
-    ARGS1         →  EXP7
-    RANGE             →  ((NUMLIT | ID | FUNCALL) (to | through))? (NUMLIT | ID | FUNCALL) (by EXP3)?
+void ID(): {} { [a-Z]+([-_a-Z0-9])* }
 
-    ID            →  [a-Z]+([-_a-Z0-9])*
-    BR            →  NEWLINE
+void FALSE(): {} { "0" | "0.0" | "\"\"" | "false" | "null" }
+void NUMLIT(): {} { ("0x" | "0b" | "0o")? [0-9]+("."[0-9]*)? }
+void STRLIT(): {} { "\"" (^("\"")* ("\\\"")?)* "\"" }
 
-    FALSE         →  0 | 0.0 | '"''"' | false, null 
-    NUMLIT        →  (0x | 0b | 0o)? [0-9]+('.'[0-9]*)?
-    STRLIT        →  '"' (^(")* ('\''"')?)* '"'
-
-    COMMENTS      →  '^^' ()* NEWLINE
-                  |  '^^*' ()* '*^^'
+void COMMENTS(): {} { ("\^\^" ()* "\n") | ("\^\^\*" ()* "\*\^\^") }
 
 
 
