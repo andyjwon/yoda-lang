@@ -14,13 +14,14 @@ public class SyntaxChecker {
 
 PARSER_END(SyntaxChecker)
 
-SKIP: { " " | "\t" | "\n" | "\r" }
+SKIP: { " " | "\t" | "\r" }
+BR: { "\n" }
 TOKEN: {
     "(" | ")" | "+" | "*" | ":="
     | <NUM: (["0"-"9"])+> | <ID: (["a"-"z"])+>
 }
 
-void SCRIPT(): {} { (STMT() "\n")+ }
+void SCRIPT(): {} { (STMT() "\n")+ <EOF> }
 void STMT(): {} { DEC() | ASSIGNMENT() | PRINTSTMT() | RETURNSTMT() | CONDITIONAL()
                   | TIMESLOOP() | FORLOOP() | WHILELOOP() | PROCCALL() | EXP() }
 
@@ -45,12 +46,12 @@ void EXP(): {} { ("(" EXP() "|" EXP() ")") | EXP1() }
 void EXP1(): {} { ("(" EXP1() "&" EXP1() ")") | EXP2() }
 void EXP2(): {} { ("(" RELOP() EXP2() EXP2() "is?" ")") | EXP3() }
 void EXP3(): {} { ("(" MULOP() EXP3() (EXP3())+ ")") | EXP4() }
-void EXP4(): {} { ("(" ADDOP() EXP4() (EXP4())+ ")" | EXP5() }
-void EXP5(): {} { ("(" UNARYOP()? EXP5() ")") |  EXP6() }
+void EXP4(): {} { ( "(" ADDOP() EXP4() (EXP4())+ ")" ) | EXP5() }
+void EXP5(): {} { ("(" ( UNARYOP() )? EXP5() ")") |  EXP6() }
 void EXP6(): {} { ("(" EXP6() "hmm?" EXP6() "hmm" EXP6() ")") | EXP7() }
 void EXP7(): {} { LIT() | ID() | ARRAY() | ARRAYLOOKUP() | OBJECT() | ANONFUN() | FUNCALL() }
 void LIT(): {} { "true" | FALSE() | NUMLIT() | STRLIT() }
-void ARRAY(): {} { ("[" "]") | ("[: ("\n")? EXP() ("," ("\n")? EXP())* ("\n")? "]") }
+void ARRAY(): {} { ("[" "]") | ("[: (<BR>)? EXP() ("," ("\n")? EXP())* ("\n")? "]") }
 void ARRAYLOOKUP(): {} { ID() "[" NUMLIT() (":" NUMLIT())? "]" }
 void OBJECT(): {} { "{" (":" ID() EXP())* "}" ("to be" ID())? "," ID()? "training begins" }
 void ANONFUN(): {} { BLOCK() "given" ARGS() }

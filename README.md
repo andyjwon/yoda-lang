@@ -29,7 +29,7 @@ Constants (compile-time error to update)
 Assignment is not initialization
 
     1, x begins                                     var x = 1;
-    + x 1, x becomes                                x = x + 1;
+    (+ x 1), x becomes                                x = x + 1;
     x you print                                     console.log(x);
 
 Parallel Assignment
@@ -52,16 +52,16 @@ Swap
 Null/Null Test
 
     null                                            null
-    = null x is?                                    x === null
+    (= null x is?)                                    x === null
 
 Booleans
 
     true                                                true
     false                                               false
-    < 3 4 is?                                           4 < 3
-    > 5 x is?
-    != 1 n is?
-    = 5 3 is? & >= 9 x is? | != / y 4 1 is? & !found    3 === 5 & x >= 9 | 1 != y / 4 & !found
+    (< 3 4 is?)                                           4 < 3
+    > 5 x is?)
+    (!= 1 n is?)
+    (((= 5 3 is?) & (>= 9 x is?)) | ((!= (/ y 4) 1 is?) & (!found)))    3 === 5 & x >= 9 | 1 != y / 4 & !found
 
 Falsehood
 
@@ -96,26 +96,26 @@ String Literal Escapes
 Are strings mutable?
 
     "yoda", x begins                                var x = "yoda";
-    + x " loves pie", x becomes                     x += " loves pie";
+    (+ x " loves pie"), x becomes                     x += " loves pie";
 
 String Comparison
 
-    = "hi" "bye" is?                                "hi" === "bye"
+    (= "hi" "bye" is?)                                "hi" === "bye"
 
 String Concatenation
 
-    + "hi" "bye"                                    "hi" + "bye"
+    (+ "hi" "bye")                                    "hi" + "bye"
 
 
 Function declaration, one parameter
 
-    {x * x} given x, square gives                   var square = function (x) {
+    {(* x x)} given x, square gives                   var square = function (x) {
                                                       return x * x;
                                                     };
 
 Function declaration, two parameters
 
-    {x + y} given x and y, plus gives               var plus = function (x, y) {
+    {(+ x y)} given x and y, plus gives               var plus = function (x, y) {
                                                       return x + y;
                                                     };
 Function declaration, zero parameters
@@ -128,17 +128,17 @@ Function declaration, multiline
     {                                               var bmi = function (pounds, inches) {
       0.45359237, KILOGRAMS_PER_POUND begins          var KILOGRAMS_PER_POUND = 0.45359237;
       0.0254, METERS_PER_INCH begins                  var METERS_PER_INCH = 0.0254;
-      pounds * KILOGRAMS_PER_POUND, kilos begins      var kilos = pounds * KILOGRAMS_PER_POUND;
-      inches * METERS_PER_INCH, meters begins         var inches = inches * METERS_PER_INCH;
-      give back kilos / (meters * meters) you must    return kilos / (meters * meters)
+      (* pounds KILOGRAMS_PER_POUND), kilos begins      var kilos = pounds * KILOGRAMS_PER_POUND;
+      (* inches METERS_PER_INCH), meters begins         var inches = inches * METERS_PER_INCH;
+      give back (/ kilos (* meters meters)) you must    return kilos / (meters * meters)
     } given pounds and inches, bmi gives            };
 
 Function call
 
     (8)square                                       square(8)
     (7, 4)plus                                      plus(7, 4)
-    ((8, (2 - (11)square))plus)square               square(plus(8, 2 - square(11)))
-    (155, 71)bmi + ()zero you print                 console.log(bmi(155, 71) + zero());
+    ((8, (- 2 (11)square))plus)square               square(plus(8, 2 - square(11)))
+    (+ (155, 71)bmi ()zero) you print                 console.log(bmi(155, 71) + zero());
 
 Procedure declaration (function that does not return anything)
 
@@ -179,20 +179,20 @@ Function as parameter
 
 Anonymous function
 
-    {* 3 x} given x                                 function (x) {return 3 * x;}
+    {(* 3 x)} given x                                 function (x) {return 3 * x;}
 
-    ({* x x} given x, 9)twice                       twice(function (x) {return x * x;}, 9)
+    ({(* x x)} given x, 9)twice                       twice(function (x) {return x * x;}, 9)
 
 Conditional Expressions
 
-    {3 you print} if > 2 x is?                          if (x > 2) {console.log(3);}
+    {3 you print} if (> 2 x is?)                          if (x > 2) {console.log(3);}
 
-    {give back false you must} if !found                if (!found) {return false;}
+    {give back false you must} if (!found)                if (!found) {return false;}
 
-    {give back "A" you must} if >= 90 grade is?         if (grade >= 90) {
-    else {give back "B" you must} if >= 80 grade is?      return "A";
-    else {give back "C" you must} if >= 70 grade is?    } else if (grade >= 80) {
-    else {give back "D" you must} if >= 60 grade is?      return "B";
+    {give back "A" you must} if (>= 90 grade is?)         if (grade >= 90) {
+    else {give back "B" you must} if (>= 80 grade is?)      return "A";
+    else {give back "C" you must} if (>= 70 grade is?)    } else if (grade >= 80) {
+    else {give back "D" you must} if (>= 60 grade is?)      return "B";
     else {give back "F" you must}                       } else if (grade >= 70) {
                                                           return "C";
                                                         } else if (grade >= 60) {
@@ -201,7 +201,7 @@ Conditional Expressions
                                                           return "F";
                                                         }
 
-    < 5 y hmm? y++ hmm y--                              5 < y ? y++ : y--;
+    (< 5 y hmm? y++ hmm y--)                              5 < y ? y++ : y--;
 
 For loops
 
@@ -210,7 +210,7 @@ For loops
                                                     }
 
     {                                               for (var x = 1; i <= 10; i += 2) {
-      * x x you print                                 console.log(x * x);
+      (* x x) you print                                 console.log(x * x);
     } as through 1 to 10 by 2 x runs                }
 
     [spot, sparky, spike], pet_list begins          var pet_list = [spot, sparky, spike]
@@ -224,9 +224,9 @@ For loops
 While loops
 
     {                                               while (n != 1) {
-      {+ * 3 n 1, n becomes} if = 0 % n 2 is?         if (n % 2 === 0) {
-      else {/ n 2, n becomes}                           n = 3 * n + 1;
-    } while != 1 n is?                                } else {
+      {(+ (* 3 n) 1), n becomes} if (= 0 (% n 2) is?)         if (n % 2 === 0) {
+      else {(/ n 2), n becomes}                           n = 3 * n + 1;
+    } while (!= 1 n is?)                                } else {
                                                         n = n / 2;
                                                       }
                                                     }
@@ -234,9 +234,9 @@ While loops
 Function with multiple returns
 
     {                                               var isPrime = function (n) {
-      {give back false you must} if < 2 max is?       if (max < 2) {
+      {give back false you must} if (< 2 max is?)       if (max < 2) {
       {                                                 return false;
-        {give back false you must} if = 0 % n d is?   }
+        {give back false you must} if (= 0 (% n d) is?)   }
       } as through 3 to (n)sqrt d runs                   for (var d = 3; d <= Math.sqrt(n); d++) {
       give back true you must                           if (n % d === 0) {
     } given n, is_prime gives                             return false;
@@ -249,7 +249,7 @@ Closure
 
     {                                               var counter = function (i) {
       0, i begins                                     var i = 0;
-      give back {+= i 1} given nothing you must       return function () {i += 1;};
+      give back {(+= i 1)} given nothing you must       return function () {i += 1;};
     } given i, counter gives                        };
 
 Objects
