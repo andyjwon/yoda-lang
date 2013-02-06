@@ -47,12 +47,10 @@ void PROCCALL(): {} { FUNCALL() }
 void BLOCK(): {} { ("{" (STMT())+ "}") | ("{" (STMT() "\n")+ "}") }
 void EXP(): {} { ("(" EXP() "|" EXP() ")") | EXP1() }
 void EXP1(): {} { ("(" EXP1() "&" EXP1() ")") | EXP2() }
-void EXP2(): {} { ("(" RELOP() EXP2() EXP2() "is?" ")") | EXP3() }
-void EXP3(): {} { ("(" MULOP() EXP3() (EXP3())+ ")") | EXP4() }
-void EXP4(): {} { ( "(" ADDOP() EXP4() (EXP4())+ ")" ) | EXP5() }
-void EXP5(): {} { ("(" ( UNARYOP() )? EXP5() ")") |  EXP6() }
-void EXP6(): {} { ("(" EXP6() "hmm?" EXP6() "hmm" EXP6() ")") | EXP7() }
-void EXP7(): {} { LIT() | <ID> | ARRAY() | ARRAYLOOKUP() | OBJECT() | ANONFUN() | FUNCALL() }
+void EXP2(): {} { ("(" RELOP() EXP2() EXP2() "is?" ")") | ("(" ARITHOP() EXP2() (EXP2())+ ")") | EXP3() }
+void EXP3(): {} { ("(" ( UNARYOP() )? EXP3() ")") |  EXP4() }
+void EXP4(): {} { ("(" EXP4() "hmm?" EXP4() "hmm" EXP4() ")") | EXP5() }
+void EXP5(): {} { LIT() | <ID> | ARRAY() | ARRAYLOOKUP() | OBJECT() | ANONFUN() | FUNCALL() }
 void LIT(): {} { <NUMLIT> | <STRLIT> }
 void ARRAY(): {} { ("[" "]") | ("[:" (<BR>)? EXP() ("," ("\n")? EXP())* ("\n")? "]") }
 void ARRAYLOOKUP(): {} { <ID> "[" <NUMLIT> (":" <NUMLIT>)? "]" }
@@ -60,10 +58,9 @@ void OBJECT(): {} { "{" (":" <ID> EXP())* "}" ("to be" <ID>)? "," (<ID>)? "train
 void ANONFUN(): {} { BLOCK() "given" ARGS() }
 void FUNCALL(): {} { (<ID>".")?"("ARGS()")"(<ID> | ANONFUN()) }
 void RELOP(): {} { "<" | "<=" | "=" | "!=" | ">=" | ">" }
-void MULOP(): {} { "*" | "/" }
-void ADDOP(): {} { "+" | "-" | "^" }
+void ARITHOP(): {} { "*" | "/" | "+" | "-" | "^" }
 void UNARYOP(): {} { "!" }
 
 void ARGS(): {} { ARGS1() ("," ARGS1())* }
-void ARGS1(): {} { EXP7() }
+void ARGS1(): {} { EXP5() }
 void RANGE(): {} { ((<NUMLIT> | <ID> | FUNCALL()) ("to" | "through"))? (<NUMLIT> | <ID> | FUNCALL()) ("by" EXP3())? }
