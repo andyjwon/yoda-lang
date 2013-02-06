@@ -324,7 +324,7 @@ The tokens `NUMLIT`, `STRLIT`, `ID`, and `BR` are defined in the microsyntax bel
     EXP1          →  '(' EXP1 '&' EXP1 ')'
                   |  EXP2
     EXP2          →  '(' RELOP EXP2 EXP2 is'?' ')'
-                  |  '(' NONRELOP EXP2 (EXP2)+ ')'
+                  |  '(' ARITHOP EXP2 (EXP2)+ ')'
                   |  EXP3
     EXP3          →  '(' UNARYOP? EXP3 ')'
                   |  EXP4
@@ -341,7 +341,7 @@ The tokens `NUMLIT`, `STRLIT`, `ID`, and `BR` are defined in the microsyntax bel
     ARGS          →  ARGS1 (',' ARGS1)*
     ARGS1         →  EXP6
     RELOP         →  '<' | '<=' | '=' | '!=' | '>=' | '>'
-    NONRELOP      →  '*' | '/' | '+' | '-' | '^'
+    ARITHOP       →  '*' | '/' | '+' | '-' | '^'
     UNARYOP       →  '!'
 
 The Microsyntax is informally defined as follows:
