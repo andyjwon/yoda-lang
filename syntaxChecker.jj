@@ -17,18 +17,39 @@ PARSER_END(SyntaxChecker)
 SKIP: { " " | "\t" | "\r" }
 TOKEN: {
     "(" | ")" | "+" | "*" | ":="
+    | <IF: ("if")>
+	| <TO: ("to")>
+	| <BY: ("by")>
+	| <AND: ("and")>
+	| <HMM: ("hmm")>
+	| <ELSE: ("else")>
+	| <FROM: ("from")>
+	| <DOES: ("does")>
+	| <RUNS: ("runs")>
+	| <WHILE: ("while")>
+	| <BEGIN: ("begin")>
+	| <GIVEN: ("given")>
+	| <GIVES: ("gives")>
+	| <TIMES: ("times")>
+	| <BECOME: ("become")>
+	| <BECOMES: ("becomes")>
+	| <BEGINS: ("begins")>
+	| <NOTHING: ("nothing")>
+	| <THROUGH: ("through")>
+	| <ID: ((["a"-"z"] | ["A"-"Z"])+(["-"] | ["_"] | ["a"-"z"] | ["A"-"Z"] | ["0"-"9"])*)>
     | <NUM: (["0"-"9"])+> | <BR: ("\n")>
-    | <ID: ((["a"-"z"] | ["A"-"Z"])+(["-"] | ["_"] | ["a"-"z"] | ["A"-"Z"] | ["0"-"9"])*)>
     | <NUMLIT: (("0x" | "0b" | "0o")? (["0"-"9"])+("."(["0"-"9"])*)?)>
     | <STRLIT: ("\"" ("^"("\"")* ("\\\"")?)* "\"") >
     | <COMMENTS: (("<(-_-)>" (".")* <BR>) | ("<(-.-)>" (".")* "<(-.-)>"))>
+	
 }
 
-void SCRIPT(): {} { (STMT() "\n")+ <EOF> }
-void STMT(): {} { DEC() | ASSIGNMENT() | PRINTSTMT() | RETURNSTMT() | CONDITIONAL()
-                  | TIMESLOOP() | FORLOOP() | WHILELOOP() | PROCCALL() | EXP() }
 
-void DEC(): {} { VARDEC() | CONSTDEC() | PROCDEC() | FUNDEC() }
+void SCRIPT(): {} { (STMT() "\n")+ <EOF> }
+void STMT(): {} { LOOKAHEAD(3) DEC() | LOOKAHEAD(3) ASSIGNMENT() | LOOKAHEAD(3) PRINTSTMT() | LOOKAHEAD(3) RETURNSTMT() | LOOKAHEAD(3) CONDITIONAL()
+                  | LOOKAHEAD(3) TIMESLOOP() | LOOKAHEAD(3) FORLOOP() | LOOKAHEAD(3) WHILELOOP() | LOOKAHEAD(3) PROCCALL() | EXP() }
+
+void DEC(): {} { LOOKAHEAD(3) VARDEC() | LOOKAHEAD(3) CONSTDEC() | LOOKAHEAD(3) PROCDEC() | FUNDEC() }
 
 void VARDEC(): {} { (EXP() ("and" EXP())* "," <ID> ("and" <ID>)* ("begin" | "begins"))
                     | ("from" EXP() "," <ID> "begins") }
@@ -39,18 +60,18 @@ void PARAMS(): {} { "nothing" | (<ID> ("and" <ID>)*) }
 void ASSIGNMENT(): {} { EXP() ("and" EXP())* "," <ID> ("and" <ID>)* ("become" | "becomes") }
 void PRINTSTMT(): {} { EXP() "you print" }
 void RETURNSTMT(): {} { "give back" EXP() "you must" }
-void CONDITIONAL(): {} { BLOCK() "if" EXP() ("\n" ("else" BLOCK() "if" EXP() "\n")* "else" BLOCK())? }
+void CONDITIONAL(): {} { BLOCK() "if" EXP() (LOOKAHEAD (3) "\n" (LOOKAHEAD ("else") "else" BLOCK() "if" EXP() "\n")* "else" BLOCK())? }
 void TIMESLOOP(): {} { BLOCK() EXP() "times" }
 void FORLOOP(): {} { BLOCK() "as through" RANGE() <ID> "runs" }
 void WHILELOOP(): {} { BLOCK() "while" EXP() }
 void PROCCALL(): {} { FUNCALL() }
-void BLOCK(): {} { ("{" (STMT())+ "}") | ("{" (STMT() "\n")+ "}") }
-void EXP(): {} { ("(" EXP() "|" EXP() ")") | EXP1() }
-void EXP1(): {} { ("(" EXP1() "&" EXP1() ")") | EXP2() }
-void EXP2(): {} { ("(" RELOP() EXP2() EXP2() "is?" ")") | ("(" ARITHOP() EXP2() (EXP2())+ ")") | EXP3() }
-void EXP3(): {} { ("(" ( UNARYOP() )? EXP3() ")") |  EXP4() }
-void EXP4(): {} { ("(" EXP4() "hmm?" EXP4() "hmm" EXP4() ")") | EXP5() }
-void EXP5(): {} { LIT() | <ID> | ARRAY() | ARRAYLOOKUP() | OBJECT() | ANONFUN() | FUNCALL() }
+void BLOCK(): {} { LOOKAHEAD(12) ("{" (STMT())+ "}") | ("{" (STMT() "\n")+ "}") }
+void EXP(): {} { LOOKAHEAD(3) ("(" EXP() "|" EXP() ")") | EXP1() }
+void EXP1(): {} { LOOKAHEAD(3)("(" EXP1() "&" EXP1() ")") | EXP2() }
+void EXP2(): {} { LOOKAHEAD (2) ("(" RELOP() EXP2() EXP2() "is?" ")") | LOOKAHEAD (2) ("(" ARITHOP() EXP2() (EXP2())+ ")") | EXP3() }
+void EXP3(): {} { LOOKAHEAD (3)("(" ( UNARYOP() )? EXP3() ")") | EXP4() }
+void EXP4(): {} { LOOKAHEAD (3)("(" EXP4() "hmm?" EXP4() "hmm" EXP4() ")") | EXP5() }
+void EXP5(): {} { LOOKAHEAD (2) LIT() | LOOKAHEAD (2) <ID> | LOOKAHEAD (2) ARRAY() | LOOKAHEAD (2) ARRAYLOOKUP() | LOOKAHEAD (2) OBJECT() | LOOKAHEAD (2) ANONFUN() | FUNCALL() }
 void LIT(): {} { <NUMLIT> | <STRLIT> }
 void ARRAY(): {} { ("[" "]") | ("[:" (<BR>)? EXP() ("," ("\n")? EXP())* ("\n")? "]") }
 void ARRAYLOOKUP(): {} { <ID> "[" <NUMLIT> (":" <NUMLIT>)? "]" }
@@ -61,6 +82,6 @@ void RELOP(): {} { "<" | "<=" | "=" | "!=" | ">=" | ">" }
 void ARITHOP(): {} { "*" | "/" | "+" | "-" | "^" }
 void UNARYOP(): {} { "!" }
 
-void ARGS(): {} { ARGS1() ("," ARGS1())* }
+void ARGS(): {} { ARGS1() (LOOKAHEAD (2) "," ARGS1())* }
 void ARGS1(): {} { EXP5() }
-void RANGE(): {} { ((<NUMLIT> | <ID> | FUNCALL()) ("to" | "through"))? (<NUMLIT> | <ID> | FUNCALL()) ("by" EXP3())? }
+void RANGE(): {} { (LOOKAHEAD (2) ( LOOKAHEAD (2) <NUMLIT> | LOOKAHEAD (2) <ID> | FUNCALL()) (LOOKAHEAD (2) "to" | "through"))? (LOOKAHEAD (2) <NUMLIT> | LOOKAHEAD (2) <ID> | FUNCALL()) ("by" EXP3())? }
