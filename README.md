@@ -2,6 +2,19 @@
 
 A long time ago in a galaxy far, far away...
 
+### DESCRIPTION
+The general feel and use of the Yoda language is meant to mimic the speech patterns of the Jedi Master Yoda from Star Wars.
+Although Yoda's speech patterns can be inconsistent, his sentences typically follow an object-subject-verb word order.
+It is this pattern that Yoda-Lang replicates in terms of language syntax. When read aloud, all statements and expressions
+in Yoda-Lang should sound like Yoda himself is talking.
+
+### DESIGN CHOICES
+Scope
+    
+    Yoda-Lang uses dynamic scoping, as the Force flows through all things and binds them together.
+    You need not search far to find the Force in times of need. Instead, you must feel the Force around you.
+    In this way, variable declarations are found all around you, rather than being forced to be found where they were
+    initiaded.
 ### EXAMPLES
 
 Yoda on the left; JavaScript on the right.
