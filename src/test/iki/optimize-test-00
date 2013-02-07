@@ -1,0 +1,16 @@
+begin
+  var x;
+  var y;
+  write(x + 0);         -- should be just write x
+  write(x - (0 * x));   -- should be just write x
+  while 5 / 5 - 1 loop  -- will be optimized away
+    var z;              -- so this will never appear either
+    read x;
+    write y;            -- so y will be unused also!
+  end;
+  while 5 / 5 - 2 loop  -- while (-1)
+    read x;
+  end;
+  x = x / 2;
+  x = x / 1;            -- optimized away
+end

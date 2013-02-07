@@ -1,0 +1,7 @@
+begin
+  while 0 loop
+    var y;
+    write y;
+  end;
+  y = 3;
+end
