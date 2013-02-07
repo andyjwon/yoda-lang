@@ -11,10 +11,20 @@ in Yoda-Lang should sound like Yoda himself is talking.
 ### DESIGN CHOICES
 Scope
     
-    Yoda-Lang uses dynamic scoping, as the Force flows through all things and binds them together.
-    You need not search far to find the Force in times of need. Instead, you must feel the Force around you.
-    In this way, variable declarations are found all around you, rather than being forced to be found where they were
-    initiaded.
+    Yoda-Lang uses a specific style of scoping drawn from the wisdom of Master Yoda. When asked what is in a mysterious cave,
+    Yoda responds "Only what you take with you." In this way, variables must be brought in to a lower scope as a parameter in 
+    order to be used.
+
+Booleans and Arithmetic
+    
+    Yoda-Lang uses a unique syntax pattern for boolean expressions and arithmetic. Like the rest of the language, the point is
+    to make it sound like Yoda is talking. Thus, our Boolean expressions follow the pattern (operator operand operand is?).
+    I.e. "greater than 3, y is?" Similarly, arithmetic follows the pattern (operator operand operand are). I.e. 
+    "added 3 and y are."
+    
+Exceptions
+
+    Yoda-Lang does not use exceptions because "do or do not, there is no try."
 ### EXAMPLES
 
 Yoda on the left; JavaScript on the right.
@@ -42,7 +52,7 @@ Constants (compile-time error to update)
 Assignment is not initialization
 
     1, x begins                                             var x = 1;
-    (+ x 1), x becomes                                      x = x + 1;
+    (+ x 1 are), x becomes                                  x = x + 1;
     x you print                                             console.log(x);
 
 Parallel Assignment
@@ -51,7 +61,7 @@ Parallel Assignment
 
 Arithmetic Expression
 
-    (* (/ y (- 4  x)) 2.5)                                  y / (4 - x) * 2.5
+    (* (/ y (- 4  x are) are) 2.5 are)                      y / (4 - x) * 2.5
 
 Swap
 
@@ -75,7 +85,7 @@ Booleans
     > 5 x is?)
     (!= 1 n is?)
     (((= 5 3 is?) & (>= 9 x is?)) |                         3 === 5 & x >= 9 | 1 != y / 4 & !found
-     ((!= (/ y 4) 1 is?) & (!found)))
+     ((!= (/ y 4 are) 1 is?) & (!found)))
 
 Falsehood
 
@@ -110,7 +120,7 @@ String Literal Escapes
 Are strings mutable?
 
     "yoda", x begins                                        var x = "yoda";
-    (+ x " loves pie"), x becomes                           x += " loves pie";
+    (+ x " loves pie" are), x becomes                       x += " loves pie";
 
 String Comparison
 
@@ -118,17 +128,17 @@ String Comparison
 
 String Concatenation
 
-    (+ "hi" "bye")                                          "hi" + "bye"
+    (+ "hi" "bye" are)                                      "hi" + "bye"
 
 Function declaration, one parameter
 
-    {(* x x)} given x, square gives                         var square = function (x) {
+    {(* x x are)} given x, square gives                     var square = function (x) {
                                                               return x * x;
                                                             };
 
 Function declaration, two parameters
 
-    {(+ x y)} given x and y, plus gives                     var plus = function (x, y) {
+    {(+ x y are)} given x and y, plus gives                 var plus = function (x, y) {
                                                               return x + y;
                                                             };
 Function declaration, zero parameters
@@ -141,22 +151,22 @@ Function declaration, multiline
     {                                                       var bmi = function (pounds, inches) {
       0.45359237, KILOGRAMS_PER_POUND begins                  var KILOGRAMS_PER_POUND = 0.45359237;
       0.0254, METERS_PER_INCH begins                          var METERS_PER_INCH = 0.0254;
-      (* pounds KILOGRAMS_PER_POUND), kilos begins            var kilos = pounds * KILOGRAMS_PER_POUND;
-      (* inches METERS_PER_INCH), meters begins               var inches = inches * METERS_PER_INCH;
-      give back (/ kilos (* meters meters)) you must          return kilos / (meters * meters)
+      (* pounds KILOGRAMS_PER_POUND are), kilos begins        var kilos = pounds * KILOGRAMS_PER_POUND;
+      (* inches METERS_PER_INCH are), meters begins           var inches = inches * METERS_PER_INCH;
+      give back (/ kilos (* meters meters are)) you must      return kilos / (meters * meters)
     } given pounds and inches, bmi gives                    };
 
 Function call
 
     (8)square                                               square(8)
     (7, 4)plus                                              plus(7, 4)
-    ((8, (- 2 (11)square))plus)square                       square(plus(8, 2 - square(11)))
-    (+ (155, 71)bmi ()zero) you print                       console.log(bmi(155, 71) + zero());
+    ((8, (- 2 (11)square are))plus)square                   square(plus(8, 2 - square(11)))
+    (+ (155, 71)bmi ()zero are) you print                   console.log(bmi(155, 71) + zero());
 
 Procedure declaration (function that does not return anything)
 
     {                                                       var greet_her = function (name) {
-      + "Hello, " name you print                              console.log("Hello, " + name);
+      (+ "Hello, " name are) you print                              console.log("Hello, " + name);
     } given name, greet_her does                            };
 
     {                                                       var greet = function () {
@@ -191,9 +201,9 @@ Function as parameter
 
 Anonymous function
 
-    {(* 3 x)} given x                                       function (x) {return 3 * x;}
+    {(* 3 x are)} given x                                   function (x) {return 3 * x;}
 
-    ({(* x x)} given x, 9)twice                             twice(function (x) {return x * x;}, 9)
+    ({(* x x are)} given x, 9)twice                         twice(function (x) {return x * x;}, 9)
 
 Conditional Expressions
 
@@ -222,7 +232,7 @@ For loops
                                                             }
 
     {                                                       for (var x = 1; i <= 10; i += 2) {
-      (* x x) you print                                       console.log(x * x);
+      (* x x are) you print                                       console.log(x * x);
     } as through 1 to 10 by 2 x runs                        }
 
     [spot, sparky, spike], pet_list begins                  var pet_list = [spot, sparky, spike]
@@ -236,8 +246,8 @@ For loops
 While loops
 
     {                                                       while (n != 1) {
-      {(+ (* 3 n) 1), n becomes} if (= 0 (% n 2) is?)         if (n % 2 === 0) {
-      else {(/ n 2), n becomes}                                 n = 3 * n + 1;
+      {(+ (* 3 n are) 1 are),n becomes} if(= 0 (% n 2) is?)   if (n % 2 === 0) {
+      else {(/ n 2 are), n becomes                                n = 3 * n + 1;
     } while (!= 1 n is?)                                      } else {
                                                                 n = n / 2;
                                                               }
@@ -261,7 +271,7 @@ Closure
 
     {                                                       var counter = function (i) {
       0, i begins                                             var i = 0;
-      give back {(+= i 1)} given nothing you must             return function () {i += 1;};
+      give back {(+= i 1 are)} given nothing you must         return function () {i += 1;};
     } given i, counter gives                                };
 
 Objects
@@ -278,7 +288,7 @@ Objects
       : color "black",                                        color: "black",
       : radius 1,                                             radius: 1,
       {                                                       area: function ()
-        * (radius, 2)power ()PI                                 return Math.pow(this.radius, 2) * Math.PI;
+        * (radius, 2)power ()PI are                             return Math.pow(this.radius, 2) * Math.PI;
       }, given nothing area gives                             }
     }, circle training begins                               };
 
@@ -369,3 +379,9 @@ The Microsyntax is informally defined as follows:
 
     COMMENTS      →  '<(-_-)>' .* NEWLINE
                   |  '<(-.-)>' .* '<(-.-)>'
+                  
+                  
+                  
+                  
+                  
+May the Force be with you.
