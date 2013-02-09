@@ -3,6 +3,6 @@ target
 .project
 .settings
 bin
-*.java
+
 *.class
 
