@@ -25,6 +25,12 @@ Booleans and Arithmetic
 Exceptions
 
     Yoda-Lang does not use exceptions because "do or do not, there is no try."
+    
+Typing
+    
+    Yoda-Lang uses strong, dynamic typing. While those who follow the light side of the force and those who follow
+    the dark side cannot cooperate, it is easy for the light to fall to darkness.
+    
 ### EXAMPLES
 
 Yoda on the left; JavaScript on the right.
