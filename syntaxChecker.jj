@@ -3,7 +3,7 @@ PARSER_BEGIN(SyntaxChecker)
 public class SyntaxChecker {
     public static void main(String[] args) {
         try {
-            new SyntaxChecker(new java.io.StringReader(args[0])).S();
+            new SyntaxChecker(new java.io.StringReader(args[0])).SCRIPT();
             System.out.println("Syntax is okay");
         } catch (Throwable e) {
             // Catching Throwable is ugly but JavaCC throws Error objects!
