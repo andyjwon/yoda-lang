@@ -3,7 +3,7 @@ PARSER_BEGIN(SyntaxChecker)
 public class SyntaxChecker {
     public static void main(String[] args) {
         try {
-            new SyntaxChecker(new java.io.StringReader(args[0])).SCRIPT();
+            new SyntaxChecker(new java.io.FileReader(args[0])).SCRIPT();
             System.out.println("Syntax is okay");
         } catch (Throwable e) {
             // Catching Throwable is ugly but JavaCC throws Error objects!
@@ -14,8 +14,7 @@ public class SyntaxChecker {
 
 PARSER_END(SyntaxChecker)
 
-SKIP: { " " | "\t" | "\r" 
-    | <"<(-_-)>" (~["\n","\r"])* ("\n"|"\r")>
+SKIP: { " " | "\t" | "\r"
     | <"<(-_-)>" (~[])* "<(-_-)>">
 }
 
@@ -50,19 +49,18 @@ TOKEN: {
 	| <PRINT: ("print")>
 	| <GIVEBACK: ("give back")>
 	| <ID: ((["a"-"z"] | ["A"-"Z"])+(["-"] | ["_"] | ["a"-"z"] | ["A"-"Z"] | ["0"-"9"])*)>
-    | <NUM: (["0"-"9"])+>
     | <NUMLIT: (("0x" | "0b" | "0o")? (["0"-"9"])+("."(["0"-"9"])*)?)>
-    | <STRLIT: ("\"" ("^"("\"")* ("\\\"")?)* "\"") >
+    | <STRLIT: ("\"" (~["\""] | ("\\\""))* "\"") >
     | <BR: ("\n")>
 	
 }
 
 
-void SCRIPT(): {} { (STMT() <BR>) + <EOF> }
+void SCRIPT(): {} { ((<BR>)* STMT() (<BR>)*) + <EOF> }
 void STMT(): {} { LOOKAHEAD(3) DEC() | LOOKAHEAD(3) ASSIGNMENT() | LOOKAHEAD(3) PRINTSTMT() | LOOKAHEAD(3) RETURNSTMT() | LOOKAHEAD(3) CONDITIONAL()
                   | LOOKAHEAD(3) TIMESLOOP() | LOOKAHEAD(3) FORLOOP() | LOOKAHEAD(3) WHILELOOP() | LOOKAHEAD(3) PROCCALL() | EXP() }
 
-void DEC(): {} { LOOKAHEAD(3) VARDEC() | LOOKAHEAD(3) CONSTDEC() | LOOKAHEAD(3) PROCDEC() | FUNDEC() }
+void DEC(): {} { LOOKAHEAD(4) VARDEC() | LOOKAHEAD(3) CONSTDEC() | LOOKAHEAD(3) PROCDEC() | FUNDEC() }
 
 void VARDEC(): {} { (EXP() (<AND> EXP())* "," <ID> ( <AND>  <ID>)*  (<BEGIN> | <BEGINS>))
                     | (<FROM> EXP() "," <ID>  <BEGINS>) }
@@ -84,7 +82,7 @@ void EXP1(): {} { LOOKAHEAD(3)("(" EXP1() "&" EXP1() ")") | EXP2() }
 void EXP2(): {} { LOOKAHEAD (2) ("(" RELOP() EXP2() EXP2() <IS> ")") | LOOKAHEAD (2) ("(" ARITHOP() EXP2() (EXP2())+ ")") | EXP3() }
 void EXP3(): {} { LOOKAHEAD (3)("(" ( UNARYOP() )? EXP3() ")") | EXP4() }
 void EXP4(): {} { LOOKAHEAD (3)("(" EXP4() <HMMQ> EXP4() <HMM> EXP4() ")") | EXP5() }
-void EXP5(): {} { LOOKAHEAD (2) LIT() | LOOKAHEAD (2) <ID> | LOOKAHEAD (2) ARRAY() | LOOKAHEAD (2) ARRAYLOOKUP() | LOOKAHEAD (2) OBJECT() | LOOKAHEAD (2) ANONFUN() | FUNCALL() }
+void EXP5(): {} { LOOKAHEAD (2) LIT() | LOOKAHEAD (2) <ID> | LOOKAHEAD (2) ARRAY() | LOOKAHEAD (2) ARRAYLOOKUP() | LOOKAHEAD (2) OBJECT() | LOOKAHEAD (2) ANONFUN() | FUNCALL()}
 void LIT(): {} { <NUMLIT> | <STRLIT> }
 void ARRAY(): {} { ("[" (":" (<BR>)? EXP() ("," (<BR>)? EXP())* (<BR>)?)? "]") }
 void ARRAYLOOKUP(): {} { <ID> "[" <NUMLIT> (":" <NUMLIT>)? "]" }
