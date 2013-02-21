@@ -46,3 +46,138 @@ a[1:]
 a[1:-1] 
 
 "hi"
+
+"\""
+
+"yoda", x begins     
+(+ x " loves pie" are), x becomes
+
+(= "hi" "bye" is?)
+
+(+ "hi" "bye" are)   
+
+{(* x x are)} given x, square gives
+
+{(+ x y are)} given x and y, plus gives
+
+{0} given nothing, zero gives
+
+{                                                    
+  0.45359237, KILOGRAMS_PER_POUND begins             
+  0.0254, METERS_PER_INCH begins                     
+  (* pounds KILOGRAMS_PER_POUND are), kilos begins   
+  (* inches METERS_PER_INCH are), meters begins      
+  give back (/ kilos (* meters meters are)) you must 
+} given pounds and inches, bmi gives    
+
+(8)square                                           
+(7, 4)plus                                          
+((8, (- 2 (11)square are))plus)square               
+(+ (155, 71)bmi ()zero are) you print
+    
+    
+    
+{                                             
+  (+ "Hello, " name are) you print                
+} given name, greet_her does                      
+
+{                                                 
+  "Hello" you print                               
+} given nothing, greet does                       
+
+{                                                 
+  "one" you print                                 
+  "two" you print                                 
+  "three" you print                               
+} given nothing, counter does                     
+
+{                                                 
+  {s you print} as through 0 to n _1 runs         
+} given s and n, echo does
+    
+
+("Alice")greet_her   
+
+()greet              
+
+("NO", 5)echo 
+
+{((x)f)f} given f and x, twice gives   
+
+
+{(* 3 x are)} given x                                   
+
+({(* x x are)} given x, 9)twice
+
+{3 you print} if (> 2 x is?)                      
+
+{give back false you must} if (!found)                
+
+{give back "A" you must} if (>= 90 grade is?)         
+else {give back "B" you must} if (>= 80 grade is?)    
+else {give back "C" you must} if (>= 70 grade is?)    
+else {give back "D" you must} if (>= 60 grade is?)    
+else {give back "F" you must} 
+
+((< 5 y is?) hmm? y++ hmm y--)    
+
+{x you print} as through 1 to 10 x runs        
+                                                       
+                                                       
+
+{                                                  
+  (* x x are) you print                            
+} as through 1 to 10 by 2 x runs                   
+
+[spot, sparky, spike], pet_list begins             
+{                                                  
+  dog.()bark;                                      
+  dog.()run;                                       
+  dog.()sit;                                       
+} as through pet_list dog runs
+
+{                                                       
+  {(+ (* 3 n are) 1 are),n becomes} if(= 0 (% n 2) is?) 
+  else {(/ n 2 are), n becomes                          
+} while (!= 1 n is?) 
+
+{                                                      
+  {give back false you must} if (< 2 max is?)          
+  {                                                    
+    {give back false you must} if (= 0 (% n d) is?)    
+  } as through 3 to (n)sqrt d runs                     
+  give back true you must                              
+} given n, is_prime gives 
+
+
+{                                                      
+  0, i begins                                          
+  give back {(+= i 1 are)} given nothing you must      
+} given i, counter gives
+
+{: x 1 , : y 5}, training begins                  
+
+{}, training begins                               
+
+{}, universe training begins                      
+
+{                                                 
+  : x 0,                                          
+  : y 0,                                          
+  : color "black",                                
+  : radius 1,                                     
+  {                                               
+    * (radius, 2)power ()PI are                   
+  }, given nothing area gives                     
+}, circle training begins                         
+
+{} to be circle, c1 training begins
+
+(3)abs       
+(2.3)floor   
+(2)cos       
+()PI         
+(x, 2)power  
+(x)sqrt
+    
+0x, 0b, 0o 
