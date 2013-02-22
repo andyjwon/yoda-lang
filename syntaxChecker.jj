@@ -15,7 +15,21 @@ public class SyntaxChecker {
 PARSER_END(SyntaxChecker)
 
 SKIP: { " " | "\t" | "\r"
-    | <"<(-_-)>" (~[])* "<(-_-)>">
+    | <"<(-_-)>" (~["\n","\r"])* ("\n"|"\r")>
+}
+
+SKIP : {
+    "<(-.-)>" : WithinComment
+}
+
+<WithinComment> SKIP :
+{
+    "<(-.-)>" : DEFAULT
+}
+
+<WithinComment> MORE :
+{
+    <~[]>
 }
 
 TOKEN: {
