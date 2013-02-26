@@ -9,12 +9,12 @@
 "disbelief", REASON_FOR_FAILURE must be
 
 1, x begins
-(+ x 1 are), x becomes
+(+ x 1 ), x becomes
 x you print 
 
 3 and 5 and 7 and 11, x and y and z and a become  
 
-(* (/ y (- 4  x are) are) 2.5 are)
+(* (/ y (- 4  x ) ) 2.5 )
 
 3, x begins
 10, y begins
@@ -26,10 +26,10 @@ null
 true                                                  
 false                                                 
 (< 3 4 is?)                                            
-> 5 x is?)
+(> 5 x is?)
 (!= 1 n is?)
 (((= 5 3 is?) & (>= 9 x is?)) |
-((!= (/ y 4 are) 1 is?) & (!found)))
+  ((!= (/ y 4 ) 1 is?) & (!found)))
 
 0, 0.0, "", false, null 
 
@@ -50,35 +50,35 @@ a[1:-1]
 "\""
 
 "yoda", x begins     
-(+ x " loves pie" are), x becomes
+(+ x " loves pie" ), x becomes
 
 (= "hi" "bye" is?)
 
-(+ "hi" "bye" are)   
+(+ "hi" "bye" )   
 
-{(* x x are)} given x, square gives
+{(* x x )} given x, square gives
 
-{(+ x y are)} given x and y, plus gives
+{(+ x y )} given x and y, plus gives
 
 {0} given nothing, zero gives
 
 {                                                    
   0.45359237, KILOGRAMS_PER_POUND begins             
   0.0254, METERS_PER_INCH begins                     
-  (* pounds KILOGRAMS_PER_POUND are), kilos begins   
-  (* inches METERS_PER_INCH are), meters begins      
-  give back (/ kilos (* meters meters are)) you must 
+  (* pounds KILOGRAMS_PER_POUND ), kilos begins   
+  (* inches METERS_PER_INCH ), meters begins      
+  give back (/ kilos (* meters meters )) you must 
 } given pounds and inches, bmi gives    
 
 (8)square                                           
 (7, 4)plus                                          
-((8, (- 2 (11)square are))plus)square               
-(+ (155, 71)bmi ()zero are) you print
+((8, (- 2 (11)square ))plus)square               
+(+ (155, 71)bmi ()zero ) you print
     
     
     
 {                                             
-  (+ "Hello, " name are) you print                
+  (+ "Hello, " name ) you print                
 } given name, greet_her does                      
 
 {                                                 
@@ -105,9 +105,9 @@ a[1:-1]
 {((x)f)f} given f and x, twice gives   
 
 
-{(* 3 x are)} given x                                   
+{(* 3 x )} given x                                   
 
-({(* x x are)} given x, 9)twice
+({(* x x )} given x, 9)twice
 
 {3 you print} if (> 2 x is?)                      
 
@@ -126,7 +126,7 @@ else {give back "F" you must}
                                                        
 
 {                                                  
-  (* x x are) you print                            
+  (* x x ) you print                            
 } as through 1 to 10 by 2 x runs                   
 
 [spot, sparky, spike], pet_list begins             
@@ -137,8 +137,8 @@ else {give back "F" you must}
 } as through pet_list dog runs
 
 {                                                       
-  {(+ (* 3 n are) 1 are),n becomes} if(= 0 (% n 2) is?) 
-  else {(/ n 2 are), n becomes                          
+  {(+ (* 3 n ) 1 ),n becomes} if(= 0 (% n 2) is?) 
+  else {(/ n 2 ), n becomes                          
 } while (!= 1 n is?) 
 
 {                                                      
@@ -152,7 +152,7 @@ else {give back "F" you must}
 
 {                                                      
   0, i begins                                          
-  give back {(+= i 1 are)} given nothing you must      
+  give back {(+= i 1 )} given nothing you must      
 } given i, counter gives
 
 {: x 1 , : y 5}, training begins                  
@@ -167,7 +167,7 @@ else {give back "F" you must}
   : color "black",                                
   : radius 1,                                     
   {                                               
-    * (radius, 2)power ()PI are                   
+    * (radius, 2)power ()PI                    
   }, given nothing area gives                     
 }, circle training begins                         
 
