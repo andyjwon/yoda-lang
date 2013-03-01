@@ -106,12 +106,12 @@ void FORLOOP(): {} { BLOCK() <AS>  <THROUGH> RANGE() <ID>  <RUNS> }
 void WHILELOOP(): {} { BLOCK() <WHILE> EXP() }
 void PROCCALL(): {} { FUNCALL() }
 void BLOCK(): {} { LOOKAHEAD(12) ("{" (STMT())+ "}") | ("{" (STMT() (<BR>)+)+ "}") }
-void EXP(): {} { LOOKAHEAD(3) ("(" EXP() "|" EXP() ")") | EXP1() }
+void EXP(): {} { LOOKAHEAD("(" EXP() "|") ("(" EXP() "|" EXP() ")") | EXP1() }
 void EXP1(): {} { LOOKAHEAD(3)("(" EXP1() "&" EXP1() ")") | EXP2() }
 void EXP2(): {} { LOOKAHEAD (2) ("(" RELOP() EXP2() EXP2() <IS> ")") | LOOKAHEAD (2) ("(" ARITHOP() EXP2() (EXP2())+ ")") | EXP3() }
 void EXP3(): {} { LOOKAHEAD (3)("(" ( UNARYOP() )? EXP3() ")") | EXP4() }
 void EXP4(): {} { LOOKAHEAD (3)("(" EXP4() <HMMQ> EXP4() <HMM> EXP4() ")") | EXP5() }
-void EXP5(): {} { LOOKAHEAD (2) LIT() | LOOKAHEAD (2) <ID> | LOOKAHEAD (2) ARRAY() | LOOKAHEAD (2) ARRAYLOOKUP() | LOOKAHEAD (2) OBJECT() | LOOKAHEAD (2) ANONFUN() | FUNCALL()}
+void EXP5(): {} { ARRAY() | LIT() | LOOKAHEAD (2) ARRAYLOOKUP() | LOOKAHEAD (2) OBJECT() | FUNCALL() | <ID>}
 void LIT(): {} { <NUMLIT> | <STRLIT> }
 void ARRAY(): {} { ("[" (":" (<BR>)* EXP() ("," (<BR>)* EXP())* (<BR>)*)? "]") }
 void ARRAYLOOKUP(): {} { <ID> "[" <NUMLIT> (":" <NUMLIT>)? "]" }
