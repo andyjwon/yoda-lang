@@ -50,6 +50,7 @@ TOKEN: {
 	| <BEGINS: ("begins")>
 	| <GIVEN: ("given")>
 	| <GIVES: ("gives")>
+	| <GET: ("get")>
 	| <TIMES: ("times")>
 	| <BECOME: ("become")>
 	| <BECOMES: ("becomes")>
@@ -105,16 +106,18 @@ void TIMESLOOP(): {} { BLOCK() EXP() <TIMES> }
 void FORLOOP(): {} { BLOCK() <AS>  <THROUGH> RANGE() <ID>  <RUNS> }
 void WHILELOOP(): {} { BLOCK() <WHILE> EXP() }
 void PROCCALL(): {} { FUNCALL() }
-void BLOCK(): {} { LOOKAHEAD(12) ("{" (STMT())+ "}") | ("{" (STMT() (<BR>)+)+ "}") }
+void BLOCK(): {} { ("{" (STMT() (<BR>)+)+ "}") }
 void EXP(): {} { LOOKAHEAD("(" EXP() "|") ("(" EXP() "|" EXP() ")") | EXP1() }
-void EXP1(): {} { LOOKAHEAD(3)("(" EXP1() "&" EXP1() ")") | EXP2() }
-void EXP2(): {} { LOOKAHEAD (2) ("(" RELOP() EXP2() EXP2() <IS> ")") | LOOKAHEAD (2) ("(" ARITHOP() EXP2() (EXP2())+ ")") | EXP3() }
-void EXP3(): {} { LOOKAHEAD (3)("(" ( UNARYOP() )? EXP3() ")") | EXP4() }
-void EXP4(): {} { LOOKAHEAD (3)("(" EXP4() <HMMQ> EXP4() <HMM> EXP4() ")") | EXP5() }
-void EXP5(): {} { ARRAY() | LIT() | LOOKAHEAD (2) ARRAYLOOKUP() | LOOKAHEAD (2) OBJECT() | FUNCALL() | <ID>}
+void EXP1(): {} { LOOKAHEAD("(" EXP1() "&") ("(" EXP1() "&" EXP1() ")") | EXP2() }
+void EXP2(): {} { LOOKAHEAD ("(" RELOP()) ("(" RELOP() EXP2() EXP2() <IS> ")")
+   | LOOKAHEAD ("(" ARITHOP()) ("(" ARITHOP() EXP2() (EXP2())+ ")")
+   | EXP3() }
+void EXP3(): {} { LOOKAHEAD("(" ( UNARYOP() )? EXP3()) ("(" ( UNARYOP() )? EXP3() ")") | EXP4() }
+void EXP4(): {} { LOOKAHEAD("(" EXP4() <HMMQ> ) ("(" EXP4() <HMMQ> EXP4() <HMM> EXP4() ")") | EXP5() }
+void EXP5(): {} { ARRAY() | LIT() | LOOKAHEAD( <ID> "." ) ARRAYLOOKUP() | LOOKAHEAD("{") OBJECT() | LOOKAHEAD(BLOCK()) FUNCALL() | <ID>}
 void LIT(): {} { <NUMLIT> | <STRLIT> }
-void ARRAY(): {} { ("[" (":" (<BR>)* EXP() ("," (<BR>)* EXP())* (<BR>)*)? "]") }
-void ARRAYLOOKUP(): {} { <ID> "[" <NUMLIT> (":" <NUMLIT>)? "]" }
+void ARRAY(): {} { ("[" ( <BR>? EXP() ("," <BR>? EXP())* <BR>?)* "]") }
+void ARRAYLOOKUP(): {} { <ID> "." "(" <NUMLIT> (".""." <NUMLIT>)? ")" <GET> }
 void OBJECT(): {} { "{" (":" <ID> EXP())* "}" (<TO>  <BE>  <ID>)? ","  (<ID> )? <TRAINING>  <BEGINS> }
 void ANONFUN(): {} { BLOCK() <GIVEN> ARGS() }
 void FUNCALL(): {} { (<ID>".")?"("ARGS()")"(<ID> | ANONFUN()) }
