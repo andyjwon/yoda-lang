@@ -125,4 +125,4 @@ void UNARYOP(): {} { "!" }
 
 void ARGS(): {} { (ARGS1() (LOOKAHEAD (2) "," ARGS1())*)? }
 void ARGS1(): {} { EXP5() }
-void RANGE(): {} { (LOOKAHEAD (2) ( LOOKAHEAD (2) <NUMLIT> | LOOKAHEAD (2) <ID> | FUNCALL()) (LOOKAHEAD (2) <TO> | <THROUGH>))? (LOOKAHEAD (2) <NUMLIT> | LOOKAHEAD (2) <ID> | FUNCALL()) (<BY> EXP3())? }
+void RANGE(): {} { (<NUMLIT> | <ID> | FUNCALL() ) <TO> (<NUMLIT> | <ID> | FUNCALL() ) }
