@@ -113,11 +113,11 @@ void EXP2(): {} { ( RELOP() EXP3() EXP3() <IS> )
    | EXP3() }
 void EXP3(): {} { (UNARYOP()  EXP4() )  | EXP4()}
 void EXP4(): {} { ( EXP5() (<HMMQ> EXP5() <HMM> EXP5() )?)}
-void EXP5(): {} { ARRAY() | LIT() |  LOOKAHEAD("{") OBJECT() 
+void EXP5(): {} { ARRAY() | LIT() |  LOOKAHEAD("{") OBJECT()
    | LOOKAHEAD((<ID>".")?"("ARGS()")") FUNCALL() | <ID> | "(" EXP() ")"}
 void LIT(): {} { <NUMLIT> | <STRLIT> }
 void ARRAY(): {} { ("[" ( (<BR>)? EXP() ("," (<BR>)? EXP())* (<BR>)?)* "]") }
-void OBJECT(): {} { LOOKAHEAD(<TRAINING>) "{" (":" <ID> EXP())* "}" (<TO>  <BE>  <ID>)? ","  (<ID> )? <TRAINING>  <BEGINS> }
+void OBJECT(): {} { "{" (":" <ID> EXP())* "}" (<TO>  <BE>  <ID>)? ","  (<ID> )? <TRAINING>  <BEGINS> }
 void ANONFUN(): {} { BLOCK() <GIVEN> ARGS() }
 void FUNCALL(): {} { (<ID>".")?"("ARGS()")"(<ID> | ANONFUN()) }
 void RELOP(): {} { "<" | "<=" | "=" | "!=" | ">=" | ">" }
