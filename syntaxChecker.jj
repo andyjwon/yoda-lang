@@ -117,7 +117,7 @@ void EXP4(): {} { LOOKAHEAD("(" EXP4() <HMMQ> ) ("(" EXP4() <HMMQ> EXP4() <HMM> 
 void EXP5(): {} { ARRAY() | LIT() | LOOKAHEAD( <ID> "." ) ARRAYLOOKUP() | LOOKAHEAD("{") OBJECT()
    | LOOKAHEAD((<ID>".")?"("ARGS()")") FUNCALL() | <ID>}
 void LIT(): {} { <NUMLIT> | <STRLIT> }
-void ARRAY(): {} { ("[" ( <BR>? EXP() ("," <BR>? EXP())* <BR>?)* "]") }
+void ARRAY(): {} { ("[" ( (<BR>)? EXP() ("," (<BR>)? EXP())* (<BR>)?)* "]") }
 void ARRAYLOOKUP(): {} { <ID> "." "(" <NUMLIT> (".""." <NUMLIT>)? ")" <GET> }
 void OBJECT(): {} { "{" (":" <ID> EXP())* "}" (<TO>  <BE>  <ID>)? ","  (<ID> )? <TRAINING>  <BEGINS> }
 void ANONFUN(): {} { BLOCK() <GIVEN> ARGS() }
