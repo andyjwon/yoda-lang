@@ -31,16 +31,9 @@ false
 (((= 5 3 is?) & (>= 9 x is?)) | ((!= (/ y 4 ) 1 is?) & (!found)))
 
 [2, 3, 5, 7, 11], p begins
-p[0] you print
 p, q begins
 [4, true, "000", q], a begins
-a.()length, you print 
 
-p[-1] 
-
-a[3:6]
-a[1:]
-a[1:-1] 
 
 "hi"
 
@@ -59,13 +52,7 @@ a[1:-1]
 
 {0} given nothing, zero gives
 
-{                                                    
-  0.45359237, KILOGRAMS_PER_POUND begins             
-  0.0254, METERS_PER_INCH begins                     
-  (* pounds KILOGRAMS_PER_POUND ), kilos begins   
-  (* inches METERS_PER_INCH ), meters begins      
-  give back (/ kilos (* meters meters )) you must 
-} given pounds and inches, bmi gives    
+ 
 
 (8)square                                           
 (7, 4)plus                                          

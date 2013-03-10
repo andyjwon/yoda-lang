@@ -71,15 +71,15 @@ TOKEN: {
 }
 
 
-void SCRIPT(): {} { ((<BR>)* STMT())+ (<BR>)* <EOF> }
+void SCRIPT(): {} { ((<BR>)* STMT()((<BR>)+ | <EOF>))+ (<BR>)* <EOF> }
 void STMT(): {} { 
      LOOKAHEAD(BLOCK() <WHILE>) WHILELOOP()
    | LOOKAHEAD(BLOCK() <AS>) FORLOOP()
    | LOOKAHEAD(BLOCK() <IF>) CONDITIONAL()
    | LOOKAHEAD(BLOCK() EXP()) TIMESLOOP()
-   | LOOKAHEAD(BLOCK() <GIVEN> ARGS()) ANONFUN()
    | LOOKAHEAD(BLOCK() <GIVEN> PARAMS() "," <ID> <DOES>) PROCDEC()
-   | LOOKAHEAD(BLOCK() <GIVEN> PARAMS() "," <ID> <GIVES>) FUNDEC()   
+   | LOOKAHEAD(BLOCK() <GIVEN> PARAMS() "," <ID> <GIVES>) FUNDEC()
+   | LOOKAHEAD(BLOCK() <GIVEN> ARGS()) ANONFUN()   
    | LOOKAHEAD(EXP() <YOU> <PRINT>) PRINTSTMT()
    | LOOKAHEAD(EXP() "," <ID> <MUST> <BE>) CONSTDEC()
    | LOOKAHEAD(<FROM> | (EXP() (<AND> EXP())*  "," <ID> ( <AND> <ID>)* (<BEGIN> | <BEGINS>))) VARDEC()
@@ -89,8 +89,6 @@ void STMT(): {} {
    | LOOKAHEAD(FUNCALL()) PROCCALL()
    | EXP()
 }
-
-void DEC(): {} { LOOKAHEAD(4) VARDEC() | LOOKAHEAD(3) CONSTDEC() | LOOKAHEAD(3) PROCDEC() | FUNDEC() }
 
 void VARDEC(): {} { (EXP() (<AND> EXP())* "," <ID> ( <AND>  <ID>)*  (<BEGIN> | <BEGINS>))
                     | (<FROM> EXP() "," <ID>  <BEGINS>) }
@@ -106,7 +104,7 @@ void TIMESLOOP(): {} { BLOCK() EXP() <TIMES> }
 void FORLOOP(): {} { BLOCK() <AS>  <THROUGH> RANGE() <ID>  <RUNS> }
 void WHILELOOP(): {} { BLOCK() <WHILE> EXP() }
 void PROCCALL(): {} { FUNCALL() }
-void BLOCK(): {} { ("{" (STMT() (<BR>)+)+ "}") }
+void BLOCK(): {} { ("{" STMT() ( (<BR>)+ STMT())* "}") }
 void EXP(): {} { LOOKAHEAD("(" EXP() "|") ("(" EXP() "|" EXP() ")") | EXP1() }
 void EXP1(): {} { LOOKAHEAD("(" EXP1() "&") ("(" EXP1() "&" EXP1() ")") | EXP2() }
 void EXP2(): {} { LOOKAHEAD ("(" RELOP()) ("(" RELOP() EXP2() EXP2() <IS> ")")
@@ -114,11 +112,10 @@ void EXP2(): {} { LOOKAHEAD ("(" RELOP()) ("(" RELOP() EXP2() EXP2() <IS> ")")
    | EXP3() }
 void EXP3(): {} { LOOKAHEAD("(" ( UNARYOP() )? EXP3()) ("(" ( UNARYOP() )? EXP3() ")") | EXP4() }
 void EXP4(): {} { LOOKAHEAD("(" EXP4() <HMMQ> ) ("(" EXP4() <HMMQ> EXP4() <HMM> EXP4() ")") | EXP5() }
-void EXP5(): {} { ARRAY() | LIT() | LOOKAHEAD( <ID> "." ) ARRAYLOOKUP() | LOOKAHEAD("{") OBJECT()
-   | LOOKAHEAD((<ID>".")?"("ARGS()")") FUNCALL() | <ID>}
+void EXP5(): {} { ARRAY() | LIT() |  LOOKAHEAD("{") OBJECT() 
+   | LOOKAHEAD((<ID>".")?"("ARGS()")") FUNCALL() | <ID> }
 void LIT(): {} { <NUMLIT> | <STRLIT> }
 void ARRAY(): {} { ("[" ( (<BR>)? EXP() ("," (<BR>)? EXP())* (<BR>)?)* "]") }
-void ARRAYLOOKUP(): {} { <ID> "." "(" <NUMLIT> (".""." <NUMLIT>)? ")" <GET> }
 void OBJECT(): {} { "{" (":" <ID> EXP())* "}" (<TO>  <BE>  <ID>)? ","  (<ID> )? <TRAINING>  <BEGINS> }
 void ANONFUN(): {} { BLOCK() <GIVEN> ARGS() }
 void FUNCALL(): {} { (<ID>".")?"("ARGS()")"(<ID> | ANONFUN()) }
