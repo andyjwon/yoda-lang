@@ -99,7 +99,8 @@ void PARAMS(): {} { <NOTHING> | (<ID> (  <AND>  <ID>)*) }
 void ASSIGNMENT(): {} { EXP() (<AND> EXP())* ","  <ID> (  <AND>  <ID>)*  (<BECOME> | <BECOMES>) }
 void PRINTSTMT(): {} { EXP() <YOU>  <PRINT> }
 void RETURNSTMT(): {} { <GIVEBACK> EXP() <YOU>  <MUST> }
-void CONDITIONAL(): {} { BLOCK() <IF> EXP() ((<BR>)+ <ELSE> BLOCK() (<IF> EXP())? )* }
+void CONDITIONAL(): {} { BLOCK() <IF> "(" EXP() ")" (LOOKAHEAD((<BR>)+ <ELSE> BLOCK() <IF>) (<BR>)+ <ELSE> BLOCK() <IF> "(" EXP() ")")*  
+    (LOOKAHEAD((<BR>)+ <ELSE>)(<BR>)+ <ELSE> BLOCK() )?}
 void TIMESLOOP(): {} { BLOCK() EXP() <TIMES> }
 void FORLOOP(): {} { BLOCK() <AS>  <THROUGH> RANGE() <ID>  <RUNS> }
 void WHILELOOP(): {} { BLOCK() <WHILE> EXP() }
