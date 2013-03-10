@@ -84,7 +84,7 @@ void STMT(): {} {
    | LOOKAHEAD(EXP() "," <ID> <MUST> <BE>) CONSTDEC()
    | LOOKAHEAD(<FROM> | (EXP() (<AND> EXP())*  "," <ID> ( <AND> <ID>)* (<BEGIN> | <BEGINS>))) VARDEC()
    | LOOKAHEAD(EXP() (<AND> EXP())* "," <ID> ( <AND> <ID>)* (<BECOME> | <BECOMES>)) ASSIGNMENT()
-   | LOOKAHEAD((<ID> ".") | ("(" ARGS())) FUNCALL()
+   | LOOKAHEAD((<ID> ".") | ("(" ARGS() <ID>)) FUNCALL()
    | LOOKAHEAD(<GIVEBACK>) RETURNSTMT()
    | LOOKAHEAD(FUNCALL()) PROCCALL()
    | EXP()
@@ -105,15 +105,15 @@ void FORLOOP(): {} { BLOCK() <AS>  <THROUGH> RANGE() <ID>  <RUNS> }
 void WHILELOOP(): {} { BLOCK() <WHILE> EXP() }
 void PROCCALL(): {} { FUNCALL() }
 void BLOCK(): {} { ("{" STMT() ( (<BR>)+ STMT())* "}") }
-void EXP(): {} { LOOKAHEAD("(" EXP() "|") ("(" EXP() "|" EXP() ")") | EXP1() }
-void EXP1(): {} { LOOKAHEAD("(" EXP1() "&") ("(" EXP1() "&" EXP1() ")") | EXP2() }
-void EXP2(): {} { LOOKAHEAD ("(" RELOP()) ("(" RELOP() EXP2() EXP2() <IS> ")")
-   | LOOKAHEAD ("(" ARITHOP()) ("(" ARITHOP() EXP2() (EXP2())+ ")")
+void EXP(): {} {  EXP1() ("|" EXP1() )*}
+void EXP1(): {} {  EXP2() ("&" EXP2() )*}
+void EXP2(): {} { ( RELOP() EXP3() EXP3() <IS> )
+   |  (ARITHOP() EXP3() (EXP3())+ )
    | EXP3() }
-void EXP3(): {} { LOOKAHEAD("(" ( UNARYOP() )? EXP3()) ("(" ( UNARYOP() )? EXP3() ")") | EXP4() }
-void EXP4(): {} { LOOKAHEAD("(" EXP4() <HMMQ> ) ("(" EXP4() <HMMQ> EXP4() <HMM> EXP4() ")") | EXP5() }
+void EXP3(): {} { (UNARYOP()  EXP4() )  | EXP4()}
+void EXP4(): {} { ( EXP5() (<HMMQ> EXP5() <HMM> EXP5() )?)}
 void EXP5(): {} { ARRAY() | LIT() |  LOOKAHEAD("{") OBJECT() 
-   | LOOKAHEAD((<ID>".")?"("ARGS()")") FUNCALL() | <ID> }
+   | LOOKAHEAD((<ID>".")?"("ARGS()")") FUNCALL() | <ID> | "(" EXP() ")"}
 void LIT(): {} { <NUMLIT> | <STRLIT> }
 void ARRAY(): {} { ("[" ( (<BR>)? EXP() ("," (<BR>)? EXP())* (<BR>)?)* "]") }
 void OBJECT(): {} { "{" (":" <ID> EXP())* "}" (<TO>  <BE>  <ID>)? ","  (<ID> )? <TRAINING>  <BEGINS> }
@@ -123,6 +123,6 @@ void RELOP(): {} { "<" | "<=" | "=" | "!=" | ">=" | ">" }
 void ARITHOP(): {} { "*" | "/" | "+" | "-" | "^" }
 void UNARYOP(): {} { "!" }
 
-void ARGS(): {} { ARGS1() (LOOKAHEAD (2) "," ARGS1())* }
+void ARGS(): {} { (ARGS1() (LOOKAHEAD (2) "," ARGS1())*)? }
 void ARGS1(): {} { EXP5() }
 void RANGE(): {} { (LOOKAHEAD (2) ( LOOKAHEAD (2) <NUMLIT> | LOOKAHEAD (2) <ID> | FUNCALL()) (LOOKAHEAD (2) <TO> | <THROUGH>))? (LOOKAHEAD (2) <NUMLIT> | LOOKAHEAD (2) <ID> | FUNCALL()) (<BY> EXP3())? }
