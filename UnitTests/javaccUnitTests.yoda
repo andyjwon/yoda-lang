@@ -76,7 +76,7 @@ p, q begins
 } given nothing, counter does                     
 
 {                                                 
-  {s you print} as through 0 to n _1 runs         
+  {s you print} as through 0 to n repeat1 runs         
 } given s and n, echo does
     
 

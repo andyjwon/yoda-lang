@@ -84,7 +84,7 @@ void STMT(): {} {
    | LOOKAHEAD(EXP() "," <ID> <MUST> <BE>) CONSTDEC()
    | LOOKAHEAD(<FROM> | (EXP() (<AND> EXP())*  "," <ID> ( <AND> <ID>)* (<BEGIN> | <BEGINS>))) VARDEC()
    | LOOKAHEAD(EXP() (<AND> EXP())* "," <ID> ( <AND> <ID>)* (<BECOME> | <BECOMES>)) ASSIGNMENT()
-   | LOOKAHEAD((<ID> ".") | ("(" ARGS() <ID>)) FUNCALL()
+   | LOOKAHEAD((<ID> ".") | ("(" ARGS() ")" <ID>)) FUNCALL()
    | LOOKAHEAD(<GIVEBACK>) RETURNSTMT()
    | LOOKAHEAD(FUNCALL()) PROCCALL()
    | EXP()
@@ -113,8 +113,12 @@ void EXP2(): {} { ( RELOP() EXP3() EXP3() <IS> )
    | EXP3() }
 void EXP3(): {} { (UNARYOP()  EXP4() )  | EXP4()}
 void EXP4(): {} { ( EXP5() (<HMMQ> EXP5() <HMM> EXP5() )?)}
-void EXP5(): {} { ARRAY() | LIT() |  LOOKAHEAD("{") OBJECT()
-   | LOOKAHEAD((<ID>".")?"("ARGS()")") FUNCALL() | <ID> | "(" EXP() ")"}
+void EXP5(): {} { ARRAY() 
+   | LIT()
+   | LOOKAHEAD("{" (":" | "}")) OBJECT()
+   | LOOKAHEAD((<ID> ".")? "("ARGS()")") FUNCALL()
+   | <ID>
+   | "(" EXP() ")"}
 void LIT(): {} { <NUMLIT> | <STRLIT> }
 void ARRAY(): {} { ("[" ( (<BR>)? EXP() ("," (<BR>)? EXP())* (<BR>)?)* "]") }
 void OBJECT(): {} { "{" (":" <ID> EXP())* "}" (<TO>  <BE>  <ID>)? ","  (<ID> )? <TRAINING>  <BEGINS> }
@@ -124,6 +128,10 @@ void RELOP(): {} { "<" | "<=" | "=" | "!=" | ">=" | ">" }
 void ARITHOP(): {} { "*" | "/" | "+" | "-" | "^" }
 void UNARYOP(): {} { "!" }
 
-void ARGS(): {} { (ARGS1() (LOOKAHEAD (2) "," ARGS1())*)? }
-void ARGS1(): {} { EXP5() }
+void ARGS(): {} { (ARGS1() ("," ARGS1())*)? }
+void ARGS1(): {} { LOOKAHEAD(BLOCK() <GIVEN> PARAMS() "," <ID> <DOES>) PROCDEC()
+   | LOOKAHEAD(BLOCK() <GIVEN> PARAMS() "," <ID> <GIVES>) FUNDEC()
+   | LOOKAHEAD(BLOCK() <GIVEN> ARGS()) ANONFUN()
+   | LOOKAHEAD((<ID>".")? "("ARGS()")") FUNCALL()
+   | EXP5() }
 void RANGE(): {} { (<NUMLIT> | <ID> | FUNCALL() ) <TO> (<NUMLIT> | <ID> | FUNCALL() ) }
