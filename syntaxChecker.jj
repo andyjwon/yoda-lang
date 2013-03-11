@@ -97,9 +97,10 @@ void PROCDEC(): {} { BLOCK() <GIVEN> PARAMS() ","  <ID>  <DOES> }
 void FUNDEC(): {} { BLOCK() <GIVEN> PARAMS() ","  <ID>  <GIVES> }
 void PARAMS(): {} { <NOTHING> | (<ID> (  <AND>  <ID>)*) }
 void ASSIGNMENT(): {} { ( INCOP() <ID> )
+   | (UPDATE() <ID> EXP5())
    | (EXP() (<AND> EXP())* ","  <ID> (  <AND>  <ID>)*  (<BECOME> | <BECOMES>))}
 void PRINTSTMT(): {} { EXP() <YOU>  <PRINT> }
-void RETURNSTMT(): {} { <GIVEBACK> EXP() <YOU>  <MUST> }
+void RETURNSTMT(): {} { <GIVEBACK> ( ANONFUN() | EXP()) <YOU>  <MUST> }
 void CONDITIONAL(): {} { BLOCK() <IF> "(" EXP() ")" (LOOKAHEAD((<BR>)+ <ELSE> BLOCK() <IF>) (<BR>)+ <ELSE> BLOCK() <IF> "(" EXP() ")")*  
     (LOOKAHEAD((<BR>)+ <ELSE>)(<BR>)+ <ELSE> BLOCK() )?}
 void TIMESLOOP(): {} { BLOCK() EXP() <TIMES> }
@@ -117,24 +118,25 @@ void EXP3(): {} { (UNARYOP()  EXP4() )  | EXP4()}
 void EXP4(): {} { ( EXP5() (<HMMQ> (EXP5() | ASSIGNMENT()) <HMM> (EXP5() | ASSIGNMENT()) )?)}
 void EXP5(): {} { ARRAY() 
    | LIT()
-   | LOOKAHEAD("{" (":" | "}")) OBJECT()
+   | LOOKAHEAD("{" (<BR>)* (":" | "}")) OBJECT()
    | LOOKAHEAD((<ID> ".")? "("ARGS()")") FUNCALL()
    | <ID>
    | "(" EXP() ")"}
 void LIT(): {} { <NUMLIT> | <STRLIT> }
 void ARRAY(): {} { ("[" ( (<BR>)? EXP() ("," (<BR>)? EXP())* (<BR>)?)* "]") }
-void OBJECT(): {} { "{" (":" <ID> EXP())* "}" (<TO>  <BE>  <ID>)? ","  (<ID> )? <TRAINING>  <BEGINS> }
-void ANONFUN(): {} { BLOCK() <GIVEN> ARGS() }
+void OBJECT(): {} { "{" (<BR>)* (":" <ID> EXP5() ( "," (<BR>)* ":" <ID> EXP5())* (<BR>)* )? (<BR>)* "}" (<TO>  <BE>  <ID>)? ","  (<ID> )? <TRAINING>  <BEGINS> }
+void ANONFUN(): {} { BLOCK() <GIVEN> PARAMS() }
 void FUNCALL(): {} { (<ID>".")?"("ARGS()")"(<ID> | ANONFUN()) }
 void RELOP(): {} { "<" | "<=" | "=" | "!=" | ">=" | ">" }
-void ARITHOP(): {} { "*" | "/" | "+" | "-" | "%" | "^" }
+void ARITHOP(): {} { "*" | "/" | "+" | "-" | "%" | "^" | UPDATE() }
 void UNARYOP(): {} { "!" }
-void INCOP(): {} {"++" | "--"}
+void INCOP(): {} { "++" | "--" }
+void UPDATE(): {} { "+=" | "-="}
 
 void ARGS(): {} { (ARGS1() ("," ARGS1())*)? }
 void ARGS1(): {} { LOOKAHEAD(BLOCK() <GIVEN> PARAMS() "," <ID> <DOES>) PROCDEC()
    | LOOKAHEAD(BLOCK() <GIVEN> PARAMS() "," <ID> <GIVES>) FUNDEC()
-   | LOOKAHEAD(BLOCK() <GIVEN> ARGS()) ANONFUN()
+   | LOOKAHEAD(BLOCK() <GIVEN> PARAMS()) ANONFUN()
    | LOOKAHEAD((<ID>".")? "("ARGS()")") FUNCALL()
    | EXP5() }
 void RANGE(): {} { (<NUMLIT> | <ID> | FUNCALL() ) <TO> (<NUMLIT> | <ID> | FUNCALL() ) }

@@ -152,8 +152,7 @@ else {give back "F" you must}
   : radius 1,                                     
   {                                               
     * (radius, 2)power ()PI                    
-  }, given nothing area gives                     
-}, circle training begins                         
+  }, given nothing area gives                     }, circle training begins                         
 
 {} to be circle, c1 training begins
 
