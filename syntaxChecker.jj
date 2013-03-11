@@ -96,23 +96,25 @@ void CONSTDEC(): {} { EXP() "," <ID>  <MUST>  <BE> }
 void PROCDEC(): {} { BLOCK() <GIVEN> PARAMS() ","  <ID>  <DOES> }
 void FUNDEC(): {} { BLOCK() <GIVEN> PARAMS() ","  <ID>  <GIVES> }
 void PARAMS(): {} { <NOTHING> | (<ID> (  <AND>  <ID>)*) }
-void ASSIGNMENT(): {} { EXP() (<AND> EXP())* ","  <ID> (  <AND>  <ID>)*  (<BECOME> | <BECOMES>) }
+void ASSIGNMENT(): {} { ( INCOP() <ID> )
+   | (EXP() (<AND> EXP())* ","  <ID> (  <AND>  <ID>)*  (<BECOME> | <BECOMES>))}
 void PRINTSTMT(): {} { EXP() <YOU>  <PRINT> }
 void RETURNSTMT(): {} { <GIVEBACK> EXP() <YOU>  <MUST> }
 void CONDITIONAL(): {} { BLOCK() <IF> "(" EXP() ")" (LOOKAHEAD((<BR>)+ <ELSE> BLOCK() <IF>) (<BR>)+ <ELSE> BLOCK() <IF> "(" EXP() ")")*  
     (LOOKAHEAD((<BR>)+ <ELSE>)(<BR>)+ <ELSE> BLOCK() )?}
 void TIMESLOOP(): {} { BLOCK() EXP() <TIMES> }
-void FORLOOP(): {} { BLOCK() <AS>  <THROUGH> RANGE() <ID>  <RUNS> }
+void FORLOOP(): {} { BLOCK() <AS>  <THROUGH> (LOOKAHEAD( (<NUMLIT> | <ID> | FUNCALL() ) <TO>) RANGE()
+                                             | EXP5() ) (<BY> EXP5())? <ID>  <RUNS> }
 void WHILELOOP(): {} { BLOCK() <WHILE> EXP() }
 void PROCCALL(): {} { FUNCALL() }
 void BLOCK(): {} { ("{" (<BR>)* STMT() ((<BR>)+ (STMT())?)* (<BR>)*"}") }
 void EXP(): {} {  EXP1() ("|" EXP1() )*}
 void EXP1(): {} {  EXP2() ("&" EXP2() )*}
 void EXP2(): {} { ( RELOP() EXP3() EXP3() <IS> )
-   |  (ARITHOP() EXP3() (EXP3())+ )
+   | (ARITHOP() EXP3() (EXP3())+ )
    | EXP3() }
 void EXP3(): {} { (UNARYOP()  EXP4() )  | EXP4()}
-void EXP4(): {} { ( EXP5() (<HMMQ> EXP5() <HMM> EXP5() )?)}
+void EXP4(): {} { ( EXP5() (<HMMQ> (EXP5() | ASSIGNMENT()) <HMM> (EXP5() | ASSIGNMENT()) )?)}
 void EXP5(): {} { ARRAY() 
    | LIT()
    | LOOKAHEAD("{" (":" | "}")) OBJECT()
@@ -125,8 +127,9 @@ void OBJECT(): {} { "{" (":" <ID> EXP())* "}" (<TO>  <BE>  <ID>)? ","  (<ID> )? 
 void ANONFUN(): {} { BLOCK() <GIVEN> ARGS() }
 void FUNCALL(): {} { (<ID>".")?"("ARGS()")"(<ID> | ANONFUN()) }
 void RELOP(): {} { "<" | "<=" | "=" | "!=" | ">=" | ">" }
-void ARITHOP(): {} { "*" | "/" | "+" | "-" | "^" }
+void ARITHOP(): {} { "*" | "/" | "+" | "-" | "%" | "^" }
 void UNARYOP(): {} { "!" }
+void INCOP(): {} {"++" | "--"}
 
 void ARGS(): {} { (ARGS1() ("," ARGS1())*)? }
 void ARGS1(): {} { LOOKAHEAD(BLOCK() <GIVEN> PARAMS() "," <ID> <DOES>) PROCDEC()
