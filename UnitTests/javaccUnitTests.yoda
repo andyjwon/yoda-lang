@@ -150,9 +150,10 @@ else {give back "F" you must}
   : y 0,                                          
   : color "black",                                
   : radius 1,                                     
-  {                                               
-    * (radius, 2)power ()PI                    
-  }, given nothing area gives                     }, circle training begins                         
+  : area {                                               
+           (* (radius, 2)power ()PI)
+         } given nothing, area gives
+}, circle training begins                         
 
 {} to be circle, c1 training begins
 
@@ -162,5 +163,3 @@ else {give back "F" you must}
 ()PI         
 (x, 2)power  
 (x)sqrt
-    
-0x, 0b, 0o 

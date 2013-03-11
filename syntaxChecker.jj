@@ -124,7 +124,7 @@ void EXP5(): {} { ARRAY()
    | "(" EXP() ")"}
 void LIT(): {} { <NUMLIT> | <STRLIT> }
 void ARRAY(): {} { ("[" ( (<BR>)? EXP() ("," (<BR>)? EXP())* (<BR>)?)* "]") }
-void OBJECT(): {} { "{" (<BR>)* (":" <ID> EXP5() ( "," (<BR>)* ":" <ID> EXP5())* (<BR>)* )? (<BR>)* "}" (<TO>  <BE>  <ID>)? ","  (<ID> )? <TRAINING>  <BEGINS> }
+void OBJECT(): {} { "{" (<BR>)* (":" <ID> ( FUNDEC() | EXP5()) ( "," (<BR>)* ":" <ID> (FUNDEC() | EXP5()))* (<BR>)* )? (<BR>)* "}" (<TO>  <BE>  <ID>)? ","  (<ID> )? <TRAINING>  <BEGINS> }
 void ANONFUN(): {} { BLOCK() <GIVEN> PARAMS() }
 void FUNCALL(): {} { (<ID>".")?"("ARGS()")"(<ID> | ANONFUN()) }
 void RELOP(): {} { "<" | "<=" | "=" | "!=" | ">=" | ">" }
