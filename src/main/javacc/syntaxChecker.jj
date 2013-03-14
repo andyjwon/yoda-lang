@@ -1,5 +1,13 @@
 PARSER_BEGIN(SyntaxChecker)
 
+package edu.lmu.cs.xlg.yoda-lang.syntax;
+
+import java.util.List;
+import java.util.ArrayList;
+import java.io.Reader;
+import edu.lmu.cs.xlg.util.Log;
+import edu.lmu.cs.xlg.yoda-lang.entities.*;
+
 public class SyntaxChecker {
     public static void main(String[] args) {
         try {
@@ -71,23 +79,36 @@ TOKEN: {
 }
 
 
-void SCRIPT(): {} { ((<BR>)* STMT()((<BR>)+ | <EOF>))+ (<BR>)* <EOF> }
-void STMT(): {} { 
-     LOOKAHEAD(BLOCK() <WHILE>) WHILELOOP()
-   | LOOKAHEAD(BLOCK() <AS>) FORLOOP()
-   | LOOKAHEAD(BLOCK() <IF>) CONDITIONAL()
-   | LOOKAHEAD(BLOCK() EXP()) TIMESLOOP()
-   | LOOKAHEAD(BLOCK() <GIVEN> PARAMS() "," <ID> <DOES>) PROCDEC()
-   | LOOKAHEAD(BLOCK() <GIVEN> PARAMS() "," <ID> <GIVES>) FUNDEC()
-   | LOOKAHEAD(BLOCK() <GIVEN> ARGS()) ANONFUN()   
-   | LOOKAHEAD(EXP() <YOU> <PRINT>) PRINTSTMT()
-   | LOOKAHEAD(EXP() "," <ID> <MUST> <BE>) CONSTDEC()
-   | LOOKAHEAD(<FROM> | (EXP() (<AND> EXP())*  "," <ID> ( <AND> <ID>)* (<BEGIN> | <BEGINS>))) VARDEC()
-   | LOOKAHEAD(EXP() (<AND> EXP())* "," <ID> ( <AND> <ID>)* (<BECOME> | <BECOMES>)) ASSIGNMENT()
-   | LOOKAHEAD((<ID> ".") | ("(" ARGS() ")" <ID>)) FUNCALL()
-   | LOOKAHEAD(<GIVEBACK>) RETURNSTMT()
-   | LOOKAHEAD(FUNCALL()) PROCCALL()
-   | EXP()
+Script SCRIPT(): {
+    List<Statement> statements = new ArrayList<statement>();
+    Statement s;
+} 
+{ 
+    (<BR>)*
+    (s = STMT() ((<BR>)+ | <EOF>))+ 
+    (<BR>)* <EOF>
+    {return new Script(statements);} 
+}
+
+statement STMT(): {
+    Statement s;
+} 
+{ 
+     LOOKAHEAD(BLOCK() <WHILE>) s = WHILELOOP()
+   | LOOKAHEAD(BLOCK() <AS>) s = FORLOOP()
+   | LOOKAHEAD(BLOCK() <IF>) s = CONDITIONAL()
+   | LOOKAHEAD(BLOCK() EXP()) s = TIMESLOOP()
+   | LOOKAHEAD(BLOCK() <GIVEN> PARAMS() "," <ID> <DOES>) s = PROCDEC()
+   | LOOKAHEAD(BLOCK() <GIVEN> PARAMS() "," <ID> <GIVES>) s = FUNDEC()
+   | LOOKAHEAD(BLOCK() <GIVEN> ARGS()) s = ANONFUN()   
+   | LOOKAHEAD(EXP() <YOU> <PRINT>) s = PRINTSTMT()
+   | LOOKAHEAD(EXP() "," <ID> <MUST> <BE>) s = CONSTDEC()
+   | LOOKAHEAD(<FROM> | (EXP() (<AND> EXP())*  "," <ID> ( <AND> <ID>)* (<BEGIN> | <BEGINS>))) s = VARDEC()
+   | LOOKAHEAD(EXP() (<AND> EXP())* "," <ID> ( <AND> <ID>)* (<BECOME> | <BECOMES>)) s = ASSIGNMENT()
+   | LOOKAHEAD((<ID> ".") | ("(" ARGS() ")" <ID>)) s = FUNCALL()
+   | LOOKAHEAD(<GIVEBACK>) s = RETURNSTMT()
+   | LOOKAHEAD(FUNCALL()) s = PROCCALL()
+   | s = EXP()
 }
 
 void VARDEC(): {} { (EXP() (<AND> EXP())* "," <ID> ( <AND>  <ID>)*  (<BEGIN> | <BEGINS>))
