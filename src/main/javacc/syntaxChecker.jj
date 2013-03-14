@@ -1,0 +1,142 @@
+PARSER_BEGIN(SyntaxChecker)
+
+public class SyntaxChecker {
+    public static void main(String[] args) {
+        try {
+            new SyntaxChecker(new java.io.FileReader(args[0])).SCRIPT();
+            System.out.println("Syntax is okay");
+        } catch (Throwable e) {
+            // Catching Throwable is ugly but JavaCC throws Error objects!
+            System.out.println("Syntax check failed: " + e.getMessage());
+        }
+    }
+}
+
+PARSER_END(SyntaxChecker)
+
+SKIP: { " " | "\t"
+    | <"<(-_-)>" (~["\n","\r"])* ("\n"|"\r")>
+}
+
+SKIP : {
+    "<(-.-)>" : WithinComment
+}
+
+<WithinComment> SKIP :
+{
+    "<(-.-)>" : DEFAULT
+}
+
+<WithinComment> MORE :
+{
+    <~[]>
+}
+
+TOKEN: {
+    "(" | ")" | "{" | "}" | "+" | "*" | ":=" | "|" | "&" | "," | ":" | "."
+    | <IF: ("if")>
+	| <TO: ("to")>
+	| <BY: ("by")>
+	| <AND: ("and")>
+	| <HMM: ("hmm")>
+	| <HMMQ: ("hmm?")>
+	| <IS: ("is?")>
+	| <ELSE: ("else")>
+	| <FROM: ("from")>
+	| <DOES: ("does")>
+	| <RUNS: ("runs")>
+	| <WHILE: ("while")>
+	| <BEGIN: ("begin")>
+	| <BEGINS: ("begins")>
+	| <GIVEN: ("given")>
+	| <GIVES: ("gives")>
+	| <GET: ("get")>
+	| <TIMES: ("times")>
+	| <BECOME: ("become")>
+	| <BECOMES: ("becomes")>
+	| <NOTHING: ("nothing")>
+	| <THROUGH: ("through")>
+	| <AS: ("as")>
+	| <TRAINING: ("training")>
+	| <MUST: ("must")>
+	| <BE: ("be")>
+	| <YOU: ("you")>
+	| <PRINT: ("print")>
+	| <GIVEBACK: ("give back")>
+	| <ID: ((["a"-"z"] | ["A"-"Z"])+(["-"] | ["_"] | ["a"-"z"] | ["A"-"Z"] | ["0"-"9"])*)>
+    | <NUMLIT: (("0x" | "0b" | "0o")? (["0"-"9"])+("."(["0"-"9"])*)?)>
+    | <STRLIT: ("\"" (~["\""] | ("\\\""))* "\"") >
+    | <BR: ("\n" | "\r" | "\r\n" )>
+	
+}
+
+
+void SCRIPT(): {} { ((<BR>)* STMT()((<BR>)+ | <EOF>))+ (<BR>)* <EOF> }
+void STMT(): {} { 
+     LOOKAHEAD(BLOCK() <WHILE>) WHILELOOP()
+   | LOOKAHEAD(BLOCK() <AS>) FORLOOP()
+   | LOOKAHEAD(BLOCK() <IF>) CONDITIONAL()
+   | LOOKAHEAD(BLOCK() EXP()) TIMESLOOP()
+   | LOOKAHEAD(BLOCK() <GIVEN> PARAMS() "," <ID> <DOES>) PROCDEC()
+   | LOOKAHEAD(BLOCK() <GIVEN> PARAMS() "," <ID> <GIVES>) FUNDEC()
+   | LOOKAHEAD(BLOCK() <GIVEN> ARGS()) ANONFUN()   
+   | LOOKAHEAD(EXP() <YOU> <PRINT>) PRINTSTMT()
+   | LOOKAHEAD(EXP() "," <ID> <MUST> <BE>) CONSTDEC()
+   | LOOKAHEAD(<FROM> | (EXP() (<AND> EXP())*  "," <ID> ( <AND> <ID>)* (<BEGIN> | <BEGINS>))) VARDEC()
+   | LOOKAHEAD(EXP() (<AND> EXP())* "," <ID> ( <AND> <ID>)* (<BECOME> | <BECOMES>)) ASSIGNMENT()
+   | LOOKAHEAD((<ID> ".") | ("(" ARGS() ")" <ID>)) FUNCALL()
+   | LOOKAHEAD(<GIVEBACK>) RETURNSTMT()
+   | LOOKAHEAD(FUNCALL()) PROCCALL()
+   | EXP()
+}
+
+void VARDEC(): {} { (EXP() (<AND> EXP())* "," <ID> ( <AND>  <ID>)*  (<BEGIN> | <BEGINS>))
+                    | (<FROM> EXP() "," <ID>  <BEGINS>) }
+void CONSTDEC(): {} { EXP() "," <ID>  <MUST>  <BE> }
+void PROCDEC(): {} { BLOCK() <GIVEN> PARAMS() ","  <ID>  <DOES> }
+void FUNDEC(): {} { BLOCK() <GIVEN> PARAMS() ","  <ID>  <GIVES> }
+void PARAMS(): {} { <NOTHING> | (<ID> (  <AND>  <ID>)*) }
+void ASSIGNMENT(): {} { ( INCOP() <ID> )
+   | (UPDATE() <ID> EXP5())
+   | (EXP() (<AND> EXP())* ","  <ID> (  <AND>  <ID>)*  (<BECOME> | <BECOMES>))}
+void PRINTSTMT(): {} { EXP() <YOU>  <PRINT> }
+void RETURNSTMT(): {} { <GIVEBACK> ( ANONFUN() | EXP()) <YOU>  <MUST> }
+void CONDITIONAL(): {} { BLOCK() <IF> "(" EXP() ")" (LOOKAHEAD((<BR>)+ <ELSE> BLOCK() <IF>) (<BR>)+ <ELSE> BLOCK() <IF> "(" EXP() ")")*  
+    (LOOKAHEAD((<BR>)+ <ELSE>)(<BR>)+ <ELSE> BLOCK() )?}
+void TIMESLOOP(): {} { BLOCK() EXP() <TIMES> }
+void FORLOOP(): {} { BLOCK() <AS>  <THROUGH> (LOOKAHEAD( (<NUMLIT> | <ID> | FUNCALL() ) <TO>) RANGE()
+                                             | EXP5() ) (<BY> EXP5())? <ID>  <RUNS> }
+void WHILELOOP(): {} { BLOCK() <WHILE> EXP() }
+void PROCCALL(): {} { FUNCALL() }
+void BLOCK(): {} { ("{" (<BR>)* STMT() ((<BR>)+ (STMT())?)* (<BR>)*"}") }
+void EXP(): {} {  EXP1() ("|" EXP1() )*}
+void EXP1(): {} {  EXP2() ("&" EXP2() )*}
+void EXP2(): {} { ( RELOP() EXP3() EXP3() <IS> )
+   | (ARITHOP() EXP3() (EXP3())+ )
+   | EXP3() }
+void EXP3(): {} { (UNARYOP()  EXP4() )  | EXP4()}
+void EXP4(): {} { ( EXP5() (<HMMQ> (EXP5() | ASSIGNMENT()) <HMM> (EXP5() | ASSIGNMENT()) )?)}
+void EXP5(): {} { ARRAY() 
+   | LIT()
+   | LOOKAHEAD("{" (<BR>)* (":" | "}")) OBJECT()
+   | LOOKAHEAD((<ID> ".")? "("ARGS()")") FUNCALL()
+   | <ID>
+   | "(" EXP() ")"}
+void LIT(): {} { <NUMLIT> | <STRLIT> }
+void ARRAY(): {} { ("[" ( (<BR>)? EXP() ("," (<BR>)? EXP())* (<BR>)?)* "]") }
+void OBJECT(): {} { "{" (<BR>)* (":" <ID> ( FUNDEC() | EXP5()) ( "," (<BR>)* ":" <ID> (FUNDEC() | EXP5()))* (<BR>)* )? (<BR>)* "}" (<TO>  <BE>  <ID>)? ","  (<ID> )? <TRAINING>  <BEGINS> }
+void ANONFUN(): {} { BLOCK() <GIVEN> PARAMS() }
+void FUNCALL(): {} { (<ID>".")?"("ARGS()")"(<ID> | ANONFUN()) }
+void RELOP(): {} { "<" | "<=" | "=" | "!=" | ">=" | ">" }
+void ARITHOP(): {} { "*" | "/" | "+" | "-" | "%" | "^" | UPDATE() }
+void UNARYOP(): {} { "!" }
+void INCOP(): {} { "++" | "--" }
+void UPDATE(): {} { "+=" | "-="}
+
+void ARGS(): {} { (ARGS1() ("," ARGS1())*)? }
+void ARGS1(): {} { LOOKAHEAD(BLOCK() <GIVEN> PARAMS() "," <ID> <DOES>) PROCDEC()
+   | LOOKAHEAD(BLOCK() <GIVEN> PARAMS() "," <ID> <GIVES>) FUNDEC()
+   | LOOKAHEAD(BLOCK() <GIVEN> PARAMS()) ANONFUN()
+   | LOOKAHEAD((<ID>".")? "("ARGS()")") FUNCALL()
+   | EXP5() }
+void RANGE(): {} { (<NUMLIT> | <ID> | FUNCALL() ) <TO> (<NUMLIT> | <ID> | FUNCALL() ) }
