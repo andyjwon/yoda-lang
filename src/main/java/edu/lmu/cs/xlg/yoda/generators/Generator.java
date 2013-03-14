@@ -1,11 +1,11 @@
-package edu.lmu.cs.xlg.iki.generators;
+package edu.lmu.cs.xlg.yoda.generators;
 
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.lmu.cs.xlg.iki.entities.Entity;
-import edu.lmu.cs.xlg.iki.entities.Program;
+import edu.lmu.cs.xlg.yoda.entities.Entity;
+import edu.lmu.cs.xlg.yoda.entities.Script;
 
 /**
  * An generator that translates an Iki program into some other form.  The result of the translation
@@ -48,12 +48,12 @@ public abstract class Generator {
     /**
      * Generates a target program for the given Iki program.
      *
-     * @param program
+     * @param script
      *     The Iki program (source).
      * @param writer
      *     Writer for the target program.
      */
-    public abstract void generate(Program program, PrintWriter writer);
+    public abstract void generate(Script script, PrintWriter writer);
 
     /**
      * Returns the id for the given entity, creating the id if the entity doesn't already

@@ -1,21 +1,21 @@
-package edu.lmu.cs.xlg.iki.generators;
+package edu.lmu.cs.xlg.yoda.generators;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import edu.lmu.cs.xlg.iki.entities.AssignmentStatement;
-import edu.lmu.cs.xlg.iki.entities.BinaryExpression;
-import edu.lmu.cs.xlg.iki.entities.Block;
-import edu.lmu.cs.xlg.iki.entities.Expression;
-import edu.lmu.cs.xlg.iki.entities.Number;
-import edu.lmu.cs.xlg.iki.entities.Program;
-import edu.lmu.cs.xlg.iki.entities.ReadStatement;
-import edu.lmu.cs.xlg.iki.entities.Statement;
-import edu.lmu.cs.xlg.iki.entities.VariableReference;
-import edu.lmu.cs.xlg.iki.entities.WhileStatement;
-import edu.lmu.cs.xlg.iki.entities.WriteStatement;
+import edu.lmu.cs.xlg.yoda.entities.AssignmentStatement;
+import edu.lmu.cs.xlg.yoda.entities.BinaryExpression;
+import edu.lmu.cs.xlg.yoda.entities.Block;
+import edu.lmu.cs.xlg.yoda.entities.Expression;
+import edu.lmu.cs.xlg.yoda.entities.Number;
+import edu.lmu.cs.xlg.yoda.entities.Script;
+import edu.lmu.cs.xlg.yoda.entities.ReadStatement;
+import edu.lmu.cs.xlg.yoda.entities.Statement;
+import edu.lmu.cs.xlg.yoda.entities.VariableReference;
+import edu.lmu.cs.xlg.yoda.entities.WhileStatement;
+import edu.lmu.cs.xlg.yoda.entities.WriteStatement;
 
 /**
  * A generator that translates an Iki program into assembly language for the x86-84, good
@@ -28,13 +28,13 @@ public class IkiToX86Generator extends Generator {
     private static int numberOfLabelsGenerated = 0;
 
     @Override
-    public void generate(Program program, PrintWriter writer) {
+    public void generate(Script script, PrintWriter writer) {
         this.writer = writer;
 
         emit("\t.globl\tmain");
         emit("\t.text");
         emit("main:");
-        generateBlock(program.getBlock());
+        generateBlock(script.getBlock());
         emit("\tret");
         emit("\t.data");
         emit("READ:\t.ascii\t\"%d\\0\\0\""); // extra 0 for alignment

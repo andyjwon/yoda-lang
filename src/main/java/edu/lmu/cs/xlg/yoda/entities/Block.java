@@ -1,4 +1,4 @@
-package edu.lmu.cs.xlg.iki.entities;
+package edu.lmu.cs.xlg.yoda.entities;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,19 +1,19 @@
-package edu.lmu.cs.xlg.iki.generators;
+package edu.lmu.cs.xlg.yoda.generators;
 
 import java.io.PrintWriter;
 
-import edu.lmu.cs.xlg.iki.entities.AssignmentStatement;
-import edu.lmu.cs.xlg.iki.entities.BinaryExpression;
-import edu.lmu.cs.xlg.iki.entities.Block;
-import edu.lmu.cs.xlg.iki.entities.Declaration;
-import edu.lmu.cs.xlg.iki.entities.Expression;
-import edu.lmu.cs.xlg.iki.entities.Number;
-import edu.lmu.cs.xlg.iki.entities.Program;
-import edu.lmu.cs.xlg.iki.entities.ReadStatement;
-import edu.lmu.cs.xlg.iki.entities.Statement;
-import edu.lmu.cs.xlg.iki.entities.VariableReference;
-import edu.lmu.cs.xlg.iki.entities.WhileStatement;
-import edu.lmu.cs.xlg.iki.entities.WriteStatement;
+import edu.lmu.cs.xlg.yoda.entities.AssignmentStatement;
+import edu.lmu.cs.xlg.yoda.entities.BinaryExpression;
+import edu.lmu.cs.xlg.yoda.entities.Block;
+import edu.lmu.cs.xlg.yoda.entities.Declaration;
+import edu.lmu.cs.xlg.yoda.entities.Expression;
+import edu.lmu.cs.xlg.yoda.entities.Number;
+import edu.lmu.cs.xlg.yoda.entities.Script;
+import edu.lmu.cs.xlg.yoda.entities.ReadStatement;
+import edu.lmu.cs.xlg.yoda.entities.Statement;
+import edu.lmu.cs.xlg.yoda.entities.VariableReference;
+import edu.lmu.cs.xlg.yoda.entities.WhileStatement;
+import edu.lmu.cs.xlg.yoda.entities.WriteStatement;
 
 /**
  * A generator that translates an Iki program into JavaScript.
@@ -21,11 +21,11 @@ import edu.lmu.cs.xlg.iki.entities.WriteStatement;
 public class IkiToJavaScriptGenerator extends Generator {
 
     @Override
-    public void generate(Program program, PrintWriter writer) {
+    public void generate(Script script, PrintWriter writer) {
         this.writer = writer;
 
         emit("(function () {");
-        generateBlock(program.getBlock());
+        generateBlock(script.getBlock());
         emit("}());");
     }
 

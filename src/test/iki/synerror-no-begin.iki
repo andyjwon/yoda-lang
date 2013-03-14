@@ -1,4 +1,0 @@
-begin
-  var x
-  write x;
-end

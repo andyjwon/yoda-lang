@@ -1,4 +1,4 @@
-package edu.lmu.cs.xlg.iki.entities;
+package edu.lmu.cs.xlg.yoda.entities;
 
 import edu.lmu.cs.xlg.util.Log;
 

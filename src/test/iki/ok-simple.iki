@@ -1,7 +1,0 @@
-begin
-  var x;
-  write 2, x;
-  while 4 * x loop
-    read x;
-  end;
-end

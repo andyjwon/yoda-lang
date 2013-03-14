@@ -1,4 +1,4 @@
-package edu.lmu.cs.xlg.iki.entities;
+package edu.lmu.cs.xlg.yoda.entities;
 
 import java.io.PrintWriter;
 import java.lang.reflect.Field;
