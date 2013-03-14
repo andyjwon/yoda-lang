@@ -1,14 +1,14 @@
-PARSER_BEGIN(SyntaxChecker)
+PARSER_BEGIN(Parser)
 
-package edu.lmu.cs.xlg.yoda-lang.syntax;
+package edu.lmu.cs.xlg.yoda.syntax;
 
 import java.util.List;
 import java.util.ArrayList;
 import java.io.Reader;
 import edu.lmu.cs.xlg.util.Log;
-import edu.lmu.cs.xlg.yoda-lang.entities.*;
+import edu.lmu.cs.xlg.yoda.entities.*;
 
-public class SyntaxChecker {
+public class Parser {
     public static void main(String[] args) {
         try {
             new SyntaxChecker(new java.io.FileReader(args[0])).SCRIPT();
@@ -20,7 +20,7 @@ public class SyntaxChecker {
     }
 }
 
-PARSER_END(SyntaxChecker)
+PARSER_END(Parser)
 
 SKIP: { " " | "\t"
     | <"<(-_-)>" (~["\n","\r"])* ("\n"|"\r")>
@@ -80,21 +80,21 @@ TOKEN: {
 
 
 Script SCRIPT(): {
-    List<Statement> statements = new ArrayList<statement>();
+    List<Statement> statements = new ArrayList<Statement>();
     Statement s;
 } 
 { 
     (<BR>)*
-    (s = STMT() ((<BR>)+ | <EOF>))+ 
-    (<BR>)* <EOF>
+    (s = STMT() {statement.add(s);})+ 
+    <EOF>
     {return new Script(statements);} 
 }
 
-statement STMT(): {
+Statement STMT(): {
     Statement s;
 } 
 { 
-     LOOKAHEAD(BLOCK() <WHILE>) s = WHILELOOP()
+     (LOOKAHEAD(BLOCK() <WHILE>) s = WHILELOOP()
    | LOOKAHEAD(BLOCK() <AS>) s = FORLOOP()
    | LOOKAHEAD(BLOCK() <IF>) s = CONDITIONAL()
    | LOOKAHEAD(BLOCK() EXP()) s = TIMESLOOP()
@@ -108,11 +108,25 @@ statement STMT(): {
    | LOOKAHEAD((<ID> ".") | ("(" ARGS() ")" <ID>)) s = FUNCALL()
    | LOOKAHEAD(<GIVEBACK>) s = RETURNSTMT()
    | LOOKAHEAD(FUNCALL()) s = PROCCALL()
-   | s = EXP()
+   | s = EXP())
+   ((<BR>)+ | <EOF>)
+   {return s;}
 }
 
-void VARDEC(): {} { (EXP() (<AND> EXP())* "," <ID> ( <AND>  <ID>)*  (<BEGIN> | <BEGINS>))
-                    | (<FROM> EXP() "," <ID>  <BEGINS>) }
+Variable VARDEC(): {
+    List<String> tokens = new ArrayList<String>;
+    Token t;
+    List<Expression> exps = new ArrayList<Expression>;
+    Expression e;
+    boolean constant = false;
+} 
+{ 
+	((e = EXP() ){exps.add(e);} (<AND> (e = EXP()) {expr.add(e);} )* "," (t = <ID>) {tokens.add(t.image);} 
+		( <AND>  (t = <ID>) {tokens.add(t.image);})*  (<BEGIN> | <BEGINS>))
+        | (<FROM> EXP() "," (t = <ID>) {tokens.add(t.image);}  <BEGINS>) 
+    {return new Variable(t, e, constant);}
+}
+                    
 void CONSTDEC(): {} { EXP() "," <ID>  <MUST>  <BE> }
 void PROCDEC(): {} { BLOCK() <GIVEN> PARAMS() ","  <ID>  <DOES> }
 void FUNDEC(): {} { BLOCK() <GIVEN> PARAMS() ","  <ID>  <GIVES> }
