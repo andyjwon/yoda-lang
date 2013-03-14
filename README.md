@@ -346,40 +346,41 @@ The tokens `NUMLIT`, `STRLIT`, `ID`, and `BR` are defined in the microsyntax bel
                   |  EXP (and EXP)* ','  ID (and  ID)*  (become | becomes)
     PRINTSTMT     →  EXP you print
     RETURNSTMT    →  give back (ANONFUN | EXP) you must
-    CONDITIONAL   →  BLOCK if EXPR (BR (else BLOCK if EXPR BR)* else BLOCK)?
+    CONDITIONAL   →  BLOCK if '(' EXP ')' (LOOKAHEAD((BR)+ else BLOCK if) (BR)+ else BLOCK() if '(' EXP() ')')*
+                    (LOOKAHEAD((BR)+ else)(BR)+ else BLOCK )?
     TIMESLOOP     →  BLOCK EXP times
-    FORLOOP       →  BLOCK as through RANGE ID runs
+    FORLOOP       →  BLOCK as through ( (NUMLIT | ID | FUNCALL ) to RANGE | EXP5 ) (by EXP5)? ID runs
     WHILELOOP     →  BLOCK while EXP
     PROCCALL      →  FUNCALL
     BLOCK         →  '{' (BR)* STMT ((BR)+ (STMT)?)* (BR)*'}'
-    EXP           →  '(' EXP '|' EXP ')'
-                  | EXP1
-    EXP1          →  '(' EXP1 '&' EXP1 ')'
-                  |  EXP2
-    EXP2          →  '(' RELOP EXP2 EXP2 is'?' ')'
-                  |  '(' ARITHOP EXP2 (EXP2)+ ')'
+    EXP           →  EXP1 ('|' EXP1 )*
+    EXP1          →  EXP2 ('&' EXP2 )*
+    EXP2          →  ( RELOP EXP3 EXP3 is )
+                  |  (ARITHOP EXP3 (EXP3)+ )
                   |  EXP3
-    EXP3          →  '(' UNARYOP EXP3 ')'
+    EXP3          →  (UNARYOP  EXP4 )
                   |  EXP4
-    EXP4          →  '(' EXP4 hmm'?' EXP4 hmm EXP4 ')'
-                  |  EXP5
-    EXP5          →  LIT | ID | ARRAY | ARRAYLOOKUP | OBJECT | FUNCALL
-    LIT           →  true | FALSE | NUMLIT | STRLIT
+    EXP4          →  ( EXP5 (hmm'?' (EXP5 | ASSIGNMENT) hmm (EXP5 | ASSIGNMENT) )?)
+    EXP5          →  ARRAY | LIT | OBJECT | FUNCALL | ID | '(' EXP ')'
+    LIT           →  NUMLIT | STRLIT
     ARRAY         →  '[' ']'
                   |  '[' BR? EXP (',' BR? EXP)* BR? ']'
-    ARRAYLOOKUP   →  ID'['NUMLIT (':' NUMLIT)?]'
-    OBJECT        →  '{'(':' ID EXP)*'}' (to be ID)? ',' ID? training begins
+    OBJECT        →  '{' (BR)* (':' ID ( FUNDEC | EXP5) ( ',' (BR)* ':' ID (FUNDEC | EXP5))* 
+                    (BR)* )? (BR)* '}' (to  be  ID)? ','  (ID )? training begins
     ANONFUN       →  BLOCK given ARGS
     FUNCALL       →  (ID'.')?'('ARGS')'(ID | ANONFUN)
-    ARGS          →  ARGS1 (',' ARGS1)*
-    ARGS1         →  EXP6
+    ARGS          →  (ARGS1 (',' ARGS1)*)?
+    ARGS1         →  PROCDEC | FUNDEC | ANONFUN | FUNCALL | EXP5
     RELOP         →  '<' | '<=' | '=' | '!=' | '>=' | '>'
     ARITHOP       →  '*' | '/' | '+' | '-' | '^'
     UNARYOP       →  '!'
+    INCOP         →  '++' | '--'
+    UPDATE        →  '+=' | '-='
+
 
 The Microsyntax is informally defined as follows:
 
-    RANGE         →  ((NUMLIT | ID | FUNCALL) (to | through))? (NUMLIT | ID | FUNCALL) (by EXP3)?
+    RANGE         →  ((NUMLIT | ID | FUNCALL) to (NUMLIT | ID | FUNCALL)
 
     ID            →  [a-Z]+([-_a-Z0-9])*
     BR            →  NEWLINE
