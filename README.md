@@ -126,7 +126,7 @@ String Literal Escapes
 Are strings mutable?
 
     "yoda", x begins                                        var x = "yoda";
-    (+ x " loves pie" ), x becomes                       x += " loves pie";
+    (+ x " loves pie" ), x becomes                          x += " loves pie";
 
 String Comparison
 
@@ -134,17 +134,17 @@ String Comparison
 
 String Concatenation
 
-    (+ "hi" "bye" )                                      "hi" + "bye"
+    (+ "hi" "bye" )                                         "hi" + "bye"
 
 Function declaration, one parameter
 
-    {(* x x )} given x, square gives                     var square = function (x) {
+    {(* x x )} given x, square gives                        var square = function (x) {
                                                               return x * x;
                                                             };
 
 Function declaration, two parameters
 
-    {(+ x y )} given x and y, plus gives                 var plus = function (x, y) {
+    {(+ x y )} given x and y, plus gives                    var plus = function (x, y) {
                                                               return x + y;
                                                             };
 Function declaration, zero parameters
@@ -166,13 +166,13 @@ Function call
 
     (8)square                                               square(8)
     (7, 4)plus                                              plus(7, 4)
-    ((8, (- 2 (11)square ))plus)square                   square(plus(8, 2 - square(11)))
-    (+ (155, 71)bmi ()zero ) you print                   console.log(bmi(155, 71) + zero());
+    ((8, (- 2 (11)square ))plus)square                      square(plus(8, 2 - square(11)))
+    (+ (155, 71)bmi ()zero ) you print                      console.log(bmi(155, 71) + zero());
 
 Procedure declaration (function that does not return anything)
 
     {                                                       var greet_her = function (name) {
-      (+ "Hello, " name ) you print                              console.log("Hello, " + name);
+      (+ "Hello, " name ) you print                           console.log("Hello, " + name);
     } given name, greet_her does                            };
 
     {                                                       var greet = function () {
@@ -207,9 +207,9 @@ Function as parameter
 
 Anonymous function
 
-    {(* 3 x )} given x                                   function (x) {return 3 * x;}
+    {(* 3 x )} given x                                      function (x) {return 3 * x;}
 
-    ({(* x x )} given x, 9)twice                         twice(function (x) {return x * x;}, 9)
+    ({(* x x )} given x, 9)twice                            twice(function (x) {return x * x;}, 9)
 
 Conditional Expressions
 
@@ -252,7 +252,7 @@ For loops
 While loops
 
     {                                                       while (n != 1) {
-      {(+ (* 3 n ) 1 ),n becomes} if(= 0 (% n 2) is?)   if (n % 2 === 0) {
+      {(+ (* 3 n ) 1 ),n becomes} if(= 0 (% n 2) is?)         if (n % 2 === 0) {
       else {(/ n 2 ), n becomes                                n = 3 * n + 1;
     } while (!= 1 n is?)                                      } else {
                                                                 n = n / 2;
@@ -277,7 +277,7 @@ Closure
 
     {                                                       var counter = function (i) {
       0, i begins                                             var i = 0;
-      give back {(+= i 1 )} given nothing you must         return function () {i += 1;};
+      give back {(+= i 1 )} given nothing you must            return function () {i += 1;};
     } given i, counter gives                                };
 
 Objects
@@ -346,8 +346,7 @@ The tokens `NUMLIT`, `STRLIT`, `ID`, and `BR` are defined in the microsyntax bel
                   |  EXP (and EXP)* ','  ID (and  ID)*  (become | becomes)
     PRINTSTMT     →  EXP you print
     RETURNSTMT    →  give back (ANONFUN | EXP) you must
-    CONDITIONAL   →  BLOCK if '(' EXP ')' (LOOKAHEAD((BR)+ else BLOCK if) (BR)+ else BLOCK() if '(' EXP() ')')*
-                    (LOOKAHEAD((BR)+ else)(BR)+ else BLOCK )?
+    CONDITIONAL   →  BLOCK if '(' EXP ')' ( (BR)+ else BLOCK() if '(' EXP() ')')* ((BR)+ else BLOCK )?
     TIMESLOOP     →  BLOCK EXP times
     FORLOOP       →  BLOCK as through ( (NUMLIT | ID | FUNCALL ) to RANGE | EXP5 ) (by EXP5)? ID runs
     WHILELOOP     →  BLOCK while EXP
