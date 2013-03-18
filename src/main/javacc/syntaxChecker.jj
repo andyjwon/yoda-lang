@@ -114,8 +114,9 @@ Statement STMT(): {
    {return s;}
 }
 
-Variable VARDEC(): {
+List<Variable> VARDEC(): {
     List<String> tokens = new ArrayList<String>();
+    List<Variable> variables = new ArrayList<Variable>();
     Token t;
     List<Expression> exps = new ArrayList<Expression>();
     Expression e;
@@ -126,7 +127,10 @@ Variable VARDEC(): {
         ( <AND>  (t = <ID>) {tokens.add(t.image);})*  (<BEGIN> | <BEGINS>))
         | (<FROM> EXP() "," (t = <ID>) {tokens.add(t.image);}  <BEGINS>)
     // TODO: Must account for multiple declarations.
-    {return new Variable(t.image, e, constant);}
+    {for(int i = 0; i < tokens.size(); i++){
+        variables.add(new Variable(tokens.get(i), exps.get(i), constant));
+    }
+    return variables;}
 }
 
 Variable CONSTDEC(): {
@@ -140,24 +144,37 @@ Variable CONSTDEC(): {
 }
 
 Procedure PROCDEC(): {
+	Token t;
+	Block b;
+	List<Variable> params = new ArrayList<Variable>();
 }
 {
-    (BLOCK() <GIVEN> PARAMS() ","  <ID>  <DOES>)    {return new Procedure();}
+    ((b = BLOCK()) <GIVEN> (PARAMS(params)) ","  (t = <ID>)  <DOES>)    {return new Procedure(t.image, params, b);}
 }
 
 Function FUNDEC(): {
+	Token t;
+	Block b;
+	List<Variable> params = new ArrayList<Variable>();
 }
 {
-    (BLOCK() <GIVEN> PARAMS() ","  <ID>  <GIVES>)
-    {return new Function();}
+    ((b = BLOCK()) <GIVEN> (PARAMS(params)) ","  (t = <ID>)  <GIVES>)
+    {return new Function(t.image, params, b);}
 }
-void PARAMS(): {
+void PARAMS(List<Variable> params): {
+	Token t;
 }
 {
-    (<NOTHING> | (<ID> (  <AND>  <ID>)*))
+    (<NOTHING> | (t = <ID> {params.add(new Variable(t.image, null, false));}
+     (  <AND>  t = <ID> {params.add(new Variable(t.image, null, false));})*))
 }
 
-Statement ASSIGNMENT(): {
+List<Statement> ASSIGNMENT(): {
+	List<Token> tokens = new ArrayList<Token>();
+	List<Expression> exps = new ArrayList<Expression>();
+	List<Statement> stmts = new ArrayList<Statement>();
+	Token t;
+	Expression e;
 }
 {
     (( INCOP() <ID> )
@@ -167,21 +184,34 @@ Statement ASSIGNMENT(): {
 }
 
 Statement PRINTSTMT(): {
+	Expression e;
 }
 {
-    (EXP() <YOU>  <PRINT>)
-    {return new Statement();}
+    (e = EXP() <YOU> <PRINT>)
+    {return new PrintStatement(e);}
 }
 
 Statement RETURNSTMT(): {
+	Expression e;
+	Function f;
 }
 {
-    (<GIVEBACK> ( ANONFUN() | EXP()) <YOU>  <MUST>)
-    {return new Statement();}
+    (<GIVEBACK> ( f = ANONFUN() | e = EXP()) <YOU>  <MUST>)
+    {if(f == null){
+    	return new Statement(e);
+    }else
+    	return new Statement(f);
+    }
 }
 Statement CONDITIONAL(): {} { BLOCK() <IF> "(" EXP() ")" (LOOKAHEAD((<BR>)+ <ELSE> BLOCK() <IF>) (<BR>)+ <ELSE> BLOCK() <IF> "(" EXP() ")")*
     (LOOKAHEAD((<BR>)+ <ELSE>)(<BR>)+ <ELSE> BLOCK() )?}
-Statement TIMESLOOP(): {} { BLOCK() EXP() <TIMES> }
+Statement TIMESLOOP(): {
+	Block b;
+	Expression e;
+} 
+{ (b = BLOCK() e = EXP() <TIMES>)
+  {return new TimesLoop(e, b);}
+}
 Statement FORLOOP(): {} { BLOCK() <AS>  <THROUGH> (LOOKAHEAD( (<NUMLIT> | <ID> | FUNCALL() ) <TO>) RANGE()
                                              | EXP5() ) (<BY> EXP5())? <ID>  <RUNS> }
 Statement WHILELOOP(): {} { BLOCK() <WHILE> EXP() }

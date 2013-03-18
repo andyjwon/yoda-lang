@@ -32,8 +32,8 @@ public class ReturnStatement extends Statement {
         } else /* owner instanceof Function */ {
             // Returning something from a function, so typecheck
             expression.analyze(log, table, owner, inLoop);
-            expression.assertAssignableTo(Function.class.cast(owner).getReturnType(),
-                    log, "return.type.error");
+            //expression.assertAssignableTo(Function.class.cast(owner).getReturnType(),
+              //      log, "return.type.error");
         }
     }
 }

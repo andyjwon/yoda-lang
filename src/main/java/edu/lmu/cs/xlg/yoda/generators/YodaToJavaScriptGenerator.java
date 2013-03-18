@@ -40,7 +40,7 @@ import edu.lmu.cs.xlg.yoda.entities.UnaryExpression;
 import edu.lmu.cs.xlg.yoda.entities.Variable;
 import edu.lmu.cs.xlg.yoda.entities.WhileLoop;
 import edu.lmu.cs.xlg.yoda.entities.WholeNumberLiteral;
-import edu.lmu.cs.xlg.yoda.entities.WriteStatement;
+import edu.lmu.cs.xlg.yoda.entities.PrintStatement;
 import edu.lmu.cs.xlg.yoda.entities.ConditionalStatement.Arm;
 
 /**
@@ -88,8 +88,8 @@ public class YodaToJavaScriptGenerator extends Generator {
             // TODO
             emit("// READ STATEMENTS NOT YET HANDLED");
 
-        } else if (s instanceof WriteStatement) {
-            Expression e = WriteStatement.class.cast(s).getExpression();
+        } else if (s instanceof PrintStatement) {
+            Expression e = PrintStatement.class.cast(s).getExpression();
             emit("console.log(" + generateExpression(e) + ");");
 
         } else if (s instanceof ExitStatement) {
