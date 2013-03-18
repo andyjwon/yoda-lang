@@ -1,6 +1,7 @@
 package edu.lmu.cs.xlg.yoda.entities;
 
 import edu.lmu.cs.xlg.util.Log;
+import edu.lmu.cs.xlg.yoda.syntax.Token;
 
 public class Variable extends Declaration {
 
@@ -19,9 +20,8 @@ public class Variable extends Declaration {
     /**
      * Constructs a variable.
      */
-    public Variable(String name, String typename, Expression initializer, boolean constant) {
+    public Variable(String name, Expression initializer, boolean constant) {
         super(name);
-        this.typename = typename;
         this.initializer = initializer;
         this.constant = constant;
     }
@@ -35,7 +35,6 @@ public class Variable extends Declaration {
         super(name);
         this.typename = type.getName();
         this.initializer = null;
-        this.type = type;
     }
 
     public Expression getInitializer() {

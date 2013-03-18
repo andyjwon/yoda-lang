@@ -87,7 +87,7 @@ Script SCRIPT(): {
     (<BR>)*
     (s = STMT() {statements.add(s);})+
     <EOF>
-    {return new Script(new Block(statements));}
+    {return new Script(statements);}
 }
 
 Statement STMT(): {
@@ -108,7 +108,8 @@ Statement STMT(): {
    | LOOKAHEAD((<ID> ".") | ("(" ARGS() ")" <ID>)) s = FUNCALL()
    | LOOKAHEAD(<GIVEBACK>) s = RETURNSTMT()
    | LOOKAHEAD(FUNCALL()) s = PROCCALL()
-   | s = EXP())
+)// TODO: expression is not a statement
+   //| s = EXP())
    ((<BR>)+ | <EOF>)
    {return s;}
 }
@@ -121,52 +122,94 @@ Variable VARDEC(): {
     boolean constant = false;
 }
 {
-    ((e = EXP() ){exps.add(e);} (<AND> (e = EXP()) {expr.add(e);} )* "," (t = <ID>) {tokens.add(t.image);}
+    ((e = EXP() ){exps.add(e);} (<AND> (e = EXP()) {exps.add(e);} )* "," (t = <ID>) {tokens.add(t.image);}
         ( <AND>  (t = <ID>) {tokens.add(t.image);})*  (<BEGIN> | <BEGINS>))
         | (<FROM> EXP() "," (t = <ID>) {tokens.add(t.image);}  <BEGINS>)
-    {return new Variable(t, e, constant);}
+    // TODO: Must account for multiple declarations.
+    {return new Variable(t.image, e, constant);}
 }
 
-Variable CONSTDEC(): {} { EXP() "," <ID>  <MUST>  <BE> }
-Procedure PROCDEC(): {} { BLOCK() <GIVEN> PARAMS() ","  <ID>  <DOES> }
-Function FUNDEC(): {} { BLOCK() <GIVEN> PARAMS() ","  <ID>  <GIVES> }
-void PARAMS(): {} { <NOTHING> | (<ID> (  <AND>  <ID>)*) }
-void ASSIGNMENT(): {} { ( INCOP() <ID> )
-   | (UPDATE() <ID> EXP5())
-   | (EXP() (<AND> EXP())* ","  <ID> (  <AND>  <ID>)*  (<BECOME> | <BECOMES>))}
-void PRINTSTMT(): {} { EXP() <YOU>  <PRINT> }
-void RETURNSTMT(): {} { <GIVEBACK> ( ANONFUN() | EXP()) <YOU>  <MUST> }
-void CONDITIONAL(): {} { BLOCK() <IF> "(" EXP() ")" (LOOKAHEAD((<BR>)+ <ELSE> BLOCK() <IF>) (<BR>)+ <ELSE> BLOCK() <IF> "(" EXP() ")")*
+Variable CONSTDEC(): {
+    Token t;
+    Expression e;
+    boolean constant = true;
+}
+{
+    ((e = EXP() ) "," (t = <ID>)  <MUST>  <BE>)
+    {return new Variable(t.image, e, constant);}
+}
+
+Procedure PROCDEC(): {
+}
+{
+    (BLOCK() <GIVEN> PARAMS() ","  <ID>  <DOES>)    {return new Procedure();}
+}
+
+Function FUNDEC(): {
+}
+{
+    (BLOCK() <GIVEN> PARAMS() ","  <ID>  <GIVES>)
+    {return new Function();}
+}
+void PARAMS(): {
+}
+{
+    (<NOTHING> | (<ID> (  <AND>  <ID>)*))
+}
+
+Statement ASSIGNMENT(): {
+}
+{
+    (( INCOP() <ID> )
+        | (UPDATE() <ID> EXP5())
+        | (EXP() (<AND> EXP())* ","  <ID> (  <AND>  <ID>)*  (<BECOME> | <BECOMES>)))
+    {return new Statement();}
+}
+
+Statement PRINTSTMT(): {
+}
+{
+    (EXP() <YOU>  <PRINT>)
+    {return new Statement();}
+}
+
+Statement RETURNSTMT(): {
+}
+{
+    (<GIVEBACK> ( ANONFUN() | EXP()) <YOU>  <MUST>)
+    {return new Statement();}
+}
+Statement CONDITIONAL(): {} { BLOCK() <IF> "(" EXP() ")" (LOOKAHEAD((<BR>)+ <ELSE> BLOCK() <IF>) (<BR>)+ <ELSE> BLOCK() <IF> "(" EXP() ")")*
     (LOOKAHEAD((<BR>)+ <ELSE>)(<BR>)+ <ELSE> BLOCK() )?}
-void TIMESLOOP(): {} { BLOCK() EXP() <TIMES> }
-void FORLOOP(): {} { BLOCK() <AS>  <THROUGH> (LOOKAHEAD( (<NUMLIT> | <ID> | FUNCALL() ) <TO>) RANGE()
+Statement TIMESLOOP(): {} { BLOCK() EXP() <TIMES> }
+Statement FORLOOP(): {} { BLOCK() <AS>  <THROUGH> (LOOKAHEAD( (<NUMLIT> | <ID> | FUNCALL() ) <TO>) RANGE()
                                              | EXP5() ) (<BY> EXP5())? <ID>  <RUNS> }
-void WHILELOOP(): {} { BLOCK() <WHILE> EXP() }
-void PROCCALL(): {} { FUNCALL() }
-void BLOCK(): {} { ("{" (<BR>)* STMT() ((<BR>)+ (STMT())?)* (<BR>)*"}") }
-void EXP(): {} {  EXP1() ("|" EXP1() )*}
-void EXP1(): {} {  EXP2() ("&" EXP2() )*}
-void EXP2(): {} { ( RELOP() EXP3() EXP3() <IS> )
+Statement WHILELOOP(): {} { BLOCK() <WHILE> EXP() }
+Statement PROCCALL(): {} { FUNCALL() }
+Block BLOCK(): {} { ("{" (<BR>)* STMT() ((<BR>)+ (STMT())?)* (<BR>)*"}") }
+Expression EXP(): {} {  EXP1() ("|" EXP1() )*}
+Expression EXP1(): {} {  EXP2() ("&" EXP2() )*}
+Expression EXP2(): {} { ( RELOP() EXP3() EXP3() <IS> )
    | (ARITHOP() EXP3() (EXP3())+ )
    | EXP3() }
-void EXP3(): {} { (UNARYOP()  EXP4() )  | EXP4()}
-void EXP4(): {} { ( EXP5() (<HMMQ> (EXP5() | ASSIGNMENT()) <HMM> (EXP5() | ASSIGNMENT()) )?)}
-void EXP5(): {} { ARRAY()
+Expression EXP3(): {} { (UNARYOP()  EXP4() )  | EXP4()}
+Expression EXP4(): {} { ( EXP5() (<HMMQ> (EXP5() | ASSIGNMENT()) <HMM> (EXP5() | ASSIGNMENT()) )?)}
+Expression EXP5(): {} { ARRAY()
    | LIT()
    | LOOKAHEAD("{" (<BR>)* (":" | "}")) OBJECT()
    | LOOKAHEAD((<ID> ".")? "("ARGS()")") FUNCALL()
    | <ID>
    | "(" EXP() ")"}
-void LIT(): {} { <NUMLIT> | <STRLIT> }
+Literal LIT(): {} { <NUMLIT> | <STRLIT> }
 void ARRAY(): {} { ("[" ( (<BR>)? EXP() ("," (<BR>)? EXP())* (<BR>)?)* "]") }
 void OBJECT(): {} { "{" (<BR>)* (":" <ID> ( FUNDEC() | EXP5()) ( "," (<BR>)* ":" <ID> (FUNDEC() | EXP5()))* (<BR>)* )? (<BR>)* "}" (<TO>  <BE>  <ID>)? ","  (<ID> )? <TRAINING>  <BEGINS> }
-void ANONFUN(): {} { BLOCK() <GIVEN> PARAMS() }
-void FUNCALL(): {} { (<ID>".")?"("ARGS()")"(<ID> | ANONFUN()) }
-void RELOP(): {} { "<" | "<=" | "=" | "!=" | ">=" | ">" }
-void ARITHOP(): {} { "*" | "/" | "+" | "-" | "%" | "^" | UPDATE() }
-void UNARYOP(): {} { "!" }
-void INCOP(): {} { "++" | "--" }
-void UPDATE(): {} { "+=" | "-="}
+Function ANONFUN(): {} { BLOCK() <GIVEN> PARAMS() }
+Statement FUNCALL(): {} { (<ID>".")?"("ARGS()")"(<ID> | ANONFUN()) }
+String RELOP(): {} { "<" | "<=" | "=" | "!=" | ">=" | ">" }
+String ARITHOP(): {} { "*" | "/" | "+" | "-" | "%" | "^" | UPDATE() }
+String UNARYOP(): {} { "!" }
+String INCOP(): {} { "++" | "--" }
+String UPDATE(): {} { "+=" | "-="}
 
 void ARGS(): {} { (ARGS1() ("," ARGS1())*)? }
 void ARGS1(): {} { LOOKAHEAD(BLOCK() <GIVEN> PARAMS() "," <ID> <DOES>) PROCDEC()
