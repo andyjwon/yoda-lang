@@ -25,7 +25,7 @@ import edu.lmu.cs.xlg.yoda.entities.WholeNumberLiteral;
  */
 public class TypeAnalysisTest {
 
-    private Log log = new Log("Manatee", new PrintWriter(System.out, true));
+    private Log log = new Log("Yoda", new PrintWriter(System.out, true));
 
     Expression nullLiteral = NullLiteral.INSTANCE;
     Expression no = BooleanLiteral.FALSE;

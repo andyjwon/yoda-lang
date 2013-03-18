@@ -12,7 +12,7 @@ import edu.lmu.cs.xlg.yoda.generators.Generator;
 import edu.lmu.cs.xlg.yoda.syntax.Parser;
 
 /**
- * A compiler for Manatee.
+ * A compiler for Yoda.
  *
  * <p>This class contains a static <code>main</code> method allowing you to run the compiler
  * from the command line, as well as a few methods to compile, or even run specific phases of
@@ -22,9 +22,9 @@ public class Compiler {
 
     /**
      * A logger for logging messages (both regular and error messages). The base properties file
-     * is called <code>Manatee.properties</code>.
+     * is called <code>Yoda.properties</code>.
      */
-    private Log log = new Log("Manatee", new PrintWriter(System.out, true));
+    private Log log = new Log("Yoda", new PrintWriter(System.out, true));
 
     /**
      * Runs the compiler as an application.
@@ -75,7 +75,7 @@ public class Compiler {
     }
 
     /**
-     * Checks the syntax of a Manatee Script read from a given reader object.
+     * Checks the syntax of a Yoda Script read from a given reader object.
      *
      * @param reader
      *     the source
@@ -94,8 +94,8 @@ public class Compiler {
     }
 
     /**
-     * Checks the static semantics of a Manatee script object, generally one already produced from
-     * a parse.  This method is useful for testing or in cases where you want to embed an Manatee
+     * Checks the static semantics of a Yoda script object, generally one already produced from
+     * a parse.  This method is useful for testing or in cases where you want to embed an Yoda
      * compiler in a larger application.
      *
      * @param script
@@ -110,7 +110,7 @@ public class Compiler {
     }
 
     /**
-     * Checks the syntax and static semantics of a Manatee Script from a reader.
+     * Checks the syntax and static semantics of a Yoda Script from a reader.
      *
      * @param reader
      *     the source
@@ -126,7 +126,7 @@ public class Compiler {
     }
 
     /**
-     * Reads a Manatee script from the given reader and outputs a equivalent script to the
+     * Reads a Yoda script from the given reader and outputs a equivalent script to the
      * given writer.
      *
      * @param reader

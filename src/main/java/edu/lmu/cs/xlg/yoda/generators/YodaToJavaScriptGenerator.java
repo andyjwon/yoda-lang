@@ -44,9 +44,9 @@ import edu.lmu.cs.xlg.yoda.entities.WriteStatement;
 import edu.lmu.cs.xlg.yoda.entities.ConditionalStatement.Arm;
 
 /**
- * A generator that translates an Manatee program into JavaScript.
+ * A generator that translates an Yoda program into JavaScript.
  */
-public class ManateeToJavaScriptGenerator extends Generator {
+public class YodaToJavaScriptGenerator extends Generator {
 
     @Override
     public void generate(Script script, PrintWriter writer) {
@@ -58,7 +58,7 @@ public class ManateeToJavaScriptGenerator extends Generator {
     }
 
     /**
-     * Emits JavaScript code for the given Manatee block.
+     * Emits JavaScript code for the given Yoda block.
      */
     private void generateBlock(Block block) {
         indentLevel++;
@@ -69,7 +69,7 @@ public class ManateeToJavaScriptGenerator extends Generator {
     }
 
     /**
-     * Emits JavaScript code for the given Manatee statement.
+     * Emits JavaScript code for the given Yoda statement.
      */
     private void generateStatement(Statement s) {
         if (s instanceof Declaration) {
@@ -190,7 +190,7 @@ public class ManateeToJavaScriptGenerator extends Generator {
     }
 
     /**
-     * Returns a JavaScript expression for the given Manatee expression.
+     * Returns a JavaScript expression for the given Yoda expression.
      */
     private String generateExpression(Expression e) {
         if (e instanceof Literal) {
@@ -233,7 +233,7 @@ public class ManateeToJavaScriptGenerator extends Generator {
     }
 
     /**
-     * Emits JavaScript code for the given Manatee declaration.
+     * Emits JavaScript code for the given Yoda declaration.
      */
     private void generateDeclaration(Declaration d) {
 
@@ -288,7 +288,7 @@ public class ManateeToJavaScriptGenerator extends Generator {
     }
 
     /**
-     * Returns JavaScript source for the given Manatee unary expression.
+     * Returns JavaScript source for the given Yoda unary expression.
      */
     private String generateUnaryExpression(UnaryExpression e) {
 
@@ -305,7 +305,7 @@ public class ManateeToJavaScriptGenerator extends Generator {
     }
 
     /**
-     * Returns JavaScript source for the given Manatee unary expression.
+     * Returns JavaScript source for the given Yoda unary expression.
      */
     private String generateBinaryExpression(BinaryExpression e) {
 

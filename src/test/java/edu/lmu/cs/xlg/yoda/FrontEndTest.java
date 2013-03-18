@@ -20,7 +20,7 @@ import edu.lmu.cs.xlg.yoda.Compiler;
 import edu.lmu.cs.xlg.yoda.entities.Script;
 
 /**
- * A unit test for the front end of the Manatee compiler. It reads all the ".manatee" files
+ * A unit test for the front end of the Yoda compiler. It reads all the ".yoda" files
  * in the src/test/resources directory. Whenever a filename starts with "synerror" the tester
  * asserts that the compiler will detect a syntax error. Whenever a name starts with "semerror"
  * the tester asserts that the compiler successfully parses the program, then asserts that a
@@ -30,8 +30,8 @@ import edu.lmu.cs.xlg.yoda.entities.Script;
 @RunWith(Parameterized.class)
 public class FrontEndTest {
 
-    private static final String TEST_DIRECTORY = "src/test/manatee";
-    private static final String EXTENSION = ".manatee";
+    private static final String TEST_DIRECTORY = "src/test/yoda";
+    private static final String EXTENSION = ".yoda";
 
     private String filename;
 

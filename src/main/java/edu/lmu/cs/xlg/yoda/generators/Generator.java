@@ -11,7 +11,7 @@ import edu.lmu.cs.xlg.yoda.entities.Entity;
 import edu.lmu.cs.xlg.yoda.entities.Script;
 
 /**
- * An generator that translates a Manatee script into some other form.  The result of the
+ * An generator that translates a Yoda script into some other form.  The result of the
  * translation is written to a writer.
  */
 public abstract class Generator {
@@ -37,17 +37,17 @@ public abstract class Generator {
      */
     public static Generator getGenerator(String name) {
         if ("js".equals(name)) {
-            return new ManateeToJavaScriptGenerator();
+            return new YodaToJavaScriptGenerator();
         } else {
             return null;
         }
     }
 
     /**
-     * Generates a target script for the given Manatee script.
+     * Generates a target script for the given Yoda script.
      *
      * @param script
-     *     The Manatee program (source).
+     *     The Yoda program (source).
      * @param writer
      *     Writer for the target program.
      */
