@@ -11,7 +11,7 @@ import edu.lmu.cs.xlg.yoda.entities.*;
 public class Parser {
     public static void main(String[] args) {
         try {
-            new SyntaxChecker(new java.io.FileReader(args[0])).SCRIPT();
+            new Parser(new java.io.FileReader(args[0])).SCRIPT();
             System.out.println("Syntax is okay");
         } catch (Throwable e) {
             // Catching Throwable is ugly but JavaCC throws Error objects!
@@ -43,64 +43,64 @@ SKIP : {
 TOKEN: {
     "(" | ")" | "{" | "}" | "+" | "*" | ":=" | "|" | "&" | "," | ":" | "."
     | <IF: ("if")>
-	| <TO: ("to")>
-	| <BY: ("by")>
-	| <AND: ("and")>
-	| <HMM: ("hmm")>
-	| <HMMQ: ("hmm?")>
-	| <IS: ("is?")>
-	| <ELSE: ("else")>
-	| <FROM: ("from")>
-	| <DOES: ("does")>
-	| <RUNS: ("runs")>
-	| <WHILE: ("while")>
-	| <BEGIN: ("begin")>
-	| <BEGINS: ("begins")>
-	| <GIVEN: ("given")>
-	| <GIVES: ("gives")>
-	| <GET: ("get")>
-	| <TIMES: ("times")>
-	| <BECOME: ("become")>
-	| <BECOMES: ("becomes")>
-	| <NOTHING: ("nothing")>
-	| <THROUGH: ("through")>
-	| <AS: ("as")>
-	| <TRAINING: ("training")>
-	| <MUST: ("must")>
-	| <BE: ("be")>
-	| <YOU: ("you")>
-	| <PRINT: ("print")>
-	| <GIVEBACK: ("give back")>
-	| <ID: ((["a"-"z"] | ["A"-"Z"])+(["-"] | ["_"] | ["a"-"z"] | ["A"-"Z"] | ["0"-"9"])*)>
+    | <TO: ("to")>
+    | <BY: ("by")>
+    | <AND: ("and")>
+    | <HMM: ("hmm")>
+    | <HMMQ: ("hmm?")>
+    | <IS: ("is?")>
+    | <ELSE: ("else")>
+    | <FROM: ("from")>
+    | <DOES: ("does")>
+    | <RUNS: ("runs")>
+    | <WHILE: ("while")>
+    | <BEGIN: ("begin")>
+    | <BEGINS: ("begins")>
+    | <GIVEN: ("given")>
+    | <GIVES: ("gives")>
+    | <GET: ("get")>
+    | <TIMES: ("times")>
+    | <BECOME: ("become")>
+    | <BECOMES: ("becomes")>
+    | <NOTHING: ("nothing")>
+    | <THROUGH: ("through")>
+    | <AS: ("as")>
+    | <TRAINING: ("training")>
+    | <MUST: ("must")>
+    | <BE: ("be")>
+    | <YOU: ("you")>
+    | <PRINT: ("print")>
+    | <GIVEBACK: ("give back")>
+    | <ID: ((["a"-"z"] | ["A"-"Z"])+(["-"] | ["_"] | ["a"-"z"] | ["A"-"Z"] | ["0"-"9"])*)>
     | <NUMLIT: (("0x" | "0b" | "0o")? (["0"-"9"])+("."(["0"-"9"])*)?)>
     | <STRLIT: ("\"" (~["\""] | ("\\\""))* "\"") >
     | <BR: ("\n" | "\r" | "\r\n" )>
-	
+
 }
 
 
 Script SCRIPT(): {
     List<Statement> statements = new ArrayList<Statement>();
     Statement s;
-} 
-{ 
+}
+{
     (<BR>)*
-    (s = STMT() {statement.add(s);})+ 
+    (s = STMT() {statements.add(s);})+
     <EOF>
-    {return new Script(statements);} 
+    {return new Script(new Block(statements));}
 }
 
 Statement STMT(): {
     Statement s;
-} 
-{ 
+}
+{
      (LOOKAHEAD(BLOCK() <WHILE>) s = WHILELOOP()
    | LOOKAHEAD(BLOCK() <AS>) s = FORLOOP()
    | LOOKAHEAD(BLOCK() <IF>) s = CONDITIONAL()
    | LOOKAHEAD(BLOCK() EXP()) s = TIMESLOOP()
    | LOOKAHEAD(BLOCK() <GIVEN> PARAMS() "," <ID> <DOES>) s = PROCDEC()
    | LOOKAHEAD(BLOCK() <GIVEN> PARAMS() "," <ID> <GIVES>) s = FUNDEC()
-   | LOOKAHEAD(BLOCK() <GIVEN> ARGS()) s = ANONFUN()   
+   | LOOKAHEAD(BLOCK() <GIVEN> ARGS()) s = ANONFUN()
    | LOOKAHEAD(EXP() <YOU> <PRINT>) s = PRINTSTMT()
    | LOOKAHEAD(EXP() "," <ID> <MUST> <BE>) s = CONSTDEC()
    | LOOKAHEAD(<FROM> | (EXP() (<AND> EXP())*  "," <ID> ( <AND> <ID>)* (<BEGIN> | <BEGINS>))) s = VARDEC()
@@ -114,19 +114,19 @@ Statement STMT(): {
 }
 
 Variable VARDEC(): {
-    List<String> tokens = new ArrayList<String>;
+    List<String> tokens = new ArrayList<String>();
     Token t;
-    List<Expression> exps = new ArrayList<Expression>;
+    List<Expression> exps = new ArrayList<Expression>();
     Expression e;
     boolean constant = false;
-} 
-{ 
-	((e = EXP() ){exps.add(e);} (<AND> (e = EXP()) {expr.add(e);} )* "," (t = <ID>) {tokens.add(t.image);} 
-		( <AND>  (t = <ID>) {tokens.add(t.image);})*  (<BEGIN> | <BEGINS>))
-        | (<FROM> EXP() "," (t = <ID>) {tokens.add(t.image);}  <BEGINS>) 
+}
+{
+    ((e = EXP() ){exps.add(e);} (<AND> (e = EXP()) {expr.add(e);} )* "," (t = <ID>) {tokens.add(t.image);}
+        ( <AND>  (t = <ID>) {tokens.add(t.image);})*  (<BEGIN> | <BEGINS>))
+        | (<FROM> EXP() "," (t = <ID>) {tokens.add(t.image);}  <BEGINS>)
     {return new Variable(t, e, constant);}
 }
-                    
+
 void CONSTDEC(): {} { EXP() "," <ID>  <MUST>  <BE> }
 void PROCDEC(): {} { BLOCK() <GIVEN> PARAMS() ","  <ID>  <DOES> }
 void FUNDEC(): {} { BLOCK() <GIVEN> PARAMS() ","  <ID>  <GIVES> }
@@ -136,7 +136,7 @@ void ASSIGNMENT(): {} { ( INCOP() <ID> )
    | (EXP() (<AND> EXP())* ","  <ID> (  <AND>  <ID>)*  (<BECOME> | <BECOMES>))}
 void PRINTSTMT(): {} { EXP() <YOU>  <PRINT> }
 void RETURNSTMT(): {} { <GIVEBACK> ( ANONFUN() | EXP()) <YOU>  <MUST> }
-void CONDITIONAL(): {} { BLOCK() <IF> "(" EXP() ")" (LOOKAHEAD((<BR>)+ <ELSE> BLOCK() <IF>) (<BR>)+ <ELSE> BLOCK() <IF> "(" EXP() ")")*  
+void CONDITIONAL(): {} { BLOCK() <IF> "(" EXP() ")" (LOOKAHEAD((<BR>)+ <ELSE> BLOCK() <IF>) (<BR>)+ <ELSE> BLOCK() <IF> "(" EXP() ")")*
     (LOOKAHEAD((<BR>)+ <ELSE>)(<BR>)+ <ELSE> BLOCK() )?}
 void TIMESLOOP(): {} { BLOCK() EXP() <TIMES> }
 void FORLOOP(): {} { BLOCK() <AS>  <THROUGH> (LOOKAHEAD( (<NUMLIT> | <ID> | FUNCALL() ) <TO>) RANGE()
@@ -151,7 +151,7 @@ void EXP2(): {} { ( RELOP() EXP3() EXP3() <IS> )
    | EXP3() }
 void EXP3(): {} { (UNARYOP()  EXP4() )  | EXP4()}
 void EXP4(): {} { ( EXP5() (<HMMQ> (EXP5() | ASSIGNMENT()) <HMM> (EXP5() | ASSIGNMENT()) )?)}
-void EXP5(): {} { ARRAY() 
+void EXP5(): {} { ARRAY()
    | LIT()
    | LOOKAHEAD("{" (<BR>)* (":" | "}")) OBJECT()
    | LOOKAHEAD((<ID> ".")? "("ARGS()")") FUNCALL()
