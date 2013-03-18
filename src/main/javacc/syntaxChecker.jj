@@ -127,9 +127,9 @@ Variable VARDEC(): {
     {return new Variable(t, e, constant);}
 }
 
-void CONSTDEC(): {} { EXP() "," <ID>  <MUST>  <BE> }
-void PROCDEC(): {} { BLOCK() <GIVEN> PARAMS() ","  <ID>  <DOES> }
-void FUNDEC(): {} { BLOCK() <GIVEN> PARAMS() ","  <ID>  <GIVES> }
+Variable CONSTDEC(): {} { EXP() "," <ID>  <MUST>  <BE> }
+Procedure PROCDEC(): {} { BLOCK() <GIVEN> PARAMS() ","  <ID>  <DOES> }
+Function FUNDEC(): {} { BLOCK() <GIVEN> PARAMS() ","  <ID>  <GIVES> }
 void PARAMS(): {} { <NOTHING> | (<ID> (  <AND>  <ID>)*) }
 void ASSIGNMENT(): {} { ( INCOP() <ID> )
    | (UPDATE() <ID> EXP5())

@@ -1,0 +1,85 @@
+-- This file is intended to include all legal Manatee constructs,
+-- that is, to be the ultimate positive unit test.
+
+-- It is not there yet.
+
+write -0.4
+write 2.54x10^5
+write 10.00004x10^172
+
+to get whole number zero:
+    return 0
+end
+
+write (zero())
+
+my a01 is a whole number
+my a02 is a truth value
+my a03 is a character
+my a04 is a string
+my a05 is a number
+
+my a06 is always yes
+my a07 is no
+my a08 is always '*'
+my a09 is "a long string"
+
+my a10 is a truth value list list list list list list list
+
+read a01
+read a02
+read a09
+
+my cat is 0
+my bat is '$'
+--my dog is '\(263a)'
+
+to p1:
+  do nothing
+end
+
+to p2 number x, string y, character z, string list list b, and number last:
+  my c is a whole number
+  set c to 16
+  while x > 0:
+      write x
+      set x to x - 1
+      exit the loop if x > -200 * 3 / 4 + 6 >> 5
+  end
+end
+
+to sort number list x:
+  do nothing
+end
+
+to get the number max of number x, number y, and number z:
+    my t is x
+    set t to y if y > t
+    set t to z if z > t
+    return t
+end
+
+to get the truth value less of number x and number y:
+  return x < y
+end
+
+if less(4, 5):
+  do nothing
+end
+
+if less(9, 8):
+  do nothing
+else if less(10, 11):
+  do nothing
+else if 3 = 3:
+  do nothing
+end
+
+while 4 < 5 and [1,2,3][2] >= length of [1,2,3] or a02 or a10[0][0][0][0][0][0][0]:
+  set a03 to "abcdefghij"[8]
+  do nothing
+end
+
+my array is [5.1, 17.1*cat, 22.1, 6.1]
+do sort(array)
+do sort([9.6])

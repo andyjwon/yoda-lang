@@ -4,12 +4,15 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
+import edu.lmu.cs.xlg.yoda.entities.Declaration;
 import edu.lmu.cs.xlg.yoda.entities.Entity;
 import edu.lmu.cs.xlg.yoda.entities.Script;
 
 /**
- * An generator that translates an Iki program into some other form.  The result of the translation
- * is written to a writer.
+ * An generator that translates a Manatee script into some other form.  The result of the
+ * translation is written to a writer.
  */
 public abstract class Generator {
 
@@ -29,27 +32,22 @@ public abstract class Generator {
     int indentLevel = 0;
 
     /**
-     * A factory for retrieving a specific generator based on a name.  TODO: This is ugly
-     * because the generators and their names are hardcoded.  Needs to be refactored so the
-     * actual generators register themselves.
+     * A factory for retrieving a specific generator based on a name.  Currently only "js"
+     * for JavaScript is supported.
      */
     public static Generator getGenerator(String name) {
-        if ("c".equals(name)) {
-            return new IkiToCGenerator();
-        } else if ("js".equals(name)) {
-            return new IkiToJavaScriptGenerator();
-        } else if ("86".equals(name)) {
-            return new IkiToX86Generator();
+        if ("js".equals(name)) {
+            return new ManateeToJavaScriptGenerator();
         } else {
             return null;
         }
     }
 
     /**
-     * Generates a target program for the given Iki program.
+     * Generates a target script for the given Manatee script.
      *
      * @param script
-     *     The Iki program (source).
+     *     The Manatee program (source).
      * @param writer
      *     Writer for the target program.
      */
@@ -60,12 +58,16 @@ public abstract class Generator {
      * have one.
      */
     synchronized String id(Entity e) {
-        Integer result = idMap.get(e);
-        if (result == null) {
-            result = ++lastId;
-            idMap.put(e, result);
+        Integer suffix = idMap.get(e);
+        if (suffix == null) {
+            suffix = ++lastId;
+            idMap.put(e, suffix);
         }
-        return "_v" + result;
+        String name = e instanceof Declaration ? Declaration.class.cast(e).getName() : "";
+        if (StringUtils.isBlank(name)) {
+            name = "$";
+        }
+        return name + "_" + suffix;
     }
 
     /**

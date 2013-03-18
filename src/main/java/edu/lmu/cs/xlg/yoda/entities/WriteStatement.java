@@ -1,37 +1,24 @@
 package edu.lmu.cs.xlg.yoda.entities;
 
-import java.util.List;
-import java.util.ListIterator;
-
 import edu.lmu.cs.xlg.util.Log;
 
 /**
- * An Iki write statement.
+ * A statement for writing a single expression to standard output.
  */
 public class WriteStatement extends Statement {
 
-    private List<Expression> expressions;
+    private Expression expression;
 
-    public WriteStatement(List<Expression> expressions) {
-        this.expressions = expressions;
+    public WriteStatement(Expression expression) {
+        this.expression = expression;
     }
 
-    public List<Expression> getExpressions() {
-        return expressions;
-    }
-
-    @Override
-    public void analyze(SymbolTable table, Log log) {
-        for (Expression expression: expressions) {
-            expression.analyze(table, log);
-        }
+    public Expression getExpression() {
+        return expression;
     }
 
     @Override
-    public Statement optimize() {
-        for (ListIterator<Expression> it = expressions.listIterator(); it.hasNext();) {
-            it.set(it.next().optimize());
-        }
-        return this;
+    public void analyze(Log log, SymbolTable table, Subroutine owner, boolean inLoop) {
+        expression.analyze(log, table, owner, inLoop);
     }
 }

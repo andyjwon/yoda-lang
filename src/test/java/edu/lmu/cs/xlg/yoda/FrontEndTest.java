@@ -1,5 +1,6 @@
 package edu.lmu.cs.xlg.yoda;
 
+
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -10,7 +11,6 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -20,18 +20,18 @@ import edu.lmu.cs.xlg.yoda.Compiler;
 import edu.lmu.cs.xlg.yoda.entities.Script;
 
 /**
- * A unit test for the front end of the Iki compiler. It reads all the ".iki" files in the test
- * resources directory. Whenever a filename starts with "synerror" the tester asserts that the
- * compiler will detect a syntax error. Whenever a name starts with "semerror" the tester asserts
- * that the compiler successfully parses the program, then asserts that a semantic error is
- * present. Whenever a file name starts with anything else, the tester checks that the compiler
- * can successfully parse and perform static analysis without finding any errors.
+ * A unit test for the front end of the Manatee compiler. It reads all the ".manatee" files
+ * in the src/test/resources directory. Whenever a filename starts with "synerror" the tester
+ * asserts that the compiler will detect a syntax error. Whenever a name starts with "semerror"
+ * the tester asserts that the compiler successfully parses the program, then asserts that a
+ * semantic error is present. Whenever a file name starts with anything else, the tester checks
+ * that the compiler can successfully parse and perform static analysis without finding any errors.
  */
 @RunWith(Parameterized.class)
 public class FrontEndTest {
 
-    private static final String TEST_DIRECTORY = "src/test/iki";
-    private static final String EXTENSION = ".iki";
+    private static final String TEST_DIRECTORY = "src/test/manatee";
+    private static final String EXTENSION = ".manatee";
 
     private String filename;
 
@@ -58,15 +58,13 @@ public class FrontEndTest {
     /**
      * Tests that the current file does what it is supposed to when compiled.
      */
-    @Ignore
     @Test
     public void testFrontEnd() throws IOException {
         try {
-            System.out.print("Testing " + filename + "... ");
+            System.out.println("Testing " + filename + "... ");
             Reader reader = new FileReader(TEST_DIRECTORY + "/" + filename);
 
             Compiler compiler = new Compiler();
-            compiler.setQuiet(true);
 
             if (filename.startsWith("synerror")) {
                 // Expect at least one error during syntax checking

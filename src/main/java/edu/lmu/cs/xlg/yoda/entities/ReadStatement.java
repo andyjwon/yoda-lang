@@ -1,34 +1,27 @@
 package edu.lmu.cs.xlg.yoda.entities;
 
-import java.util.List;
-
 import edu.lmu.cs.xlg.util.Log;
 
 /**
- * An Iki read statement.
+ * A statement that reads into a single variable.
  */
 public class ReadStatement extends Statement {
 
-    private List<VariableReference> references;
+    private Expression expression;
 
-    public ReadStatement(List<VariableReference> references) {
-        this.references = references;
+    public ReadStatement(Expression expression) {
+        this.expression = expression;
     }
 
-    public List<VariableReference> getReferences() {
-        return references;
+    public Expression getExpression() {
+        return expression;
     }
 
     @Override
-    public void analyze(SymbolTable table, Log log) {
-        for (VariableReference v: references) {
-            v.analyze(table, log);
+    public void analyze(Log log, SymbolTable table, Subroutine owner, boolean inLoop) {
+        expression.analyze(log, table, owner, inLoop);
+        if (!expression.isWritableLValue()) {
+            log.error("non.writable.in.read.statement");
         }
-    }
-
-    @Override
-    public Statement optimize() {
-        // Nothing to do, really, as variable references don't need to be optimized.
-        return this;
     }
 }

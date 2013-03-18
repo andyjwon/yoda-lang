@@ -3,40 +3,33 @@ package edu.lmu.cs.xlg.yoda.entities;
 import edu.lmu.cs.xlg.util.Log;
 
 /**
- * An Iki assignment statement.
+ * An assignment statement.
  */
 public class AssignmentStatement extends Statement {
 
-    private VariableReference variableReference;
-    private Expression expression;
+    private Expression target;
+    private Expression source;
 
-    public AssignmentStatement(VariableReference v, Expression e) {
-        this.variableReference = v;
-        this.expression = e;
+    public AssignmentStatement(Expression target, Expression source) {
+        this.target = target;
+        this.source = source;
     }
 
-    public VariableReference getVariableReference() {
-        return variableReference;
+    public Expression getTarget() {
+        return target;
     }
 
-    public Expression getExpression() {
-        return expression;
-    }
-
-    @Override
-    public void analyze(SymbolTable table, Log log) {
-        variableReference.analyze(table, log);
-        expression.analyze(table, log);
+    public Expression getSource() {
+        return source;
     }
 
     @Override
-    public Statement optimize() {
-        expression = expression.optimize();
-        if (variableReference.sameVariableAs(expression)) {
-            // Assignment to self is a no-op
-            return null;
+    public void analyze(Log log, SymbolTable table, Subroutine owner, boolean inLoop) {
+        target.analyze(log, table, owner, inLoop);
+        source.analyze(log, table, owner, inLoop);
+        if (!target.isWritableLValue()) {
+            log.error("non.writable.in.assignment.statement");
         }
-        return this;
+        source.assertAssignableTo(target.getType(), log, "assignment.type.mismatch");
     }
-
 }

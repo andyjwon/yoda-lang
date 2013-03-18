@@ -1,34 +1,106 @@
 package edu.lmu.cs.xlg.yoda.entities;
 
+import edu.lmu.cs.xlg.util.Log;
+
 /**
- * An Iki expression.
+ * An expression.
  */
 public abstract class Expression extends Entity {
 
+    // As the language is statically typed, we can compute and store the type at compile time.
+    Type type;
+
     /**
-     * Optimizes this expression, returning an optimized version if possible, otherwise returns
-     * the expression itself.  This method is intended to be overridden in subclasses; however,
-     * since most forms of expressions require no optimization, a default implementation is
-     * provided here.
+     * Returns the type of this expression.
      */
-    public Expression optimize() {
-        return this;
+    public Type getType() {
+        return type;
     }
 
-    // Utility used in optimization
-    boolean isZero() {
-        return this instanceof Number && Number.class.cast(this).getValue() == 0;
+    /**
+     * Returns whether this expression is compatible with (that is, "can be assigned to an object
+     * of") a given type.
+     */
+    public boolean isCompatibleWith(Type thatType) {
+        return type.canBeAssignedTo(thatType);
     }
 
-    // Utility used in optimization
-    boolean isOne() {
-        return this instanceof Number && Number.class.cast(this).getValue() == 1;
+    /**
+     * Returns whether this expression can be assigned to.  False by default; it will be
+     * overwritten only in those particular cases where it should return true.
+     */
+    boolean isWritableLValue() {
+        return false;
     }
 
-    // Utility used in optimization
-    boolean sameVariableAs(Expression that) {
-        return this instanceof VariableReference && that instanceof VariableReference &&
-            VariableReference.class.cast(this).getReferent() ==
-                VariableReference.class.cast(that).getReferent();
+    /**
+     * Returns whether this expression's type is an array type.
+     */
+    public boolean isArray() {
+        return type instanceof ArrayType;
+    }
+
+    /**
+     * Returns whether this expression's type is an array type or the string type.
+     */
+    public boolean isArrayOrString() {
+        return isArray() || type == Type.STRING;
+    }
+
+    // Helpers for semantic analysis, called from the analyze methods of other expressions.  These
+    // are by no means necessary, but they are very convenient.
+
+    void assertAssignableTo(Type otherType, Log log, String errorKey) {
+        if (!this.isCompatibleWith(otherType)) {
+            log.error(errorKey, otherType, this.type);
+        }
+    }
+
+    void assertArithmetic(String context, Log log) {
+        if (!(type == Type.WHOLE_NUMBER || type == Type.NUMBER)) {
+            log.error("non.arithmetic", context);
+        }
+    }
+
+    void assertArithmeticOrChar(String context, Log log) {
+        if (!(type == Type.WHOLE_NUMBER || type == Type.NUMBER || type == Type.CHARACTER)) {
+            log.error("non.arithmetic.or.char", context, type);
+        }
+    }
+
+    void assertInteger(String context, Log log) {
+        if (!(type == Type.WHOLE_NUMBER)) {
+            log.error("non.integer", context, type);
+        }
+    }
+
+    void assertBoolean(String context, Log log) {
+        if (!(type == Type.TRUTH_VALUE)) {
+            log.error("non.boolean", context, type);
+        }
+    }
+
+    void assertChar(String context, Log log) {
+        if (!(type == Type.CHARACTER)) {
+            log.error("non.char", context);
+        }
+    }
+
+    void assertArray(String context, Log log) {
+        if (!(type instanceof ArrayType)) {
+            log.error("non.array", context);
+        }
+    }
+
+    void assertString(String context, Log log) {
+        if (!(type == Type.STRING)) {
+            log.error("non.string", context);
+        }
+    }
+
+    void assertArrayOrString(String context, Log log) {
+        if (!(type == Type.STRING || type instanceof ArrayType)) {
+            log.error("non.array.or.string", context);
+        }
     }
 }

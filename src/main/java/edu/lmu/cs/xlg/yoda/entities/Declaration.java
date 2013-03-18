@@ -1,9 +1,9 @@
 package edu.lmu.cs.xlg.yoda.entities;
 
 /**
- * An Iki declaration.
+ * A statement that declares an entity, such as a variable, procedure, function, or type.
  */
-public abstract class Declaration extends Entity {
+public abstract class Declaration extends Statement {
 
     private String name;
 
