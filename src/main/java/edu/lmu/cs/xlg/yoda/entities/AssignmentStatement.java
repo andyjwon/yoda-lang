@@ -1,5 +1,7 @@
 package edu.lmu.cs.xlg.yoda.entities;
 
+import java.util.List;
+
 import edu.lmu.cs.xlg.util.Log;
 
 /**
@@ -10,26 +12,31 @@ public class AssignmentStatement extends Statement {
     private List<Expression> target;
     private List<Expression> source;
 
-    public AssignmentStatement(Expression target, Expression source) {
+    public AssignmentStatement(List<Expression> target, List<Expression> source) {
         this.target = target;
         this.source = source;
     }
 
-    public Expression getTarget() {
+    public List<Expression> getTarget() {
         return target;
     }
 
-    public Expression getSource() {
+    public List<Expression> getSource() {
         return source;
     }
 
     @Override
     public void analyze(Log log, SymbolTable table, Subroutine owner, boolean inLoop) {
-        target.analyze(log, table, owner, inLoop);
-        source.analyze(log, table, owner, inLoop);
-        if (!target.isWritableLValue()) {
-            log.error("non.writable.in.assignment.statement");
+        for (Expression t : target) {
+            t.analyze(log, table, owner, inLoop);
+
+            if (!t.isWritableLValue()) {
+                log.error("non.writable.in.assignment.statement");
+            }
+            for (Expression s : source) {
+                s.analyze(log, table, owner, inLoop);
+                s.assertAssignableTo(t.getType(), log, "assignment.type.mismatch");
+            }
         }
-        source.assertAssignableTo(target.getType(), log, "assignment.type.mismatch");
     }
 }
