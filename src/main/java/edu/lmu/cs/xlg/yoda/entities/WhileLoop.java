@@ -2,9 +2,7 @@ package edu.lmu.cs.xlg.yoda.entities;
 
 import edu.lmu.cs.xlg.util.Log;
 
-/**
- * A loop that executes as long as a single expression is true.
- */
+
 public class WhileLoop extends Statement {
 
     private Expression condition;

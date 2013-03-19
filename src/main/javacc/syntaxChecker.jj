@@ -149,7 +149,8 @@ Procedure PROCDEC(): {
 	List<Variable> params = new ArrayList<Variable>();
 }
 {
-    ((b = BLOCK()) <GIVEN> (PARAMS(params)) ","  (t = <ID>)  <DOES>)    {return new Procedure(t.image, params, b);}
+    ((b = BLOCK()) <GIVEN> (PARAMS(params)) ","  (t = <ID>)  <DOES>)
+    {return new Procedure(t.image, params, b);}
 }
 
 Function FUNDEC(): {
@@ -169,18 +170,26 @@ void PARAMS(List<Variable> params): {
      (  <AND>  t = <ID> {params.add(new Variable(t.image, null, false));})*))
 }
 
-List<Statement> ASSIGNMENT(): {
-	List<Token> tokens = new ArrayList<Token>();
-	List<Expression> exps = new ArrayList<Expression>();
-	List<Statement> stmts = new ArrayList<Statement>();
+Statement ASSIGNMENT(): {
+	List<String> tokens = new ArrayList<String>();
+	List<Expression> targets = new ArrayList<Expression>();
+	List<Expression> sources = new ArrayList<Expression>();
 	Token t;
 	Expression e;
+	String op = null;
+	IdentifierExpression i;
 }
 {
-    (( INCOP() <ID> )
-        | (UPDATE() <ID> EXP5())
-        | (EXP() (<AND> EXP())* ","  <ID> (  <AND>  <ID>)*  (<BECOME> | <BECOMES>)))
-    {return new Statement();}
+    (( op = INCOP() i = <ID> 
+    {e = new UnaryExpression(op, i);
+    	targets.add(i);
+    	sources.add(e);} )
+    | (op = UPDATE() i = <ID> e = EXP5() {new BinaryExpression(i, op, e);
+    	targets.add(i);
+    	sources.add(e);})
+    | (e = EXP(){sources.add(e);} (<AND> e = EXP() {sources.add(e);{)* 
+    	","  i = <ID> {targets.add(i);}(  <AND> i = <ID> {targets.add(i);})*  (<BECOME> | <BECOMES>)))
+    {return new AssignmentStatement(i, e);}
 }
 
 Statement PRINTSTMT(): {
@@ -203,27 +212,103 @@ Statement RETURNSTMT(): {
     	return new Statement(f);
     }
 }
-Statement CONDITIONAL(): {} { BLOCK() <IF> "(" EXP() ")" (LOOKAHEAD((<BR>)+ <ELSE> BLOCK() <IF>) (<BR>)+ <ELSE> BLOCK() <IF> "(" EXP() ")")*
-    (LOOKAHEAD((<BR>)+ <ELSE>)(<BR>)+ <ELSE> BLOCK() )?}
+
+Statement CONDITIONAL(): {
+} 
+{ 
+	BLOCK() <IF> "(" EXP() ")" (LOOKAHEAD((<BR>)+ <ELSE>  BLOCK() <IF>) (<BR>)+ <ELSE> BLOCK() <IF> "(" EXP() ")")*
+    (LOOKAHEAD((<BR>)+ <ELSE>)(<BR>)+ <ELSE> BLOCK() )?
+}
+    
 Statement TIMESLOOP(): {
 	Block b;
 	Expression e;
 } 
-{ (b = BLOCK() e = EXP() <TIMES>)
-  {return new TimesLoop(e, b);}
+{ 
+    (b = BLOCK() e = EXP() <TIMES>)
+    {return new TimesLoop(e, b);}
 }
-Statement FORLOOP(): {} { BLOCK() <AS>  <THROUGH> (LOOKAHEAD( (<NUMLIT> | <ID> | FUNCALL() ) <TO>) RANGE()
-                                             | EXP5() ) (<BY> EXP5())? <ID>  <RUNS> }
-Statement WHILELOOP(): {} { BLOCK() <WHILE> EXP() }
-Statement PROCCALL(): {} { FUNCALL() }
-Block BLOCK(): {} { ("{" (<BR>)* STMT() ((<BR>)+ (STMT())?)* (<BR>)*"}") }
-Expression EXP(): {} {  EXP1() ("|" EXP1() )*}
-Expression EXP1(): {} {  EXP2() ("&" EXP2() )*}
-Expression EXP2(): {} { ( RELOP() EXP3() EXP3() <IS> )
-   | (ARITHOP() EXP3() (EXP3())+ )
-   | EXP3() }
-Expression EXP3(): {} { (UNARYOP()  EXP4() )  | EXP4()}
-Expression EXP4(): {} { ( EXP5() (<HMMQ> (EXP5() | ASSIGNMENT()) <HMM> (EXP5() | ASSIGNMENT()) )?)}
+
+Statement FORLOOP(): {
+    Block b;
+    Token t = null;
+} 
+{ 
+	BLOCK() <AS>  <THROUGH> (LOOKAHEAD( (<NUMLIT> | <ID> | FUNCALL() ) <TO>) RANGE()
+                                             | EXP5() ) (<BY> EXP5())? <ID>  <RUNS> 
+}
+
+Statement WHILELOOP(): {
+	Block b;
+	Expression e;
+} 
+{
+	b = BLOCK() <WHILE> e = EXP() 
+	{return new WhileLoop(e, b);}
+}
+
+Statement PROCCALL(): {
+	Statement s;
+} 
+{ 
+	s = FUNCALL() 
+	{return new Statement(s);}
+}
+
+Block BLOCK(): {
+	List<Statement> statements = new ArrayList<Statement>();
+	Statement s;
+} 
+{ 
+	("{" (<BR>)* (s = STMT() {statements.add(s);})) 
+		((<BR>)+ (s = STMT(){statements.add(s);})?)* (<BR>)*"}") 
+	{return new Block(statements);}	
+}
+
+Expression EXP(): {
+	Expression e1;
+	Expression e2;
+} 
+{
+	e1 =  EXP1() ("|" e2 = EXP1(){e1 = new BinaryExpression(e1, "|", e2);} )*
+	{return e1;}
+}
+Expression EXP1(): {
+	Expression e1;
+	Expression e2;
+} 
+{  
+	e1 = EXP2() ("&" e2 = EXP2() {e1 = new BinaryExpression(e1, "&", e2);})*
+	{return e1;}
+}
+Expression EXP2(): {
+	String op;
+	Expression e1;
+	Expression e2;
+} 
+{ 
+	(op = RELOP() e1 = EXP3() e2 = EXP3() <IS> {e1 = new BinaryExpression(e1, op, e2);} )
+   | (op = ARITHOP() e1 = EXP3() (e2 = EXP3(){e1 = new BinaryExpression(e1, op, e2);})+ )
+   | e1 = EXP3() 
+   {return e1;}
+}
+
+Expression EXP3(): {
+	String op = null;
+	Expression e;
+} 
+{ 
+	(op = UNARYOP()  e = EXP4() )  | e = EXP4()
+	{return op == null ? e : new UnaryExpression(op, e);}
+}
+Expression EXP4(): {
+	Expression e1;
+	Expression e2;
+	Expression e3;
+} 
+{ 
+	( EXP5() (<HMMQ> (EXP5() | ASSIGNMENT()) <HMM> (EXP5() | ASSIGNMENT()) )?)
+}
 Expression EXP5(): {} { ARRAY()
    | LIT()
    | LOOKAHEAD("{" (<BR>)* (":" | "}")) OBJECT()
