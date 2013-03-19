@@ -315,7 +315,13 @@ Expression EXP5(): {} { ARRAY()
    | LOOKAHEAD((<ID> ".")? "("ARGS()")") FUNCALL()
    | <ID>
    | "(" EXP() ")"}
-Literal LIT(): {} { <NUMLIT> | <STRLIT> }
+Literal LIT(): {
+    Literal l;
+} 
+{
+    l = <NUMLIT> | l = <STRLIT> 
+    {return l;}
+}
 void ARRAY(): {} { ("[" ( (<BR>)? EXP() ("," (<BR>)? EXP())* (<BR>)?)* "]") }
 void OBJECT(): {} { "{" (<BR>)* (":" <ID> ( FUNDEC() | EXP5()) ( "," (<BR>)* ":" <ID> (FUNDEC() | EXP5()))* (<BR>)* )? (<BR>)* "}" (<TO>  <BE>  <ID>)? ","  (<ID> )? <TRAINING>  <BEGINS> }
 Function ANONFUN(): {} { BLOCK() <GIVEN> PARAMS() }
