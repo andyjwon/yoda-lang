@@ -7,8 +7,8 @@ import edu.lmu.cs.xlg.util.Log;
  */
 public class AssignmentStatement extends Statement {
 
-    private Expression target;
-    private Expression source;
+    private List<Expression> target;
+    private List<Expression> source;
 
     public AssignmentStatement(Expression target, Expression source) {
         this.target = target;
