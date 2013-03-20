@@ -5,17 +5,16 @@ import edu.lmu.cs.xlg.util.Log;
 /**
  * A loop that takes an iterator from one value to another by some step value.
  */
-public class RangeLoop extends Statement {
+public class ConditionalLoop extends Statement {
 
     private Variable iterator;
-    private Range range;
+    private Expression condition;
     private Expression step;
     private Block body;
 
-    public RangeLoop(Variable iterator, Range range, Expression step,
+    public ConditionalLoop(Variable iterator, Expression condition, Expression step,
             Block body) {
-    	this.iterator = iterator;
-        this.range = range;
+        this.condition = condition;
         this.step = step;
         this.body = body;
     }
@@ -24,8 +23,8 @@ public class RangeLoop extends Statement {
         return iterator;
     }
 
-    public Expression getRange() {
-        return range;
+    public Expression getCondition() {
+        return condition;
     }
 
     public Expression getStep() {

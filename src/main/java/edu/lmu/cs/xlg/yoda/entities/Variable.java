@@ -36,6 +36,10 @@ public class Variable extends Declaration {
         this.typename = type.getName();
         this.initializer = null;
     }
+    public Variable(String name) {
+        super(name);
+        this.initializer = null;
+    }
 
     public Expression getInitializer() {
         return initializer;

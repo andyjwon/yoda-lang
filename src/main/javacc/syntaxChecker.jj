@@ -204,15 +204,16 @@ Statement PRINTSTMT(): {
 }
 
 Statement RETURNSTMT(): {
-    Expression e;
-    Function f;
+    Expression e = null;
+    Function f = null;
 }
 {
     (<GIVEBACK> ( f = ANONFUN() | e = EXP()) <YOU>  <MUST>)
-    {if(f == null){
-        return new ReturnStatement(e);
-    }else
-        return f;
+	{
+	    if(f == null) {
+	        return new ReturnStatement(e);
+	    } else {	        return f;
+	    }
     }
 }
 
@@ -242,13 +243,19 @@ Statement TIMESLOOP(): {
 
 Statement FORLOOP(): {
     Block b;
-    Expression e;
-    Range r;
+    Token t;
+    Expression condition = null;
+    Expression step = new NumberLiteral("1");
+    Range r = null;
 }
 {
     b = BLOCK() <AS>  <THROUGH> (LOOKAHEAD( (<NUMLIT> | <ID> | FUNCALL() ) <TO>) r = RANGE()
-                                             | e = EXP5() ) (<BY> e = EXP5())? <ID>  <RUNS>
-    {return new RangeLoop(r, e, b);}
+                                             | condition = EXP5() ) (<BY> step = EXP5())? t = <ID>  <RUNS>
+    {
+        if(condition == null) {            return new RangeLoop(new Variable(t.image), r, step, b);
+        } else {
+            return new ConditionalLoop(new Variable(t.image), condition, step, b);        }
+    }
 }
 
 Statement WHILELOOP(): {
@@ -321,21 +328,37 @@ Expression EXP4(): {
 }
 {
     ( EXP5() (<HMMQ> (EXP5() | ASSIGNMENT()) <HMM> (EXP5() | ASSIGNMENT()) )?)
+    {return null; /* TODO */}
 }
-Expression EXP5(): {} { ARRAY()
-   | LIT()
-   | LOOKAHEAD("{" (<BR>)* (":" | "}")) OBJECT()
-   | LOOKAHEAD((<ID> ".")? "("ARGS()")") FUNCALL()
-   | <ID>
-   | "(" EXP() ")"}
-Literal LIT(): {
-    Literal l;
+Expression EXP5(): {
+    Expression e;
+    Token t;
 }
 {
-    l = <NUMLIT> | l = <STRLIT>
-    {return l;}
+    e = ARRAY()
+   | e = LIT()
+   | LOOKAHEAD("{" (<BR>)* (":" | "}")) e = OBJECT()
+   | LOOKAHEAD((<ID> ".")? "("ARGS()")") e = FUNCALL()
+   | e = <ID>
+   | "(" e = EXP() ")"
+    {return e;}
 }
-void ARRAY(): {} { ("[" ( (<BR>)? EXP() ("," (<BR>)? EXP())* (<BR>)?)* "]") }
+
+Literal LIT(): {
+    Literal l;
+}{  
+  l = <NUMLIT>  {return new NumberLiteral(l.image);}  |
+  l = <STRLIT>
+  {return new StringLiteral(l.image);}
+}
+
+ArrayConstructor ARRAY():{
+    Expression e;
+    List<Expression> es = new ArrayList<Expression>();}
+{
+    ("[" ( (<BR>)? e = EXP() {es.add(e);} ("," (<BR>)? e = EXP() {es.add(e);})* (<BR>)?)* "]")
+    {return es;}
+}
 void OBJECT(): {} { "{" (<BR>)* (":" <ID> ( FUNDEC() | EXP5()) ( "," (<BR>)* ":" <ID> (FUNDEC() | EXP5()))* (<BR>)* )? (<BR>)* "}" (<TO>  <BE>  <ID>)? ","  (<ID> )? <TRAINING>  <BEGINS> }
 Function ANONFUN(): {} { BLOCK() <GIVEN> PARAMS() }
 Statement FUNCALL(): {} { (<ID>".")?"("ARGS()")"(<ID> | ANONFUN()) }
