@@ -338,18 +338,18 @@ Expression EXP5(): {
     e = ARRAY()
    | e = LIT()
    | LOOKAHEAD("{" (<BR>)* (":" | "}")) e = OBJECT()
-   | LOOKAHEAD((<ID> ".")? "("ARGS()")") e = FUNCALL()
-   | e = <ID>
+   | LOOKAHEAD((<ID> ".")? "("ARGS()")") FUNCALL()
+   | t = <ID> {return new IdentifierExpression(t.image);}
    | "(" e = EXP() ")"
     {return e;}
 }
 
 Literal LIT(): {
-    Literal l;
+    Token t;
 }{  
-  l = <NUMLIT>  {return new NumberLiteral(l.image);}  |
-  l = <STRLIT>
-  {return new StringLiteral(l.image);}
+  t = <NUMLIT>  {return new NumberLiteral(t.image);}  |
+  t = <STRLIT>
+  {return new StringLiteral(t.image);}
 }
 
 ArrayConstructor ARRAY():{
@@ -357,28 +357,119 @@ ArrayConstructor ARRAY():{
     List<Expression> es = new ArrayList<Expression>();}
 {
     ("[" ( (<BR>)? e = EXP() {es.add(e);} ("," (<BR>)? e = EXP() {es.add(e);})* (<BR>)?)* "]")
-    {return es;}
+    {return new ArrayConstructor(es);}
 }
-void OBJECT(): {} { "{" (<BR>)* (":" <ID> ( FUNDEC() | EXP5()) ( "," (<BR>)* ":" <ID> (FUNDEC() | EXP5()))* (<BR>)* )? (<BR>)* "}" (<TO>  <BE>  <ID>)? ","  (<ID> )? <TRAINING>  <BEGINS> }
-Function ANONFUN(): {} { BLOCK() <GIVEN> PARAMS() }
-Statement FUNCALL(): {} { (<ID>".")?"("ARGS()")"(<ID> | ANONFUN()) }
-String RELOP(): {} { "<" | "<=" | "=" | "!=" | ">=" | ">" }
-String ARITHOP(): {} { "*" | "/" | "+" | "-" | "%" | "^" | UPDATE() }
-String UNARYOP(): {} { "!" }
-String INCOP(): {} { "++" | "--" }
-String UPDATE(): {} { "+=" | "-="}
+ObjectExpression OBJECT(): {
+    ObjectExpression o = new ObjectExpression();
+    Token t;
+    Expression e = null;
+    Function f = null;
+}
+{ "{" (<BR>)* (":" t = <ID> ( f = ANONFUN() | e = EXP5())
+    ( "," (<BR>)* ":" <ID> (ANONFUN() | EXP5()))* (<BR>)* )? (<BR>)* "}" (<TO>  <BE>  <ID>)? ","  (<ID> )? <TRAINING>  <BEGINS>
+    {return o;}
+}
 
-void ARGS(): {} { (ARGS1() ("," ARGS1())*)? }
-void ARGS1(): {} { LOOKAHEAD(BLOCK() <GIVEN> PARAMS() "," <ID> <DOES>) PROCDEC()
-   | LOOKAHEAD(BLOCK() <GIVEN> PARAMS() "," <ID> <GIVES>) FUNDEC()
-   | LOOKAHEAD(BLOCK() <GIVEN> PARAMS()) ANONFUN()
-   | LOOKAHEAD((<ID>".")? "("ARGS()")") FUNCALL()
-   | EXP5() }
-Range RANGE(): {
-    Expression l;
-    Expression h;
+Function ANONFUN(): {
+    Block b;
+    List<Variable> params = new ArrayList<Variable>();
+}
+{
+    b = BLOCK() <GIVEN> PARAMS(params)
+    {return new Function(null, params, b);}
+}
+Statement FUNCALL(): {
+    Token functionName = null;
+    List<Expression> args = new ArrayList<Expression>();
+    Token objectName = null;
+    Function f = null;
+}
+{
+    (objectName = <ID>".")?"("args = ARGS()")"(functionName = <ID> | f = ANONFUN())
+    {
+        if(functionName == null) {
+            return f;
+        } else {
+            return new CallStatement(functionName.image, args, objectName.image);
+        }                    }
+}
+String RELOP(): {
+    Token s;
+}
+
+{   s = "<"
+    | s = "<="
+    | s = "="
+    | s = "!="
+    | s = ">="
+    | s = ">"
+    {return s.image;}
+}
+String ARITHOP(): {
+    Token s;
+    String update;
+}
+{
+    s = "*"
+    | s = "/"
+    | s = "+"
+    | s = "-"
+    | s = "%"
+    | s = "^"
+    | update = UPDATE() {return update;}
+    {return s.image;} 
+}
+
+String UNARYOP(): {
     Token t;
 }
 {
-    (l = <NUMLIT> | l = <ID> | l = FUNCALL()) <TO> (h = <NUMLIT> | h = <ID> | h = FUNCALL())    {return new Range(l, h);}
+    t = "!"    {return t.image;}}
+
+String INCOP(): {
+    Token s;
+}
+{
+    s = "++"
+    | s = "--"
+    {return s.image;}
+}
+
+String UPDATE(): {
+    Token s;
+}
+{
+    s = "+="
+    | s = "-="
+    {return s.image;}
+}
+
+List<Expression> ARGS(): {
+    List<Expression> args = new ArrayList<Expression>();
+}
+{
+    (ARGS1(args) ("," ARGS1(args))*)?
+    {return args;}
+}
+void ARGS1(List<Expression> args): {
+}
+{
+   LOOKAHEAD(BLOCK() <GIVEN> PARAMS() "," <ID> <DOES>) PROCDEC()
+   | LOOKAHEAD(BLOCK() <GIVEN> PARAMS() "," <ID> <GIVES>) FUNDEC()
+   | LOOKAHEAD(BLOCK() <GIVEN> PARAMS()) ANONFUN()
+   | LOOKAHEAD((<ID>".")? "("ARGS()")") FUNCALL()
+   | EXP5()
+}
+Range RANGE(): {
+    Expression l = null;
+    Expression h = null;
+    Token t;
+}
+{
+    (t = <NUMLIT> {l = new NumberLiteral(t.image);}
+    |t = <ID> {l = new IdentifierExpression(t.image);}
+    | FUNCALL())
+    <TO> (t = <NUMLIT> {h = new NumberLiteral(t.image);}
+    | t = <ID> {h = new IdentifierExpression(t.image);}
+    | FUNCALL())    {return new Range(l, h);}
 }

@@ -21,7 +21,7 @@ public class ObjectExpression extends Expression {
 		Map<Variable, Expression> m = new HashMap<Variable, Expression>();
 		m.put(v, e);
 	}
-
+	
 	public Map<Variable, Expression> getObjectValues() {
 		return objectValues;
 	}

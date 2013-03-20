@@ -9,10 +9,12 @@ public class CallStatement extends Statement {
     private String procedureName;
     private List<Expression> args;
     private Procedure procedure;
+    private String objectName;
 
-    public CallStatement(String procedureName, List<Expression> args) {
+    public CallStatement(String procedureName, List<Expression> args, String objectName) {
         this.procedureName = procedureName;
         this.args = args;
+        this.objectName = objectName;
     }
 
     public String getProcedureName() {
@@ -25,6 +27,10 @@ public class CallStatement extends Statement {
 
     public Procedure getProcedure() {
         return procedure;
+    }
+    
+    public String getObjectName() {
+    	return objectName;
     }
 
     @Override
