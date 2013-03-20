@@ -1,5 +1,6 @@
 package edu.lmu.cs.xlg.yoda.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.lmu.cs.xlg.util.Log;
@@ -11,6 +12,13 @@ public class AssignmentStatement extends Statement {
 
     private List<Expression> target;
     private List<Expression> source;
+
+    public AssignmentStatement(Expression target, Expression source) {
+    	this.target = new ArrayList<Expression>();
+        this.source = new ArrayList<Expression>();
+        this.target.add(target);
+        this.source.add(source);
+    }
 
     public AssignmentStatement(List<Expression> target, List<Expression> source) {
         this.target = target;

@@ -7,36 +7,24 @@ import edu.lmu.cs.xlg.util.Log;
  */
 public class RangeLoop extends Statement {
 
-    private String iteratorName;
     private Variable iterator;
-    private Expression low;
-    private Expression high;
+    private Range range;
     private Expression step;
     private Block body;
 
-    public RangeLoop(String iteratorName, Expression low, Expression high, Expression step,
+    public RangeLoop(Range range, Expression step,
             Block body) {
-        this.iteratorName = iteratorName;
-        this.low = low;
-        this.high = high;
+        this.range = range;
         this.step = step;
         this.body = body;
-    }
-
-    public String getIteratorName() {
-        return iteratorName;
     }
 
     public Variable getIterator() {
         return iterator;
     }
 
-    public Expression getLow() {
-        return low;
-    }
-
-    public Expression getHigh() {
-        return high;
+    public Expression getRange() {
+        return range;
     }
 
     public Expression getStep() {
@@ -49,18 +37,13 @@ public class RangeLoop extends Statement {
 
     @Override
     public void analyze(Log log, SymbolTable table, Subroutine owner, boolean inLoop) {
-        low.analyze(log, table, owner, inLoop);
-        high.analyze(log, table, owner, inLoop);
         if (step != null) {
             step.analyze(log, table, owner, inLoop);
         }
-        low.assertInteger("range loop", log);
-        high.assertInteger("range loop", log);
         if (step != null) {
             step.assertInteger("range loop", log);
         }
         body.createTable(table);
-        iterator = new Variable(iteratorName, Type.WHOLE_NUMBER);
         body.getTable().insert(iterator, log);
         body.analyze(log, table, owner, true);
     }

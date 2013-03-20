@@ -114,7 +114,7 @@ Statement STMT(): {
    {return s;}
 }
 
-List<Variable> VARDEC(): {
+DecStatement VARDEC(): {
     List<String> tokens = new ArrayList<String>();
     List<Variable> variables = new ArrayList<Variable>();
     Token t;
@@ -130,7 +130,7 @@ List<Variable> VARDEC(): {
     {for(int i = 0; i < tokens.size(); i++){
         variables.add(new Variable(tokens.get(i), exps.get(i), constant));
     }
-    return variables;}
+    return new DecStatement(variables);}
 }
 
 Variable CONSTDEC(): {
@@ -180,15 +180,18 @@ Statement ASSIGNMENT(): {
     IdentifierExpression i;
 }
 {
-    (( op = INCOP() i = <ID>
-    {e = new UnaryExpression(op, i);
+    (( op = INCOP() t = <ID>
+    {i = new IdentifierExpression(t.image);
+        e = new UnaryExpression(op, i);
         targets.add(i);
         sources.add(e);} )
-    | (op = UPDATE() i = <ID> e = EXP5() {new BinaryExpression(i, op, e);
+    | (op = UPDATE() t = <ID> e = EXP5()
+    {i = new IdentifierExpression(t.image);
         targets.add(i);
         sources.add(e);})
     | (e = EXP(){sources.add(e);} (<AND> e = EXP() {sources.add(e);})*
-        ","  i = <ID> {targets.add(i);}(  <AND> i = <ID> {targets.add(i);})*  (<BECOME> | <BECOMES>)))
+        ","  t = <ID> {i = new IdentifierExpression(t.image);
+        targets.add(i);}(  <AND> t = <ID> {targets.add(i);})*  (<BECOME> | <BECOMES>)))
     {return new AssignmentStatement(i, e);}
 }
 
@@ -207,17 +210,25 @@ Statement RETURNSTMT(): {
 {
     (<GIVEBACK> ( f = ANONFUN() | e = EXP()) <YOU>  <MUST>)
     {if(f == null){
-        return new Statement(e);
+        return new ReturnStatement(e);
     }else
-        return new Statement(f);
+        return f;
     }
 }
 
 Statement CONDITIONAL(): {
+    List<ConditionalStatement.Arm> arms = new ArrayList<ConditionalStatement.Arm>();
+    Expression e;
+    Block b;
+    Block elseBlock = null;
 }
 {
-    BLOCK() <IF> "(" EXP() ")" (LOOKAHEAD((<BR>)+ <ELSE>  BLOCK() <IF>) (<BR>)+ <ELSE> BLOCK() <IF> "(" EXP() ")")*
-    (LOOKAHEAD((<BR>)+ <ELSE>)(<BR>)+ <ELSE> BLOCK() )?
+    (b = BLOCK() <IF> "(" e = EXP()    {arms.add(new ConditionalStatement.Arm(e, b));} ")"
+    (LOOKAHEAD((<BR>)+ <ELSE> BLOCK() <IF>) (<BR>)+ <ELSE> b = BLOCK() <IF> "(" e = EXP() ")"
+    {arms.add(new ConditionalStatement.Arm(e, b));})*
+    (LOOKAHEAD((<BR>)+ <ELSE>)(<BR>)+ <ELSE> elseBlock = BLOCK() )?)
+
+    {return new ConditionalStatement(arms, elseBlock);}
 }
 
 Statement TIMESLOOP(): {
@@ -231,11 +242,13 @@ Statement TIMESLOOP(): {
 
 Statement FORLOOP(): {
     Block b;
-    Token t = null;
+    Expression e;
+    Range r;
 }
 {
-    BLOCK() <AS>  <THROUGH> (LOOKAHEAD( (<NUMLIT> | <ID> | FUNCALL() ) <TO>) RANGE()
-                                             | EXP5() ) (<BY> EXP5())? <ID>  <RUNS>
+    b = BLOCK() <AS>  <THROUGH> (LOOKAHEAD( (<NUMLIT> | <ID> | FUNCALL() ) <TO>) r = RANGE()
+                                             | e = EXP5() ) (<BY> e = EXP5())? <ID>  <RUNS>
+    {return new RangeLoop(r, e, b);}
 }
 
 Statement WHILELOOP(): {
@@ -252,7 +265,7 @@ Statement PROCCALL(): {
 }
 {
     s = FUNCALL()
-    {return new Statement(s);}
+    {return s;}
 }
 
 Block BLOCK(): {
@@ -338,4 +351,11 @@ void ARGS1(): {} { LOOKAHEAD(BLOCK() <GIVEN> PARAMS() "," <ID> <DOES>) PROCDEC()
    | LOOKAHEAD(BLOCK() <GIVEN> PARAMS()) ANONFUN()
    | LOOKAHEAD((<ID>".")? "("ARGS()")") FUNCALL()
    | EXP5() }
-void RANGE(): {} { (<NUMLIT> | <ID> | FUNCALL() ) <TO> (<NUMLIT> | <ID> | FUNCALL() ) }
+Range RANGE(): {
+    Expression l;
+    Expression h;
+    Token t;
+}
+{
+    (l = <NUMLIT> | l = <ID> | l = FUNCALL()) <TO> (h = <NUMLIT> | h = <ID> | h = FUNCALL())    {return new Range(l, h);}
+}
