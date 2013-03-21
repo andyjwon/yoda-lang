@@ -8,6 +8,7 @@ public class Variable extends Declaration {
     private Expression initializer;
     private Type type;
     private boolean constant;
+    private boolean derived;
 
     /**
      * An arbitrary variable, useful in semantic analysis to take the place of a variable that has
@@ -19,10 +20,19 @@ public class Variable extends Declaration {
     /**
      * Constructs a variable.
      */
-    public Variable(String name, Expression initializer, boolean constant) {
+    public Variable(String name, Expression initializer, boolean constant, boolean derived) {
         super(name);
         this.initializer = initializer;
         this.constant = constant;
+        this.derived = derived;
+    }
+
+    public Variable(String name, Expression initializer, boolean constant) {
+        this(name, initializer, constant, false);
+    }
+
+    public Variable(String name, Expression initializer) {
+        this(name, initializer, false, false);
     }
 
     /**

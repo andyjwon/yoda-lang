@@ -126,16 +126,32 @@ DecStatement VARDEC(): {
     List<Expression> exps = new ArrayList<Expression>();
     Expression e;
     boolean constant = false;
+    boolean derived = false;
 }
 {
-    ((e = EXP() ){exps.add(e);} (<AND> (e = EXP()) {exps.add(e);} )* "," (t = <ID>) {tokens.add(t.image);}
-        ( <AND>  (t = <ID>) {tokens.add(t.image);})*  (<BEGIN> | <BEGINS>))
-        | (<FROM> EXP() "," (t = <ID>) {tokens.add(t.image);}  <BEGINS>)
-    // TODO: Must account for multiple declarations.
-    {for(int i = 0; i < tokens.size(); i++){
-        variables.add(new Variable(tokens.get(i), exps.get(i), constant));
+    (
+      (e = EXP()) {exps.add(e);}
+      (<AND> (e = EXP()) {exps.add(e);})*
+      ","
+      (t = <ID>) {tokens.add(t.image);}
+      (<AND> (t = <ID>) {tokens.add(t.image);})*
+      (<BEGIN> | <BEGINS>)
+    |
+      <FROM> e = EXP() {exps.add(e);}
+      ","
+      (t = <ID>) {tokens.add(t.image);}
+      {derived = true;}
+      <BEGINS>
+    )
+
+    {
+      // ???: REVISIT LANGUAGE DESIGN
+      for (int i = 0; i < tokens.size(); i++) {
+        variables.add(new Variable(tokens.get(i),
+          i < exps.size() ? exps.get(i) : null, constant, derived));
+      }
+      return new DecStatement(variables);
     }
-    return new DecStatement(variables);}
 }
 
 Variable CONSTDEC(): {
@@ -145,7 +161,7 @@ Variable CONSTDEC(): {
 }
 {
     ((e = EXP() ) "," (t = <ID>)  <MUST>  <BE>)
-    {return new Variable(t.image, e, constant);}
+    {return new Variable(t.image, e, constant, false);}
 }
 
 Procedure PROCDEC(): {
@@ -171,8 +187,8 @@ void PARAMS(List<Variable> params): {
     Token t;
 }
 {
-    (<NOTHING> | (t = <ID> {params.add(new Variable(t.image, null, false));}
-     (  <AND>  t = <ID> {params.add(new Variable(t.image, null, false));})*))
+    (<NOTHING> | (t = <ID> {params.add(new Variable(t.image, null, false, false));}
+     (  <AND>  t = <ID> {params.add(new Variable(t.image, null, false, false));})*))
 }
 
 Statement ASSIGNMENT(): {
