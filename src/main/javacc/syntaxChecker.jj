@@ -110,9 +110,9 @@ Statement STMT(): {
    | LOOKAHEAD(EXP() "," <ID> <MUST> <BE>) s = CONSTDEC()
    | LOOKAHEAD(<FROM> | (EXP() (<AND> EXP())*  "," <ID> ( <AND> <ID>)* (<BEGIN> | <BEGINS>))) s = VARDEC()
    | LOOKAHEAD(EXP() (<AND> EXP())* "," <ID> ( <AND> <ID>)* (<BECOME> | <BECOMES>)) s = ASSIGNMENT()
-   | LOOKAHEAD((<ID> ".") | ("(" ARGS() ")" <ID>)) s = FUNCALL()
+//   | LOOKAHEAD((<ID> ".") | ("(" ARGS() ")" <ID>)) s = FUNCALL()
    | LOOKAHEAD(<GIVEBACK>) s = RETURNSTMT()
-   | LOOKAHEAD(FUNCALL()) s = PROCCALL()
+//   | LOOKAHEAD(FUNCALL()) s = PROCCALL()
 )// TODO: expression is not a statement
    //| s = EXP())
    ((<BR>)+ | <EOF>)
@@ -272,12 +272,12 @@ Statement WHILELOOP(): {
     {return new WhileLoop(e, b);}
 }
 
-Statement PROCCALL(): {
-    Statement s;
+FunctionCall PROCCALL(): {
+    FunctionCall f;
 }
 {
-    s = FUNCALL()
-    {return s;}
+    f = FUNCALL()
+    {return f;}
 }
 
 Block BLOCK(): {
@@ -345,8 +345,7 @@ Expression EXP5(): {
     (e = ARRAY()
    | e = LIT()
    | LOOKAHEAD("{" (<BR>)* (":" | "}")) e = OBJECT()
-/* TODO: funcall needs to be an expression here? */
-//   | LOOKAHEAD((<ID> ".")? "("ARGS()")") FUNCALL()
+   | LOOKAHEAD((<ID> ".")? "("ARGS()")") e = FUNCALL()
    | t = <ID> {e = new IdentifierExpression(t.image);}
    | "(" e = EXP() ")")
     {return e;}
@@ -382,24 +381,24 @@ Function ANONFUN(): {
     Block b;
     List<Variable> params = new ArrayList<Variable>();
 }
+// TODO: Make this work sometime
 {
     b = BLOCK() <GIVEN> PARAMS(params)
     {return new Function(null, params, b);}
 }
 FunctionCall FUNCALL(): {
+  //Expression function, List<Expression> args
     Token functionName = null;
     List<Expression> args = new ArrayList<Expression>();
     Token objectName = null;
-    Function f = null;
 }
 {
-    (objectName = <ID>".")?"("args = ARGS()")"(functionName = <ID> | f = ANONFUN())
+    (objectName = <ID>".")?"("args = ARGS()")"(functionName = <ID>)
     {
-        if(functionName == null) {
-            return f;
+        if (objectName != null)        {            return new FunctionCall(new IdentifierExpression(objectName.image + "." + functionName.image), args);
         } else {
-            return new CallStatement(functionName.image, args, objectName.image);
-        }    }
+            return new FunctionCall(new IdentifierExpression(functionName.image), args);
+        }    }
 }
 String RELOP(): {
     Token s;
