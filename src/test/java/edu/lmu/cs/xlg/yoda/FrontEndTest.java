@@ -11,12 +11,12 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import edu.lmu.cs.xlg.yoda.Compiler;
 import edu.lmu.cs.xlg.yoda.entities.Script;
 
 /**
@@ -59,6 +59,7 @@ public class FrontEndTest {
      * Tests that the current file does what it is supposed to when compiled.
      */
     @Test
+    @Ignore
     public void testFrontEnd() throws IOException {
         try {
             System.out.println("Testing " + filename + "... ");
