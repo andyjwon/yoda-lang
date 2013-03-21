@@ -9,7 +9,10 @@ import edu.lmu.cs.xlg.util.Log;
 import edu.lmu.cs.xlg.yoda.entities.*;
 
 public class Parser {
-    public static void main(String[] args) {
+    /**
+     * Returns the result of parsing the Yoda program on the given Reader.
+     */
+    public Script parse(Log log) {
         try {
             new Parser(new java.io.FileReader(args[0])).SCRIPT();
             System.out.println("Syntax is okay");
@@ -209,11 +212,11 @@ Statement RETURNSTMT(): {
 }
 {
     (<GIVEBACK> ( f = ANONFUN() | e = EXP()) <YOU>  <MUST>)
-	{
-	    if(f == null) {
-	        return new ReturnStatement(e);
-	    } else {	        return f;
-	    }
+    {
+        if(f == null) {
+            return new ReturnStatement(e);
+        } else {            return f;
+        }
     }
 }
 
@@ -346,7 +349,7 @@ Expression EXP5(): {
 
 Literal LIT(): {
     Token t;
-}{  
+}{
   t = <NUMLIT>  {return new NumberLiteral(t.image);}  |
   t = <STRLIT>
   {return new StringLiteral(t.image);}
@@ -391,7 +394,7 @@ Statement FUNCALL(): {
             return f;
         } else {
             return new CallStatement(functionName.image, args, objectName.image);
-        }                    }
+        }    }
 }
 String RELOP(): {
     Token s;
@@ -417,7 +420,7 @@ String ARITHOP(): {
     | s = "%"
     | s = "^"
     | update = UPDATE() {return update;}
-    {return s.image;} 
+    {return s.image;}
 }
 
 String UNARYOP(): {

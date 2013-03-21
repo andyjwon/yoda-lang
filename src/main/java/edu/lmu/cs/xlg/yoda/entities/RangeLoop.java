@@ -14,7 +14,7 @@ public class RangeLoop extends Statement {
 
     public RangeLoop(Variable iterator, Range range, Expression step,
             Block body) {
-    	this.iterator = iterator;
+        this.iterator = iterator;
         this.range = range;
         this.step = step;
         this.body = body;
@@ -24,7 +24,7 @@ public class RangeLoop extends Statement {
         return iterator;
     }
 
-    public Expression getRange() {
+    public Range getRange() {
         return range;
     }
 
