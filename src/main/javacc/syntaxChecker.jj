@@ -14,11 +14,13 @@ public class Parser {
      */
     public Script parse(Log log) {
         try {
-            new Parser(new java.io.FileReader(args[0])).SCRIPT();
-            System.out.println("Syntax is okay");
-        } catch (Throwable e) {
-            // Catching Throwable is ugly but JavaCC throws Error objects!
-            System.out.println("Syntax check failed: " + e.getMessage());
+            return SCRIPT();
+        } catch (TokenMgrError e) {
+            log.exception(e);
+            return null;
+        } catch (ParseException e) {
+            log.exception(e);
+            return null;
         }
     }
 }
