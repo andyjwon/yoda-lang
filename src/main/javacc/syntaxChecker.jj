@@ -386,7 +386,7 @@ Function ANONFUN(): {
     b = BLOCK() <GIVEN> PARAMS(params)
     {return new Function(null, params, b);}
 }
-Statement FUNCALL(): {
+FunctionCall FUNCALL(): {
     Token functionName = null;
     List<Expression> args = new ArrayList<Expression>();
     Token objectName = null;
