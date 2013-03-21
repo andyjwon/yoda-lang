@@ -12,7 +12,7 @@ import java.util.Set;
 import edu.lmu.cs.xlg.util.Log;
 
 /**
- * A Manatee entity.
+ * A Yoda entity.
  *
  * <p>The front end of the compiler produces an intermediate representation in the form of a graph.
  * Each entity in the graph has some syntactic and semantic content.  The syntactic content is

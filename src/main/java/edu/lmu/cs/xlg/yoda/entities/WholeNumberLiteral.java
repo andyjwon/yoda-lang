@@ -23,7 +23,7 @@ public class WholeNumberLiteral extends Literal {
         type = Type.WHOLE_NUMBER;
 
         // Let Java do the work of determining whether the lexeme describes a valid 2s-complement
-        // integer literal; after all, whole number literals in Manatee are exactly like integer
+        // integer literal; after all, whole number literals in Yoda are exactly like integer
         // literals in Java.
         try {
             value = Integer.valueOf(getLexeme());

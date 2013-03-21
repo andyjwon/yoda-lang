@@ -3,7 +3,7 @@ package edu.lmu.cs.xlg.yoda.entities;
 import java.util.List;
 
 /**
- * A Manatee script. A script is actually just a top-level block.
+ * A Yoda script. A script is actually just a top-level block.
  */
 public class Script extends Block {
 

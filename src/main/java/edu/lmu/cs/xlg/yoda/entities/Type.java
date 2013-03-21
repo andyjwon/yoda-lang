@@ -3,7 +3,7 @@ package edu.lmu.cs.xlg.yoda.entities;
 import edu.lmu.cs.xlg.util.Log;
 
 /**
- * A Manatee type object.
+ * A Yoda type object.
  */
 public class Type extends Declaration {
 
