@@ -1,7 +1,6 @@
 package edu.lmu.cs.xlg.yoda.entities;
 
 import edu.lmu.cs.xlg.util.Log;
-import edu.lmu.cs.xlg.yoda.syntax.Token;
 
 public class Variable extends Declaration {
 

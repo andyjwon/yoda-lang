@@ -327,25 +327,28 @@ Expression EXP3(): {
     {return op == null ? e : new UnaryExpression(op, e);}
 }
 Expression EXP4(): {
-    Expression e1;
-    Expression e2;
-    Expression e3;
+    Expression condition;
+    Expression t = null;
+    Expression f = null;
 }
 {
-    ( EXP5() (<HMMQ> (EXP5() | ASSIGNMENT()) <HMM> (EXP5() | ASSIGNMENT()) )?)
-    {return null; /* TODO */}
+/* TODO: Why does this have an assignment in there? */
+    //( condition = EXP5() (<HMMQ> (t = EXP5() | t = ASSIGNMENT()) <HMM> (f = EXP5() | f = ASSIGNMENT()) )?)
+    ( condition = EXP5() (<HMMQ> (t = EXP5()) <HMM> (f = EXP5()) )?)
+    {return new TernaryExpression(condition, t, f);}
 }
 Expression EXP5(): {
     Expression e;
     Token t;
 }
 {
-    e = ARRAY()
+    (e = ARRAY()
    | e = LIT()
    | LOOKAHEAD("{" (<BR>)* (":" | "}")) e = OBJECT()
-   | LOOKAHEAD((<ID> ".")? "("ARGS()")") FUNCALL()
-   | t = <ID> {return new IdentifierExpression(t.image);}
-   | "(" e = EXP() ")"
+/* TODO: funcall needs to be an expression here? */
+//   | LOOKAHEAD((<ID> ".")? "("ARGS()")") FUNCALL()
+   | t = <ID> {e = new IdentifierExpression(t.image);}
+   | "(" e = EXP() ")")
     {return e;}
 }
 
