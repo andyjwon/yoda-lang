@@ -43,6 +43,9 @@
             <goals>
               <goal>javacc</goal>
             </goals>
+            <configuration>
+              <isStatic>false</isStatic>
+            </configuration>
           </execution>
         </executions>
       </plugin>

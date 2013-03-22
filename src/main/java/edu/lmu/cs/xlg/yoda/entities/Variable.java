@@ -66,6 +66,10 @@ public class Variable extends Declaration {
         return constant;
     }
 
+    public boolean isDerived() {
+        return derived;
+    }
+
     @Override
     public void analyze(Log log, SymbolTable table, Subroutine owner, boolean inLoop) {
 
