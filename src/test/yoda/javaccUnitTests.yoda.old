@@ -1,0 +1,165 @@
+
+"Hello, republic" you print
+
+"strong", force begins
+800, years_training_jedi begins
+
+3 and 5, x and y begin
+
+"disbelief", REASON_FOR_FAILURE must be
+
+1, x begins
+(+ x 1 ), x becomes
+x you print
+
+3 and 5 and 7 and 11, x and y and z and a become
+
+(* (/ y (- 4  x ) ) 2.5 )
+
+3, x begins
+10, y begins
+x and y, y and x become
+
+null
+(= null x is?)
+
+true
+false
+(< 3 4 is?)
+(> 5 x is?)
+(!= 1 n is?)
+(((= 5 3 is?) & (>= 9 x is?)) | ((!= (/ y 4 ) 1 is?) & (!found)))
+
+[2, 3, 5, 7, 11], p begins
+p, q begins
+[4, true, "000", q], a begins
+
+
+"hi"
+
+"\""
+
+"yoda", x begins
+(+ x " loves pie" ), x becomes
+
+(= "hi" "bye" is?)
+
+(+ "hi" "bye" )
+
+{(* x x )} given x, square gives
+
+{(+ x y )} given x and y, plus gives
+
+{0} given nothing, zero gives
+
+
+
+(8)square
+(7, 4)plus
+((8, (- 2 (11)square ))plus)square
+(+ (155, 71)bmi ()zero ) you print
+
+
+
+{
+  (+ "Hello, " name ) you print
+} given name, greet_her does
+
+{
+  "Hello" you print
+} given nothing, greet does
+
+{
+  "one" you print
+  "two" you print
+  "three" you print
+} given nothing, counter does
+
+{
+  {s you print} as through 0 to n repeat1 runs
+} given s and n, echo does
+
+
+("Alice")greet_her
+
+()greet
+
+("NO", 5)echo
+
+{((x)f)f} given f and x, twice gives
+
+
+{(* 3 x )} given x
+
+({(* x x )} given x, 9)twice
+
+{3 you print} if (> 2 x is?)
+
+{give back false you must} if (!found)
+
+{give back "A" you must} if (>= 90 grade is?)
+else {give back "B" you must} if (>= 80 grade is?)
+else {give back "C" you must} if (>= 70 grade is?)
+else {give back "D" you must} if (>= 60 grade is?)
+else {give back "F" you must}
+
+((< 5 y is?) hmm? ++y hmm --y)
+
+{x you print} as through 1 to 10 x runs
+
+
+
+{
+  (* x x ) you print
+} as through 1 to 10 by 2 x runs
+
+[spot, sparky, spike], pet_list begins
+{
+  dog.()bark
+  dog.()run
+  dog.()sit
+} as through pet_list dog runs
+
+{
+  {(+ (* 3 n ) 1 ),n becomes} if(= 0 (% n 2) is?)
+  else {(/ n 2 ), n becomes}
+} while (!= 1 n is?)
+
+{
+  {give back false you must} if (< 2 max is?)
+  {
+    {give back false you must} if (= 0 (% n d) is?)
+  } as through 3 to (n)sqrt d runs
+  give back true you must
+} given n, is_prime gives
+
+
+{
+  0, i begins
+  give back {(+= i 1 )} given nothing you must
+} given i, counter gives
+
+{: x 1 , : y 5}, training begins
+
+{}, training begins
+
+{}, universe training begins
+
+{
+  : x 0,
+  : y 0,
+  : color "black",
+  : radius 1,
+  : area {
+           (* (radius, 2)power ()PI)
+         } given nothing, area gives
+}, circle training begins
+
+{} to be circle, c1 training begins
+
+(3)abs
+(2.3)floor
+(2)cos
+()PI
+(x, 2)power
+(x)sqrt
