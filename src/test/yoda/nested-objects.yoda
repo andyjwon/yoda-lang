@@ -1,0 +1,11 @@
+{: x 1,
+  {: y 7,
+    {: new "string",
+      {: array [1,2,3,4,5,6,7,8,9,0],
+        {: gcd {{give back x} if (= 0 (% x y))else {give back (y, (% x y))gcd}} given x and y, gcd gives,
+          {: m 5}
+        }
+      }
+    }
+  }
+}
