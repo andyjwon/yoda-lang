@@ -138,18 +138,18 @@ String Concatenation
 
 Function declaration, one parameter
 
-    {(* x x )} given x, square gives                        var square = function (x) {
+    {give back (* x x ) you must} given x, square gives     var square = function (x) {
                                                               return x * x;
                                                             };
 
 Function declaration, two parameters
 
-    {(+ x y )} given x and y, plus gives                    var plus = function (x, y) {
+  {give back (+ x y ) you must } given x and y, plus gives  var plus = function (x, y) {
                                                               return x + y;
                                                             };
 Function declaration, zero parameters
 
-    {0} given nothing, zero gives                           var zero = function () {
+    {give back 0 you must } given nothing, zero gives       var zero = function () {
                                                               return 0;
                                                             };
 Function declaration, multiline
