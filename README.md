@@ -201,15 +201,15 @@ Procedure call
 
 Function as parameter
 
-    {((x)f)f} given f and x, twice gives                    var twice = function (x) {
+  {give back ((x)f)f you must } given f and x, twice gives  var twice = function (x) {
                                                               return f(f(x));
                                                             };
 
 Anonymous function
 
-    {(* 3 x )} given x                                      function (x) {return 3 * x;}
+    {give back (* 3 x ) you must} given x                   function (x) {return 3 * x;}
 
-    ({(* x x )} given x, 9)twice                            twice(function (x) {return x * x;}, 9)
+    ({give back (* x x ) you must} given x, 9)twice         twice(function (x) {return x * x;}, 9)
 
 Conditional Expressions
 
@@ -294,7 +294,7 @@ Objects
       : color "black",                                        color: "black",
       : radius 1,                                             radius: 1,
       {                                                       area: function ()
-        * (radius, 2)power ()PI are                             return Math.pow(this.radius, 2) * Math.PI;
+        give back (* (radius, 2)power ()PI) you must            return Math.pow(this.radius, 2) * Math.PI;
       }, given nothing area gives                             }
     }, circle training begins                               };
 
