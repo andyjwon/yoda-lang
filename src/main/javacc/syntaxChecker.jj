@@ -51,6 +51,7 @@ TOKEN: {
     | <TO: ("to")>
     | <BY: ("by")>
     | <AND: ("and")>
+    | <PERHAPS: ("perhaps")>
     | <HMM: ("hmm")>
     | <HMMQ: ("hmm?")>
     | <IS: ("is?")>
@@ -76,6 +77,7 @@ TOKEN: {
     | <YOU: ("you")>
     | <PRINT: ("print")>
     | <GIVEBACK: ("give back")>
+    | <ON: ("on")>
     | <ID: ((["a"-"z"] | ["A"-"Z"])+(["-"] | ["_"] | ["a"-"z"] | ["A"-"Z"] | ["0"-"9"])*)>
     | <NUMLIT: (("0x" | "0b" | "0o")? (["0"-"9"])+("."(["0"-"9"])*)?)>
     | <STRLIT: ("\"" (~["\""] | ("\\\""))* "\"") >
@@ -90,8 +92,11 @@ Script SCRIPT(): {
 }
 {
     (<BR>)*
-    (s = STMT() {statements.add(s);})+
-    <EOF>
+    
+    s = STMT() {statements.add(s);} 
+    (LOOKAHEAD((<BR>)+ STMT()) (<BR>)+ STMT() {statements.add(s);})*
+    
+    (<BR>)* <EOF>
     {return new Script(statements);}
 }
 
@@ -99,23 +104,22 @@ Statement STMT(): {
     Statement s;
 }
 {
-     (LOOKAHEAD(BLOCK() <WHILE>) s = WHILELOOP()
+   ( LOOKAHEAD(BLOCK() <WHILE>) s = WHILELOOP()
    | LOOKAHEAD(BLOCK() <AS>) s = FORLOOP()
    | LOOKAHEAD(BLOCK() <IF>) s = CONDITIONAL()
    | LOOKAHEAD(BLOCK() EXP()) s = TIMESLOOP()
    | LOOKAHEAD(BLOCK() <GIVEN> PARAMS() "," <ID> <DOES>) s = PROCDEC()
    | LOOKAHEAD(BLOCK() <GIVEN> PARAMS() "," <ID> <GIVES>) s = FUNDEC()
-   | LOOKAHEAD(BLOCK() <GIVEN> ARGS()) s = ANONFUN()
    | LOOKAHEAD(EXP() <YOU> <PRINT>) s = PRINTSTMT()
    | LOOKAHEAD(EXP() "," <ID> <MUST> <BE>) s = CONSTDEC()
    | LOOKAHEAD(<FROM> | (EXP() (<AND> EXP())*  "," <ID> ( <AND> <ID>)* (<BEGIN> | <BEGINS>))) s = VARDEC()
    | LOOKAHEAD(EXP() (<AND> EXP())* "," <ID> ( <AND> <ID>)* (<BECOME> | <BECOMES>)) s = ASSIGNMENT()
-//   | LOOKAHEAD((<ID> ".") | ("(" ARGS() ")" <ID>)) s = FUNCALL()
+   //| LOOKAHEAD((<ID> ".") | ("(" ARGS() ")" <ID>)) s = FUNCALL()
    | LOOKAHEAD(<GIVEBACK>) s = RETURNSTMT()
-//   | LOOKAHEAD(FUNCALL()) s = PROCCALL()
-)// TODO: expression is not a statement
-   //| s = EXP())
-   ((<BR>)+ | <EOF>)
+   //| LOOKAHEAD(FUNCALL()) s = PROCCALL()
+   // TODO: expression is not a statement
+   //| s = EXP()
+   )
    {return s;}
 }
 
@@ -206,7 +210,7 @@ Statement ASSIGNMENT(): {
         e = new UnaryExpression(op, i);
         targets.add(i);
         sources.add(e);} )
-    | (op = UPDATE() t = <ID> e = EXP5()
+    | (op = UPDATE() t = <ID> e = EXP()
     {i = new IdentifierExpression(t.image);
         targets.add(i);
         sources.add(e);})
@@ -226,16 +230,10 @@ Statement PRINTSTMT(): {
 
 Statement RETURNSTMT(): {
     Expression e = null;
-    Function f = null;
 }
 {
-    (<GIVEBACK> ( f = ANONFUN() | e = EXP()) <YOU>  <MUST>)
-    {
-        if(f == null) {
-            return new ReturnStatement(e);
-        } else {            return f;
-        }
-    }
+    <GIVEBACK>  e = EXP() <YOU> <MUST>
+    {return new ReturnStatement(e);}
 }
 
 Statement CONDITIONAL(): {
@@ -271,7 +269,7 @@ Statement FORLOOP(): {
 }
 {
     b = BLOCK() <AS>  <THROUGH> (LOOKAHEAD( (<NUMLIT> | <ID> | FUNCALL() ) <TO>) r = RANGE()
-                                             | condition = EXP5() ) (<BY> step = EXP5())? t = <ID>  <RUNS>
+                                             | condition = EXP() ) (<BY> step = EXP())? t = <ID>  <RUNS>
     {
         if(condition == null) {            return new RangeLoop(new Variable(t.image), r, step, b);
         } else {
@@ -301,70 +299,40 @@ Block BLOCK(): {
     Statement s;
 }
 {
-    ("{" (<BR>)* (s = STMT() {statements.add(s);})
-        ((<BR>)+ (s = STMT(){statements.add(s);})?)* (<BR>)*"}")
+    "{"
+    (<BR>)*
+    
+    s = STMT() {statements.add(s);} 
+    (LOOKAHEAD((<BR>)+ STMT()) (<BR>)+ STMT() {statements.add(s);})*
+    
+    (<BR>)* "}"
     {return new Block(statements);}
 }
 
 Expression EXP(): {
-    Expression e1;
-    Expression e2;
-}
-{
-    e1 =  EXP1() ("|" e2 = EXP1(){e1 = new BinaryExpression(e1, "|", e2);} )*
-    {return e1;}
-}
-Expression EXP1(): {
-    Expression e1;
-    Expression e2;
-}
-{
-    e1 = EXP2() ("&" e2 = EXP2() {e1 = new BinaryExpression(e1, "&", e2);})*
-    {return e1;}
-}
-Expression EXP2(): {
     String op;
-    Expression e1;
+    Expression e1 = null;
     Expression e2;
-}
-{
-    (op = RELOP() e1 = EXP3() e2 = EXP3() <IS> {e1 = new BinaryExpression(e1, op, e2);} )
-   | (op = ARITHOP() e1 = EXP3() (e2 = EXP3(){e1 = new BinaryExpression(e1, op, e2);})+ )
-   | e1 = EXP3()
-   {return e1;}
-}
-
-Expression EXP3(): {
-    String op = null;
-    Expression e;
-}
-{
-    (op = UNARYOP()  e = EXP4() )  | e = EXP4()
-    {return op == null ? e : new UnaryExpression(op, e);}
-}
-Expression EXP4(): {
+    List<Expression> exps = new ArrayList<Expression>();
     Expression condition;
-    Expression t = null;
-    Expression f = null;
-}
-{
-/* TODO: Why does this have an assignment in there? */
-    //( condition = EXP5() (<HMMQ> (t = EXP5() | t = ASSIGNMENT()) <HMM> (f = EXP5() | f = ASSIGNMENT()) )?)
-    ( condition = EXP5() (<HMMQ> (t = EXP5()) <HMM> (f = EXP5()) )?)
-    {return new TernaryExpression(condition, t, f);}
-}
-Expression EXP5(): {
-    Expression e;
     Token t;
 }
 {
-    (e = ARRAY()
-   | e = LIT()
-   | LOOKAHEAD("{" (<BR>)* (":" | "}")) e = OBJECT()
-   | LOOKAHEAD((<ID> ".")? "("ARGS()")") e = FUNCALL()
-   | t = <ID> {e = new IdentifierExpression(t.image);}
-   | "(" e = EXP() ")")
-    {return e;}
+   "(" (op = RELOP() e1 = EXP() e2 = EXP() <IS> {e1 = new BinaryExpression(e1, op, e2);} )
+   	   | (op = ARITHOP() e1 = EXP() (e2 = EXP(){e1 = new BinaryExpression(e1, op, e2);})+ ) 
+   	   | (<PERHAPS> condition = EXP() <HMMQ> e1 = EXP() <HMM> e2 = EXP() {return new TernaryExpression(condition, e1, e2);})
+   	   | (op = UNARYOP() e1 = EXP() {return new UnaryExpression(op, e1);})
+   	   | (<ON> ( <NOTHING> |  (e1 = EXP() {exps.add(e1);})+ ) t = <ID>
+   	       {
+   	       	   e2 = new IdentifierExpression(t.image);
+   	           return new FunctionCall(e2, exps);
+   	       })
+   ")"  
+   | e1 = ARRAY()
+   | e1 = LIT()
+   | e1 = OBJECT()
+   | t = <ID> {e1 = new IdentifierExpression(t.image);}
+   {return e1;}
 }
 
 Literal LIT(): {
@@ -388,28 +356,18 @@ ObjectExpression OBJECT(): {
     Expression e = null;
     Function f = null;
 }
-{ "{" (<BR>)* (":" t = <ID> ( f = ANONFUN() | e = EXP5())
-    ( "," (<BR>)* ":" <ID> (ANONFUN() | EXP5()))* (<BR>)* )? (<BR>)* "}" (<TO>  <BE>  <ID>)? ","  (<ID> )? <TRAINING>  <BEGINS>
+{ "{" (<BR>)* (":" t = <ID>  e = EXP()
+    ( "," (<BR>)* ":" <ID> ( EXP()))* (<BR>)* )? (<BR>)* "}" (<TO>  <BE>  <ID>)? ","  (<ID> )? <TRAINING>  <BEGINS>
     {return o;}
 }
 
-Function ANONFUN(): {
-    Block b;
-    List<Variable> params = new ArrayList<Variable>();
-}
-// TODO: Make this work sometime
-{
-    b = BLOCK() <GIVEN> PARAMS(params)
-    {return new Function(null, params, b);}
-}
 FunctionCall FUNCALL(): {
-  //Expression function, List<Expression> args
     Token functionName = null;
     List<Expression> args = new ArrayList<Expression>();
     Token objectName = null;
 }
 {
-    (objectName = <ID>".")?"("args = ARGS()")"(functionName = <ID>)
+    <ON> (objectName = <ID>".")?"("args = ARGS()")"(functionName = <ID>)
     {
         if (objectName != null)        {            return new FunctionCall(new IdentifierExpression(objectName.image + "." + functionName.image), args);
         } else {
@@ -439,7 +397,8 @@ String ARITHOP(): {
     | s = "-"
     | s = "%"
     | s = "^"
-    | update = UPDATE() {return update;}
+    | s = "|"
+    | s = "&"
     {return s.image;}
 }
 
@@ -479,9 +438,8 @@ void ARGS1(List<Expression> args): {
 {
    LOOKAHEAD(BLOCK() <GIVEN> PARAMS() "," <ID> <DOES>) PROCDEC()
    | LOOKAHEAD(BLOCK() <GIVEN> PARAMS() "," <ID> <GIVES>) FUNDEC()
-   | LOOKAHEAD(BLOCK() <GIVEN> PARAMS()) ANONFUN()
    | LOOKAHEAD((<ID>".")? "("ARGS()")") FUNCALL()
-   | EXP5()
+   | EXP()
 }
 Range RANGE(): {
     Expression l = null;
