@@ -327,7 +327,9 @@ Expression EXP(): {
    	   | (<PERHAPS> condition = EXP() <HMMQ> e1 = EXP() <HMM> e2 = EXP()
    	        {returnedExp = new TernaryExpression(condition, e1, e2);})
    	   | (op = UNARYOP() e1 = EXP() {returnedExp = new UnaryExpression(op, e1);})
-   	   | (<ON> ( <NOTHING> |  (e1 = EXP() {exps.add(e1);})+ ) t = <ID>
+   	   | (<ON> ( <NOTHING> |  (e1 = EXP() {exps.add(e1);})
+            (<AND> e1 = EXP() {exps.add(e1);})* )
+   	    t = <ID>
    	       {
    	       	   e2 = new IdentifierExpression(t.image);
    	           returnedExp = new FunctionCall(e2, exps);
@@ -352,7 +354,7 @@ ArrayConstructor ARRAY():{
     Expression e;
     List<Expression> es = new ArrayList<Expression>();}
 {
-    ("[" ( (<BR>)? e = EXP() {es.add(e);} ("," (<BR>)? e = EXP() {es.add(e);})* (<BR>)?)* "]")
+    ("[" ( (<BR>)* e = EXP() {es.add(e);}) ("," (<BR>)* e = EXP() {es.add(e);} (<BR>)*)* "]")
     {return new ArrayConstructor(es);}
 }
 ObjectExpression OBJECT(): {
@@ -362,7 +364,8 @@ ObjectExpression OBJECT(): {
     Function f = null;
 }
 { "{" (<BR>)* (":" t = <ID>  e = EXP()
-    ( "," (<BR>)* ":" <ID> ( EXP()))* (<BR>)* )? (<BR>)* "}" (<TO>  <BE>  <ID>)? ","  (<ID> )? <TRAINING>  <BEGINS>
+    ( "," (<BR>)* ":" <ID> ( EXP()))* (<BR>)*)? "}" (<TO>  <BE>  <ID>)?
+      ","  (<ID> )? <TRAINING>  <BEGINS>
     {return o;}
 }
 
