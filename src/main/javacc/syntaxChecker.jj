@@ -313,26 +313,31 @@ Expression EXP(): {
     String op;
     Expression e1 = null;
     Expression e2;
+    Expression returnedExp;
     List<Expression> exps = new ArrayList<Expression>();
     Expression condition;
     Token t;
 }
 {
-   "(" (op = RELOP() e1 = EXP() e2 = EXP() <IS> {e1 = new BinaryExpression(e1, op, e2);} )
-   	   | (op = ARITHOP() e1 = EXP() (e2 = EXP(){e1 = new BinaryExpression(e1, op, e2);})+ ) 
-   	   | (<PERHAPS> condition = EXP() <HMMQ> e1 = EXP() <HMM> e2 = EXP() {return new TernaryExpression(condition, e1, e2);})
-   	   | (op = UNARYOP() e1 = EXP() {return new UnaryExpression(op, e1);})
+   "(" (op = RELOP() e1 = EXP() e2 = EXP() <IS> {returnedExp = new RelationalExpression(e1, op, e2);} )
+   	   | (op = ARITHOP() e1 = EXP() {exps.add(e1);}
+   	        (e2 = EXP(){exps.add(e2);})+
+   	        {returnedExp = new ArbitraryArityExpression(op, exps);}   	        
+   	     ) 
+   	   | (<PERHAPS> condition = EXP() <HMMQ> e1 = EXP() <HMM> e2 = EXP()
+   	        {returnedExp = new TernaryExpression(condition, e1, e2);})
+   	   | (op = UNARYOP() e1 = EXP() {returnedExp = new UnaryExpression(op, e1);})
    	   | (<ON> ( <NOTHING> |  (e1 = EXP() {exps.add(e1);})+ ) t = <ID>
    	       {
    	       	   e2 = new IdentifierExpression(t.image);
-   	           return new FunctionCall(e2, exps);
+   	           returnedExp = new FunctionCall(e2, exps);
    	       })
    ")"  
-   | e1 = ARRAY()
-   | e1 = LIT()
-   | e1 = OBJECT()
-   | t = <ID> {e1 = new IdentifierExpression(t.image);}
-   {return e1;}
+   | returnedExp = ARRAY()
+   | returnedExp = LIT()
+   | returnedExp = OBJECT()
+   | t = <ID> {returnedExp = new IdentifierExpression(t.image);}
+   {return returnedExp;}
 }
 
 Literal LIT(): {

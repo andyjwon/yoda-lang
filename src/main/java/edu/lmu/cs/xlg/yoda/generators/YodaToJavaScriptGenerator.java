@@ -6,9 +6,9 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
+import edu.lmu.cs.xlg.yoda.entities.ArbitraryArityExpression;
 import edu.lmu.cs.xlg.yoda.entities.ArrayConstructor;
 import edu.lmu.cs.xlg.yoda.entities.AssignmentStatement;
-import edu.lmu.cs.xlg.yoda.entities.BinaryExpression;
 import edu.lmu.cs.xlg.yoda.entities.Block;
 import edu.lmu.cs.xlg.yoda.entities.BooleanLiteral;
 import edu.lmu.cs.xlg.yoda.entities.CallStatement;
@@ -29,6 +29,7 @@ import edu.lmu.cs.xlg.yoda.entities.PlainLoop;
 import edu.lmu.cs.xlg.yoda.entities.Range;
 import edu.lmu.cs.xlg.yoda.entities.RangeLoop;
 import edu.lmu.cs.xlg.yoda.entities.ReadStatement;
+import edu.lmu.cs.xlg.yoda.entities.RelationalExpression;
 import edu.lmu.cs.xlg.yoda.entities.ReturnStatement;
 import edu.lmu.cs.xlg.yoda.entities.Script;
 import edu.lmu.cs.xlg.yoda.entities.Statement;
@@ -209,8 +210,11 @@ public class YodaToJavaScriptGenerator extends Generator {
         } else if (e instanceof UnaryExpression) {
             return generateUnaryExpression(UnaryExpression.class.cast(e));
 
-        } else if (e instanceof BinaryExpression) {
-            return generateBinaryExpression(BinaryExpression.class.cast(e));
+        } else if (e instanceof RelationalExpression) {
+            return generateRelationalExpression(RelationalExpression.class.cast(e));
+
+        } else if (e instanceof ArbitraryArityExpression) {
+            return generateArbitraryArityExpression(ArbitraryArityExpression.class.cast(e));
 
         } else if (e instanceof ArrayConstructor) {
             List<String> values = new ArrayList<String>();
@@ -312,9 +316,9 @@ public class YodaToJavaScriptGenerator extends Generator {
     }
 
     /**
-     * Returns JavaScript source for the given Yoda unary expression.
+     * Returns JavaScript source for the given Yoda relational expression.
      */
-    private String generateBinaryExpression(BinaryExpression e) {
+    private String generateRelationalExpression(RelationalExpression e) {
 
         String op = e.getOp();
         String left = generateExpression(e.getLeft());
@@ -365,4 +369,12 @@ public class YodaToJavaScriptGenerator extends Generator {
         }
         return String.format("(%s %s %s)", left, op, right);
     }
+    
+    /**
+     * Returns JavaScript source for the given Yoda arbitrary arity expression.
+     */
+    private String generateArbitraryArityExpression(ArbitraryArityExpression e) {
+        return "";
+    }
+
 }
