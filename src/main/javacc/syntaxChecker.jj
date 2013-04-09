@@ -92,10 +92,10 @@ Script SCRIPT(): {
 }
 {
     (<BR>)*
-    
-    s = STMT() {statements.add(s);} 
+
+    s = STMT() {statements.add(s);}
     (LOOKAHEAD((<BR>)+ STMT()) (<BR>)+ STMT() {statements.add(s);})*
-    
+
     (<BR>)* <EOF>
     {return new Script(statements);}
 }
@@ -243,10 +243,10 @@ Statement CONDITIONAL(): {
     Block elseBlock = null;
 }
 {
-    (b = BLOCK() <IF> "(" e = EXP()
-    {arms.add(new ConditionalStatement.Arm(e, b));} ")"
+    (b = BLOCK() <IF> "("
+        e = EXP() {arms.add(new ConditionalStatement.Arm(e, b));}")"
     (LOOKAHEAD((<BR>)+ <ELSE> BLOCK() <IF>) (<BR>)+ <ELSE> b = BLOCK() <IF> "(" e = EXP() ")"
-    {arms.add(new ConditionalStatement.Arm(e, b));})*
+        {arms.add(new ConditionalStatement.Arm(e, b));})*
     (LOOKAHEAD((<BR>)+ <ELSE>)(<BR>)+ <ELSE> elseBlock = BLOCK() )?)
 
     {return new ConditionalStatement(arms, elseBlock);}
@@ -304,10 +304,10 @@ Block BLOCK(): {
 {
     "{"
     (<BR>)*
-    
-    s = STMT() {statements.add(s);} 
+
+    s = STMT() {statements.add(s);}
     (LOOKAHEAD((<BR>)+ STMT()) (<BR>)+ STMT() {statements.add(s);})*
-    
+
     (<BR>)* "}"
     {return new Block(statements);}
 }
@@ -316,35 +316,34 @@ Expression EXP(): {
     String op = "+";
     Expression e1 = null;
     Expression e2 = null;
-    Expression returnedExp = new ArbitraryArityExpression(op, new ArrayList<Expression>());;
+    Expression returnedExp = null;
     List<Expression> exps = new ArrayList<Expression>();
     Expression condition = null;
     Token t = null;
 }
 {
-    ( "(" (( op = RELOP() e1 = EXP() e2 = EXP() <IS> {returnedExp = new RelationalExpression(e1, op, e2);} )
-   	   | (op = ARITHOP() e1 = EXP() {exps.add(e1);}
-   	        (e2 = EXP() {exps.add(e2);})
-   	        {returnedExp = new ArbitraryArityExpression(op, exps);}
-   	        
-   	     ) 
-   	   | (<PERHAPS> condition = EXP() <HMMQ> e1 = EXP() <HMM> e2 = EXP()
-   	        {returnedExp = new TernaryExpression(condition, e1, e2);})
-   	   | (op = UNARYOP() e1 = EXP() {returnedExp = new UnaryExpression(op, e1);})
-   	   | (<ON> ( <NOTHING> |  (e1 = EXP() {exps.add(e1);})
+    (      ( "(" (( op = RELOP() e1 = EXP() e2 = EXP() <IS> {returnedExp = new RelationalExpression(e1, op, e2);} )
+          | (op = ARITHOP() e1 = EXP() {exps.add(e1);}
+               (e2 = EXP() {exps.add(e2);})
+               {returnedExp = new ArbitraryArityExpression(op, exps);}
+            )
+          | (<PERHAPS> condition = EXP() <HMMQ> e1 = EXP() <HMM> e2 = EXP()
+               {returnedExp = new TernaryExpression(condition, e1, e2);})
+          | (op = UNARYOP() e1 = EXP() {returnedExp = new UnaryExpression(op, e1);})
+          | (<ON> ( <NOTHING> |  (e1 = EXP() {exps.add(e1);})
             (<AND> e1 = EXP() {exps.add(e1);})* )
-   	    t = <ID>
-   	       {
-   	       	   e2 = new IdentifierExpression(t.image);
-   	           returnedExp = new FunctionCall(e2, exps);
-   	      })
-   	   | EXP()
-   	      ) ")" )
-   
+           t = <ID>
+              {
+                     e2 = new IdentifierExpression(t.image);
+                  returnedExp = new FunctionCall(e2, exps);
+             })
+//          | returnedExp = EXP()
+             ) ")" )
+
    | returnedExp = ARRAY()
    | returnedExp = LIT()
    //| returnedExp = OBJECT()
-   | t = <ID> {returnedExp = new IdentifierExpression(t.image);}
+   | t = <ID> {returnedExp = new IdentifierExpression(t.image);})
    {return returnedExp;}
 }
 
@@ -458,7 +457,7 @@ List<Expression> ARGS(): {
     {return args;}
 }
 void ARGS1(List<Expression> args): {
-	Expression e;
+    Expression e;
 }
 {
    LOOKAHEAD(<ON>) e = FUNCALL()
