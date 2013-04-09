@@ -243,7 +243,8 @@ Statement CONDITIONAL(): {
     Block elseBlock = null;
 }
 {
-    (b = BLOCK() <IF> "(" e = EXP()    {arms.add(new ConditionalStatement.Arm(e, b));} ")"
+    (b = BLOCK() <IF> "(" e = EXP()
+    {arms.add(new ConditionalStatement.Arm(e, b));} ")"
     (LOOKAHEAD((<BR>)+ <ELSE> BLOCK() <IF>) (<BR>)+ <ELSE> b = BLOCK() <IF> "(" e = EXP() ")"
     {arms.add(new ConditionalStatement.Arm(e, b));})*
     (LOOKAHEAD((<BR>)+ <ELSE>)(<BR>)+ <ELSE> elseBlock = BLOCK() )?)
@@ -271,9 +272,11 @@ Statement FORLOOP(): {
     b = BLOCK() <AS>  <THROUGH> (LOOKAHEAD( (<NUMLIT> | <ID> | FUNCALL() ) <TO>) r = RANGE()
                                              | condition = EXP() ) (<BY> step = EXP())? t = <ID>  <RUNS>
     {
-        if(condition == null) {            return new RangeLoop(new Variable(t.image), r, step, b);
+        if(condition == null) {
+            return new RangeLoop(new Variable(t.image), r, step, b);
         } else {
-            return new ConditionalLoop(new Variable(t.image), condition, step, b);        }
+            return new ConditionalLoop(new Variable(t.image), condition, step, b);
+        }
     }
 }
 
@@ -310,19 +313,20 @@ Block BLOCK(): {
 }
 
 Expression EXP(): {
-    String op;
+    String op = "+";
     Expression e1 = null;
-    Expression e2;
-    Expression returnedExp;
+    Expression e2 = null;
+    Expression returnedExp = new ArbitraryArityExpression(op, new ArrayList<Expression>());;
     List<Expression> exps = new ArrayList<Expression>();
-    Expression condition;
-    Token t;
+    Expression condition = null;
+    Token t = null;
 }
 {
     ( "(" (( op = RELOP() e1 = EXP() e2 = EXP() <IS> {returnedExp = new RelationalExpression(e1, op, e2);} )
    	   | (op = ARITHOP() e1 = EXP() {exps.add(e1);}
    	        (e2 = EXP() {exps.add(e2);})
-   	        {returnedExp = new ArbitraryArityExpression(op, exps);}   	        
+   	        {returnedExp = new ArbitraryArityExpression(op, exps);}
+   	        
    	     ) 
    	   | (<PERHAPS> condition = EXP() <HMMQ> e1 = EXP() <HMM> e2 = EXP()
    	        {returnedExp = new TernaryExpression(condition, e1, e2);})
@@ -346,15 +350,19 @@ Expression EXP(): {
 
 Literal LIT(): {
     Token t;
-}{
-  t = <NUMLIT>  {return new NumberLiteral(t.image);}  |
+}
+{
+  t = <NUMLIT>
+  {return new NumberLiteral(t.image);}
+  |
   t = <STRLIT>
   {return new StringLiteral(t.image);}
 }
 
 ArrayConstructor ARRAY():{
     Expression e;
-    List<Expression> es = new ArrayList<Expression>();}
+    List<Expression> es = new ArrayList<Expression>();
+}
 {
     ("[" ( (<BR>)* e = EXP() {es.add(e);}) ("," (<BR>)* e = EXP() {es.add(e);} (<BR>)*)* "]")
     {return new ArrayConstructor(es);}
@@ -381,36 +389,38 @@ FunctionCall FUNCALL(): {
 {
     <ON> (objectName = <ID>".")?"("args = ARGS()")"(functionName = <ID>)
     {
-        if (objectName != null)        {            return new FunctionCall(new IdentifierExpression(objectName.image + "." + functionName.image), args);
+        if (objectName != null)
+        {
+            return new FunctionCall(new IdentifierExpression(objectName.image + "." + functionName.image), args);
         } else {
             return new FunctionCall(new IdentifierExpression(functionName.image), args);
-        }    }
+        }
+    }
 }
 String RELOP(): {
     Token s;
 }
 
-{   s = "<"
+{   (s = "<"
     | s = "<="
     | s = "="
     | s = "!="
     | s = ">="
-    | s = ">"
+    | s = ">")
     {return s.image;}
 }
 String ARITHOP(): {
     Token s;
-    String update;
 }
 {
-    s = "*"
+    (s = "*"
     | s = "/"
     | s = "+"
     | s = "-"
     | s = "%"
     | s = "^"
     | s = "|"
-    | s = "&"
+    | s = "&")
     {return s.image;}
 }
 
@@ -418,7 +428,9 @@ String UNARYOP(): {
     Token t;
 }
 {
-    t = "!"    {return t.image;}}
+    t = "!"
+    {return t.image;}
+}
 
 String INCOP(): {
     Token s;
@@ -464,5 +476,6 @@ Range RANGE(): {
     | FUNCALL())
     <TO> (t = <NUMLIT> {h = new NumberLiteral(t.image);}
     | t = <ID> {h = new IdentifierExpression(t.image);}
-    | FUNCALL())    {return new Range(l, h);}
+    | FUNCALL())
+    {return new Range(l, h);}
 }
