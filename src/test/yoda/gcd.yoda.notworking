@@ -1,4 +1,4 @@
-<(-_-)> GCD FTW
+
 {
     {give back x} if (= 0 (% x y))
 

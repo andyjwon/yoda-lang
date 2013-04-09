@@ -102,6 +102,7 @@ Script SCRIPT(): {
 
 Statement STMT(): {
     Statement s;
+    Expression e;
 }
 {
    ( LOOKAHEAD(BLOCK() <WHILE>) s = WHILELOOP()
@@ -114,11 +115,10 @@ Statement STMT(): {
    | LOOKAHEAD(EXP() "," <ID> <MUST> <BE>) s = CONSTDEC()
    | LOOKAHEAD(<FROM> | (EXP() (<AND> EXP())*  "," <ID> ( <AND> <ID>)* (<BEGIN> | <BEGINS>))) s = VARDEC()
    | LOOKAHEAD(EXP() (<AND> EXP())* "," <ID> ( <AND> <ID>)* (<BECOME> | <BECOMES>)) s = ASSIGNMENT()
-   //| LOOKAHEAD((<ID> ".") | ("(" ARGS() ")" <ID>)) s = FUNCALL()
+   | LOOKAHEAD(<ON>) e = FUNCALL() {return new ExpressionStatement(e);}
    | LOOKAHEAD(<GIVEBACK>) s = RETURNSTMT()
-   //| LOOKAHEAD(FUNCALL()) s = PROCCALL()
-   // TODO: expression is not a statement
-   //| s = EXP()
+   | LOOKAHEAD(FUNCALL()) e = PROCCALL() {return new ExpressionStatement(e);}
+   | e = EXP() {return new ExpressionStatement(e);}
    )
    {return s;}
 }
@@ -319,9 +319,9 @@ Expression EXP(): {
     Token t;
 }
 {
-   "(" (op = RELOP() e1 = EXP() e2 = EXP() <IS> {returnedExp = new RelationalExpression(e1, op, e2);} )
+    ( "(" (( op = RELOP() e1 = EXP() e2 = EXP() <IS> {returnedExp = new RelationalExpression(e1, op, e2);} )
    	   | (op = ARITHOP() e1 = EXP() {exps.add(e1);}
-   	        (e2 = EXP(){exps.add(e2);})+
+   	        (e2 = EXP() {exps.add(e2);})
    	        {returnedExp = new ArbitraryArityExpression(op, exps);}   	        
    	     ) 
    	   | (<PERHAPS> condition = EXP() <HMMQ> e1 = EXP() <HMM> e2 = EXP()
@@ -333,11 +333,13 @@ Expression EXP(): {
    	       {
    	       	   e2 = new IdentifierExpression(t.image);
    	           returnedExp = new FunctionCall(e2, exps);
-   	       })
-   ")"  
+   	      })
+   	   | EXP()
+   	      ) ")" )
+   
    | returnedExp = ARRAY()
    | returnedExp = LIT()
-   | returnedExp = OBJECT()
+   //| returnedExp = OBJECT()
    | t = <ID> {returnedExp = new IdentifierExpression(t.image);}
    {return returnedExp;}
 }
@@ -357,6 +359,7 @@ ArrayConstructor ARRAY():{
     ("[" ( (<BR>)* e = EXP() {es.add(e);}) ("," (<BR>)* e = EXP() {es.add(e);} (<BR>)*)* "]")
     {return new ArrayConstructor(es);}
 }
+/*
 ObjectExpression OBJECT(): {
     ObjectExpression o = new ObjectExpression();
     Token t;
@@ -368,6 +371,7 @@ ObjectExpression OBJECT(): {
       ","  (<ID> )? <TRAINING>  <BEGINS>
     {return o;}
 }
+*/
 
 FunctionCall FUNCALL(): {
     Token functionName = null;
@@ -442,12 +446,12 @@ List<Expression> ARGS(): {
     {return args;}
 }
 void ARGS1(List<Expression> args): {
+	Expression e;
 }
 {
-   LOOKAHEAD(BLOCK() <GIVEN> PARAMS() "," <ID> <DOES>) PROCDEC()
-   | LOOKAHEAD(BLOCK() <GIVEN> PARAMS() "," <ID> <GIVES>) FUNDEC()
-   | LOOKAHEAD((<ID>".")? "("ARGS()")") FUNCALL()
-   | EXP()
+   LOOKAHEAD(<ON>) e = FUNCALL()
+   | e = EXP()
+   { args.add(e);}
 }
 Range RANGE(): {
     Expression l = null;
