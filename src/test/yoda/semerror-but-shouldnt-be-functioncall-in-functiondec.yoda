@@ -1,4 +1,4 @@
 {
     (+ x 7), x becomes
-    give back (on (x)square) you must
+    give back (on (+ 1 x) square) you must
 } given x, plusSeven gives

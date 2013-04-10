@@ -43,7 +43,6 @@ public class AssignmentStatement extends Statement {
             }
             for (Expression s : source) {
                 s.analyze(log, table, owner, inLoop);
-                s.assertAssignableTo(t.getType(), log, "assignment.type.mismatch");
             }
         }
     }

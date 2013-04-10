@@ -185,7 +185,7 @@ Function FUNDEC(): {
 }
 {
     ((b = BLOCK()) <GIVEN> (PARAMS(params)) ","  (t = <ID>)  <GIVES>)
-    {return new Function(t.image, params, b);}
+    {System.out.println("bloop " + t.image); return new Function(t.image, params, b);}
 }
 void PARAMS(List<Variable> params): {
     Token t;
@@ -243,9 +243,9 @@ Statement CONDITIONAL(): {
     Block elseBlock = null;
 }
 {
-    (b = BLOCK() <IF> "("
-        e = EXP() {arms.add(new ConditionalStatement.Arm(e, b));}")"
-    (LOOKAHEAD((<BR>)+ <ELSE> BLOCK() <IF>) (<BR>)+ <ELSE> b = BLOCK() <IF> "(" e = EXP() ")"
+    (b = BLOCK() <IF>
+        e = EXP() {arms.add(new ConditionalStatement.Arm(e, b));}
+    (LOOKAHEAD((<BR>)+ <ELSE> BLOCK() <IF>) (<BR>)+ <ELSE> b = BLOCK() <IF> e = EXP()
         {arms.add(new ConditionalStatement.Arm(e, b));})*
     (LOOKAHEAD((<BR>)+ <ELSE>)(<BR>)+ <ELSE> elseBlock = BLOCK() )?)
 

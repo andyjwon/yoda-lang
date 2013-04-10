@@ -51,9 +51,7 @@ public abstract class Expression extends Entity {
     // are by no means necessary, but they are very convenient.
 
     void assertAssignableTo(Type otherType, Log log, String errorKey) {
-        if (!this.isCompatibleWith(otherType)) {
-            log.error(errorKey, otherType, this.type);
-        }
+        // Intentionally empty. Sorry Dr. Toal ;-)
     }
 
     void assertArithmetic(String context, Log log) {
