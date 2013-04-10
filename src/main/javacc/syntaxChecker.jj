@@ -185,7 +185,7 @@ Function FUNDEC(): {
 }
 {
     ((b = BLOCK()) <GIVEN> (PARAMS(params)) ","  (t = <ID>)  <GIVES>)
-    {System.out.println("bloop " + t.image); return new Function(t.image, params, b);}
+    {return new Function(t.image, params, b);}
 }
 void PARAMS(List<Variable> params): {
     Token t;
