@@ -28,21 +28,7 @@ public class Parser {
 PARSER_END(Parser)
 
 SKIP: { " " | "\t"
-    | <"<(-_-)>" (~["\n","\r"])* ("\n"|"\r")>
-}
-
-SKIP : {
-    "<(-.-)>" : WithinComment
-}
-
-<WithinComment> SKIP :
-{
-    "<(-.-)>" : DEFAULT
-}
-
-<WithinComment> MORE :
-{
-    <~[]>
+    | <"<(-_-)>" (~["\n","\r"])*>
 }
 
 TOKEN: {
