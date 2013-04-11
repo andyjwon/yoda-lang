@@ -164,10 +164,10 @@ Function declaration, multiline
 
 Function call
 
-    (8)square                                               square(8)
-    (7, 4)plus                                              plus(7, 4)
-    ((8, (- 2 (11)square ))plus)square                      square(plus(8, 2 - square(11)))
-    (+ (155, 71)bmi ()zero ) you print                      console.log(bmi(155, 71) + zero());
+    (on 8 square)                                           square(8)
+    (on 7 and 4 plus)                                       plus(7, 4)
+    (on (on 8 and (- 2 (on 11 square)) plus) square)        square(plus(8, 2 - square(11)))
+    (+ (on 155 and 71 bmi) (on nothing zero)) you print     console.log(bmi(155, 71) + zero());
 
 Procedure declaration (function that does not return anything)
 
@@ -280,25 +280,6 @@ Closure
       give back {(+= i 1 )} given nothing you must            return function () {i += 1;};
     } given i, counter gives                                };
 
-Objects
-
-    {: x 1 , : y 5}, training begins                        {x: 1, y: 5};
-
-    {}, training begins                                     {}
-
-    {}, universe training begins                            var universe = {}
-
-    {                                                       var circle = {
-      : x 0,                                                  x: 0,
-      : y 0,                                                  y: 0,
-      : color "black",                                        color: "black",
-      : radius 1,                                             radius: 1,
-      {                                                       area: function ()
-        give back (* (radius, 2)power ()PI) you must            return Math.pow(this.radius, 2) * Math.PI;
-      }, given nothing area gives                             }
-    }, circle training begins                               };
-
-    {} to be circle, c1 training begins                     var c1 = Object.create(circle);
 
 Math
 
