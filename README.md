@@ -195,9 +195,9 @@ Procedure call
 
     ("Alice")greet_her                                      greet_her("Alice");
 
-    ()greet                                                 greet();
+    (on nothing greet)                                      greet();
 
-    ("NO", 5)echo                                           echo("NO", 5);
+    (on "NO" and 5 echo)                                    echo("NO", 5);
 
 Function as parameter
 
@@ -244,9 +244,9 @@ For loops
 
     [spot, sparky, spike], pet_list begins                  var pet_list = [spot, sparky, spike]
     {                                                       for (var _1 = 0; _1 < pet_list.length; _1++) {
-      dog.()bark;                                             var dog = pet_list[i];
-      dog.()run;                                              dog.bark();
-      dog.()sit;                                              dog.run();
+      (on dog bark);                                             var dog = pet_list[i];
+      (on dog run);                                              dog.bark();
+      (on dog sit);                                              dog.run();
     } as through pet_list dog runs                            dog.sit();
                                                             }
 
@@ -266,7 +266,7 @@ Function with multiple returns
       {give back false you must} if (< 2 max is?)             if (max < 2) {
       {                                                         return false;
         {give back false you must} if (= 0 (% n d) is?)       }
-      } as through 3 to (n)sqrt d runs                        for (var d = 3; d <= Math.sqrt(n); d++) {
+      } as through 3 to (on n square) d runs                        for (var d = 3; d <= Math.sqrt(n); d++) {
       give back true you must                                   if (n % d === 0) {
     } given n, is_prime gives                                     return false;
                                                                 }
@@ -282,14 +282,6 @@ Closure
     } given i, counter gives                                };
 
 
-Math
-
-    (3)abs                                                  Math.abs(3);
-    (2.3)floor                                              Math.floor(2.3);
-    (2)cos                                                  Math.cos(2);
-    ()PI                                                    Math.PI
-    (x, 2)power                                             Math.pow(x, 2);
-    (x)sqrt                                                 Math.sqrt(x);
 
 Binary, Octal, and Hex Literals
 
