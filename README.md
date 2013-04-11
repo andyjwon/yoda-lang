@@ -266,7 +266,7 @@ Function with multiple returns
       {give back false you must} if (< 2 max is?)             if (max < 2) {
       {                                                         return false;
         {give back false you must} if (= 0 (% n d) is?)       }
-      } as through 3 to (on n square) d runs                        for (var d = 3; d <= Math.sqrt(n); d++) {
+      } as through 3 to (on n sqrt) d runs                        for (var d = 3; d <= Math.sqrt(n); d++) {
       give back true you must                                   if (n % d === 0) {
     } given n, is_prime gives                                     return false;
                                                                 }
@@ -286,12 +286,12 @@ Closure
 
 Math
 
-    (3)abs                                                  Math.abs(3);
-    (2.3)floor                                              Math.floor(2.3);
-    (2)cos                                                  Math.cos(2);
-    ()PI                                                    Math.PI
-    (x, 2)power                                             Math.pow(x, 2);
-    (x)sqrt                                                 Math.sqrt(x);
+    (on 3 abs)                                              Math.abs(3);
+    (on 2.3 floor)                                          Math.floor(2.3);
+    (on 2 cos)                                              Math.cos(2);
+    (on nothing PI)                                         Math.PI
+    (on x and 2 power)                                      Math.pow(x, 2);
+    (on x sqrt)                                             Math.sqrt(x);
 
 
 
