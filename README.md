@@ -103,7 +103,7 @@ Arrays
     p[0] you print                                          console.log(p[0]);
     p, q begins                                             var q = p;
     [4, true, "000", q], a begins                           var a = [4, true, "000", q];
-    a.()length, you print                                   console.log(a.length);
+    (on a length), you print                                   console.log(a.length);
 
 Last element (indices start at 0 from the left, -1 from the right)
 
@@ -201,8 +201,9 @@ Procedure call
 
 Function as parameter
 
-  {give back ((x)f)f you must } given f and x, twice gives  var twice = function (x) {
-                                                              return f(f(x));
+    {give back ((x)f)f you must } given f and x, twice gives  var twice = function (x) {
+    
+                                                            return f(f(x));
                                                             };
 
 Anonymous function
