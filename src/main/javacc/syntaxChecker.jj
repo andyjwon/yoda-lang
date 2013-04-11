@@ -94,6 +94,7 @@ Script SCRIPT(): {
     (<BR>)*
 
     s = STMT() {statements.add(s);}
+// TODO: Error here... please fix
     (LOOKAHEAD((<BR>)+ STMT()) (<BR>)+ STMT() {statements.add(s);})*
 
     (<BR>)* <EOF>
@@ -111,11 +112,11 @@ Statement STMT(): {
    | LOOKAHEAD(BLOCK() EXP()) s = TIMESLOOP()
    | LOOKAHEAD(BLOCK() <GIVEN> PARAMS() "," <ID> <DOES>) s = PROCDEC()
    | LOOKAHEAD(BLOCK() <GIVEN> PARAMS() "," <ID> <GIVES>) s = FUNDEC()
+   | LOOKAHEAD(<ON>) e = FUNCALL() {return new ExpressionStatement(e);}
    | LOOKAHEAD(EXP() <YOU> <PRINT>) s = PRINTSTMT()
    | LOOKAHEAD(EXP() "," <ID> <MUST> <BE>) s = CONSTDEC()
    | LOOKAHEAD(<FROM> | (EXP() (<AND> EXP())*  "," <ID> ( <AND> <ID>)* (<BEGIN> | <BEGINS>))) s = VARDEC()
    | LOOKAHEAD(EXP() (<AND> EXP())* "," <ID> ( <AND> <ID>)* (<BECOME> | <BECOMES>)) s = ASSIGNMENT()
-   | LOOKAHEAD(<ON>) e = FUNCALL() {return new ExpressionStatement(e);}
    | LOOKAHEAD(<GIVEBACK>) s = RETURNSTMT()
    | LOOKAHEAD(FUNCALL()) e = PROCCALL() {return new ExpressionStatement(e);}
    | e = EXP() {return new ExpressionStatement(e);}
@@ -386,7 +387,7 @@ FunctionCall FUNCALL(): {
     Token objectName = null;
 }
 {
-    <ON> (objectName = <ID>".")?"("args = ARGS()")"(functionName = <ID>)
+    (<ON> (objectName = <ID>".")? "(" args = ARGS() ")" (functionName = <ID>))
     {
         if (objectName != null)
         {
@@ -456,14 +457,16 @@ List<Expression> ARGS(): {
     (ARGS1(args) ("," ARGS1(args))*)?
     {return args;}
 }
+
 void ARGS1(List<Expression> args): {
     Expression e;
 }
 {
-   LOOKAHEAD(<ON>) e = FUNCALL()
-   | e = EXP()
+   (LOOKAHEAD(<ON>) e = FUNCALL()
+   | e = EXP())
    { args.add(e);}
 }
+
 Range RANGE(): {
     Expression l = null;
     Expression h = null;
