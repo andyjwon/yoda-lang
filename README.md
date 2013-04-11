@@ -283,6 +283,19 @@ Closure
 
 
 
+
+Math
+
+    (3)abs                                                  Math.abs(3);
+    (2.3)floor                                              Math.floor(2.3);
+    (2)cos                                                  Math.cos(2);
+    ()PI                                                    Math.PI
+    (x, 2)power                                             Math.pow(x, 2);
+    (x)sqrt                                                 Math.sqrt(x);
+
+
+
+
 Binary, Octal, and Hex Literals
 
     0x, 0b, 0o                                              0x, parseInt("1001", 2), parseInt("1001", 8)
