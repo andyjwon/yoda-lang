@@ -1,2 +1,5 @@
+<(-_-)> The logical operators must be placed in prefix notation just like
+<(-_-)> arithmetic operators
+
 
 (((= 5 3 is?) & (>= 9 x is?)) | ((!= (/ y 4 ) 1 is?) & (!found)))

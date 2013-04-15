@@ -1,4 +1,6 @@
+<(-_-)> Expression with infix notation should be prefix notation
+
 "Hello" you print
 5, x begins
-(7 - 5) you print
+(7 - 5) you print                   <(-_-)> This should be prefix notation
 "Goodbye" you print
