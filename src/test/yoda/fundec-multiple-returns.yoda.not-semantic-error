@@ -1,0 +1,9 @@
+
+
+{
+  {give back false you must} if (< 2 max is?)
+  {
+    {give back false you must} if (= 0 5 is?)
+  } as through 3 to (on n sqrt) d runs
+  give back true you must
+} given n, is_prime gives

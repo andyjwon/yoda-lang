@@ -98,7 +98,6 @@ Statement STMT(): {
    | LOOKAHEAD(BLOCK() EXP()) s = TIMESLOOP()
    | LOOKAHEAD(BLOCK() <GIVEN> PARAMS() "," <ID> <DOES>) s = PROCDEC()
    | LOOKAHEAD(BLOCK() <GIVEN> PARAMS() "," <ID> <GIVES>) s = FUNDEC()
-   | LOOKAHEAD(<ON>) e = FUNCALL() {return new ExpressionStatement(e);}
    | LOOKAHEAD(EXP() <YOU> <PRINT>) s = PRINTSTMT()
    | LOOKAHEAD(EXP() "," <ID> <MUST> <BE>) s = CONSTDEC()
    | LOOKAHEAD(<FROM> | (EXP() (<AND> EXP())*  "," <ID> ( <AND> <ID>)* (<BEGIN> | <BEGINS>))) s = VARDEC()
@@ -108,6 +107,233 @@ Statement STMT(): {
    | e = EXP() {return new ExpressionStatement(e);}
    )
    {return s;}
+}
+
+List<Expression> ARGS(): {
+    Expression e;
+    List<Expression> args = new ArrayList<Expression>();
+}
+{
+    e = EXP() {args.add(e);} (<AND> e = EXP() {args.add(e);})*
+    {return args;}
+}
+
+ArrayConstructor ARRAY():{
+    Expression e;
+    List<Expression> es = new ArrayList<Expression>();
+}
+{
+    ("[" ( (<BR>)* e = EXP() {es.add(e);}) ("," (<BR>)* e = EXP() {es.add(e);} (<BR>)*)* "]")
+    {return new ArrayConstructor(es);}
+}
+
+Statement ASSIGNMENT(): {
+    List<String> tokens = new ArrayList<String>();
+    List<Expression> targets = new ArrayList<Expression>();
+    List<Expression> sources = new ArrayList<Expression>();
+    Token t;
+    Expression e;
+    String op = null;
+    IdentifierExpression i;
+}
+{
+    (( op = INCOP() t = <ID>
+    {i = new IdentifierExpression(t.image);
+        e = new UnaryExpression(op, i);
+        targets.add(i);
+        sources.add(e);} )
+    | (op = UPDATE() t = <ID> e = EXP()
+    {i = new IdentifierExpression(t.image);
+        targets.add(i);
+        sources.add(e);})
+    | (e = EXP(){sources.add(e);} (<AND> e = EXP() {sources.add(e);})*
+        ","  t = <ID> {i = new IdentifierExpression(t.image);
+        targets.add(i);}(  <AND> t = <ID> {targets.add(i);})*  (<BECOME> | <BECOMES>)))
+    {return new AssignmentStatement(i, e);}
+}
+
+Block BLOCK(): {
+    List<Statement> statements = new ArrayList<Statement>();
+    Statement s;
+}
+{
+    "{"
+    (<BR>)*
+
+    s = STMT() {statements.add(s);}
+    (LOOKAHEAD((<BR>)+ STMT()) (<BR>)+ STMT() {statements.add(s);})*
+
+    (<BR>)* "}"
+    {return new Block(statements);}
+}
+
+Statement CONDITIONAL(): {
+    List<ConditionalStatement.Arm> arms = new ArrayList<ConditionalStatement.Arm>();
+    Expression e;
+    Block b;
+    Block elseBlock = null;
+}
+{
+    (b = BLOCK() <IF>
+        e = EXP() {arms.add(new ConditionalStatement.Arm(e, b));}
+    (LOOKAHEAD((<BR>)+ <ELSE> BLOCK() <IF>) (<BR>)+ <ELSE> b = BLOCK() <IF> e = EXP()
+        {arms.add(new ConditionalStatement.Arm(e, b));})*
+    (LOOKAHEAD((<BR>)+ <ELSE>)(<BR>)+ <ELSE> elseBlock = BLOCK() )?)
+
+    {return new ConditionalStatement(arms, elseBlock);}
+}
+
+Variable CONSTDEC(): {
+    Token t;
+    Expression e;
+    boolean constant = true;
+}
+{
+    ((e = EXP() ) "," (t = <ID>)  <MUST>  <BE>)
+    {return new Variable(t.image, e, constant, false);}
+}
+
+Expression EXP(): {
+    String op = "+";
+    Expression e1 = null;
+    Expression e2 = null;
+    Expression returnedExp = null;
+    List<Expression> exps = new ArrayList<Expression>();
+    Expression condition = null;
+    Token t = null;
+}
+{
+    (
+      ( "(" (( op = RELOP() e1 = EXP() e2 = EXP() <IS> {returnedExp = new RelationalExpression(e1, op, e2);} )
+          | (op = ARITHOP() e1 = EXP() {exps.add(e1);}
+               (e2 = EXP() {exps.add(e2);})
+               {returnedExp = new ArbitraryArityExpression(op, exps);}
+            )
+          | returnedExp = FUNCALL()
+          | (<PERHAPS> condition = EXP() <HMMQ> e1 = EXP() <HMM> e2 = EXP()
+               {returnedExp = new TernaryExpression(condition, e1, e2);})
+          | (op = UNARYOP() e1 = EXP() {returnedExp = new UnaryExpression(op, e1);})
+             ) ")" )
+
+   | returnedExp = ARRAY()
+   | returnedExp = LIT()
+   | t = <ID> {returnedExp = new IdentifierExpression(t.image);})
+   {return returnedExp;}
+}
+
+Statement FORLOOP(): {
+    Block b;
+    Token t;
+    Expression condition = null;
+    Expression step = new NumberLiteral("1");
+    Range r = null;
+}
+{
+    b = BLOCK() <AS>  <THROUGH> (LOOKAHEAD( (<NUMLIT> | <ID> | FUNCALL() ) <TO>) r = RANGE()
+                                             | condition = EXP() ) (<BY> step = EXP())? t = <ID>  <RUNS>
+    {
+        if(condition == null) {
+            return new RangeLoop(new Variable(t.image), r, step, b);
+        } else {
+            return new ConditionalLoop(new Variable(t.image), condition, step, b);
+        }
+    }
+}
+
+FunctionCall FUNCALL(): {
+    Token functionName = null;
+    List<Expression> args = new ArrayList<Expression>();
+}
+{
+    (<ON> (<NOTHING> | args = ARGS()) (functionName = <ID>))
+    {
+        return new FunctionCall(new IdentifierExpression(functionName.image), args);
+    }
+}
+
+Function FUNDEC(): {
+    Token t;
+    Block b;
+    List<Variable> params = new ArrayList<Variable>();
+}
+{
+    ((b = BLOCK()) <GIVEN> (PARAMS(params)) ","  (t = <ID>)  <GIVES>)
+    {return new Function(t.image, params, b);}
+}
+
+void PARAMS(List<Variable> params): {
+    Token t;
+}
+{
+    (<NOTHING> | (t = <ID> {params.add(new Variable(t.image, null, false, false));}
+     (  <AND>  t = <ID> {params.add(new Variable(t.image, null, false, false));})*))
+}
+
+Statement PRINTSTMT(): {
+    Expression e;
+}
+{
+    (e = EXP() <YOU> <PRINT>)
+    {return new PrintStatement(e);}
+}
+
+Procedure PROCDEC(): {
+    Token t;
+    Block b;
+    List<Variable> params = new ArrayList<Variable>();
+}
+{
+    ((b = BLOCK()) <GIVEN> (PARAMS(params)) ","  (t = <ID>)  <DOES>)
+    {return new Procedure(t.image, params, b);}
+}
+
+Range RANGE(): {
+    Expression l = null;
+    Expression h = null;
+    Token t;
+}
+{
+    (t = <NUMLIT> {l = new NumberLiteral(t.image);}
+    |t = <ID> {l = new IdentifierExpression(t.image);}
+    | FUNCALL())
+    <TO> (t = <NUMLIT> {h = new NumberLiteral(t.image);}
+    | t = <ID> {h = new IdentifierExpression(t.image);}
+    | FUNCALL())
+    {return new Range(l, h);}
+}
+
+Statement RETURNSTMT(): {
+    Expression e = null;
+}
+{
+    <GIVEBACK>  e = EXP() <YOU> <MUST>
+    {return new ReturnStatement(e);}
+}
+
+Statement TIMESLOOP(): {
+    Block b;
+    Expression e;
+}
+{
+    (b = BLOCK() e = EXP() <TIMES>)
+    {return new TimesLoop(e, b);}
+}
+
+Statement WHILELOOP(): {
+    Block b;
+    Expression e;
+}
+{
+    b = BLOCK() <WHILE> e = EXP()
+    {return new WhileLoop(e, b);}
+}
+
+FunctionCall PROCCALL(): {
+    FunctionCall f;
+}
+{
+    f = FUNCALL()
+    {return f;}
 }
 
 DecStatement VARDEC(): {
@@ -145,195 +371,6 @@ DecStatement VARDEC(): {
     }
 }
 
-Variable CONSTDEC(): {
-    Token t;
-    Expression e;
-    boolean constant = true;
-}
-{
-    ((e = EXP() ) "," (t = <ID>)  <MUST>  <BE>)
-    {return new Variable(t.image, e, constant, false);}
-}
-
-Procedure PROCDEC(): {
-    Token t;
-    Block b;
-    List<Variable> params = new ArrayList<Variable>();
-}
-{
-    ((b = BLOCK()) <GIVEN> (PARAMS(params)) ","  (t = <ID>)  <DOES>)
-    {return new Procedure(t.image, params, b);}
-}
-
-Function FUNDEC(): {
-    Token t;
-    Block b;
-    List<Variable> params = new ArrayList<Variable>();
-}
-{
-    ((b = BLOCK()) <GIVEN> (PARAMS(params)) ","  (t = <ID>)  <GIVES>)
-    {return new Function(t.image, params, b);}
-}
-void PARAMS(List<Variable> params): {
-    Token t;
-}
-{
-    (<NOTHING> | (t = <ID> {params.add(new Variable(t.image, null, false, false));}
-     (  <AND>  t = <ID> {params.add(new Variable(t.image, null, false, false));})*))
-}
-
-Statement ASSIGNMENT(): {
-    List<String> tokens = new ArrayList<String>();
-    List<Expression> targets = new ArrayList<Expression>();
-    List<Expression> sources = new ArrayList<Expression>();
-    Token t;
-    Expression e;
-    String op = null;
-    IdentifierExpression i;
-}
-{
-    (( op = INCOP() t = <ID>
-    {i = new IdentifierExpression(t.image);
-        e = new UnaryExpression(op, i);
-        targets.add(i);
-        sources.add(e);} )
-    | (op = UPDATE() t = <ID> e = EXP()
-    {i = new IdentifierExpression(t.image);
-        targets.add(i);
-        sources.add(e);})
-    | (e = EXP(){sources.add(e);} (<AND> e = EXP() {sources.add(e);})*
-        ","  t = <ID> {i = new IdentifierExpression(t.image);
-        targets.add(i);}(  <AND> t = <ID> {targets.add(i);})*  (<BECOME> | <BECOMES>)))
-    {return new AssignmentStatement(i, e);}
-}
-
-Statement PRINTSTMT(): {
-    Expression e;
-}
-{
-    (e = EXP() <YOU> <PRINT>)
-    {return new PrintStatement(e);}
-}
-
-Statement RETURNSTMT(): {
-    Expression e = null;
-}
-{
-    <GIVEBACK>  e = EXP() <YOU> <MUST>
-    {return new ReturnStatement(e);}
-}
-
-Statement CONDITIONAL(): {
-    List<ConditionalStatement.Arm> arms = new ArrayList<ConditionalStatement.Arm>();
-    Expression e;
-    Block b;
-    Block elseBlock = null;
-}
-{
-    (b = BLOCK() <IF>
-        e = EXP() {arms.add(new ConditionalStatement.Arm(e, b));}
-    (LOOKAHEAD((<BR>)+ <ELSE> BLOCK() <IF>) (<BR>)+ <ELSE> b = BLOCK() <IF> e = EXP()
-        {arms.add(new ConditionalStatement.Arm(e, b));})*
-    (LOOKAHEAD((<BR>)+ <ELSE>)(<BR>)+ <ELSE> elseBlock = BLOCK() )?)
-
-    {return new ConditionalStatement(arms, elseBlock);}
-}
-
-Statement TIMESLOOP(): {
-    Block b;
-    Expression e;
-}
-{
-    (b = BLOCK() e = EXP() <TIMES>)
-    {return new TimesLoop(e, b);}
-}
-
-Statement FORLOOP(): {
-    Block b;
-    Token t;
-    Expression condition = null;
-    Expression step = new NumberLiteral("1");
-    Range r = null;
-}
-{
-    b = BLOCK() <AS>  <THROUGH> (LOOKAHEAD( (<NUMLIT> | <ID> | FUNCALL() ) <TO>) r = RANGE()
-                                             | condition = EXP() ) (<BY> step = EXP())? t = <ID>  <RUNS>
-    {
-        if(condition == null) {
-            return new RangeLoop(new Variable(t.image), r, step, b);
-        } else {
-            return new ConditionalLoop(new Variable(t.image), condition, step, b);
-        }
-    }
-}
-
-Statement WHILELOOP(): {
-    Block b;
-    Expression e;
-}
-{
-    b = BLOCK() <WHILE> e = EXP()
-    {return new WhileLoop(e, b);}
-}
-
-FunctionCall PROCCALL(): {
-    FunctionCall f;
-}
-{
-    f = FUNCALL()
-    {return f;}
-}
-
-Block BLOCK(): {
-    List<Statement> statements = new ArrayList<Statement>();
-    Statement s;
-}
-{
-    "{"
-    (<BR>)*
-
-    s = STMT() {statements.add(s);}
-    (LOOKAHEAD((<BR>)+ STMT()) (<BR>)+ STMT() {statements.add(s);})*
-
-    (<BR>)* "}"
-    {return new Block(statements);}
-}
-
-Expression EXP(): {
-    String op = "+";
-    Expression e1 = null;
-    Expression e2 = null;
-    Expression returnedExp = null;
-    List<Expression> exps = new ArrayList<Expression>();
-    Expression condition = null;
-    Token t = null;
-}
-{
-    (      ( "(" (( op = RELOP() e1 = EXP() e2 = EXP() <IS> {returnedExp = new RelationalExpression(e1, op, e2);} )
-          | (op = ARITHOP() e1 = EXP() {exps.add(e1);}
-               (e2 = EXP() {exps.add(e2);})
-               {returnedExp = new ArbitraryArityExpression(op, exps);}
-            )
-          | (<PERHAPS> condition = EXP() <HMMQ> e1 = EXP() <HMM> e2 = EXP()
-               {returnedExp = new TernaryExpression(condition, e1, e2);})
-          | (op = UNARYOP() e1 = EXP() {returnedExp = new UnaryExpression(op, e1);})
-          | (<ON> ( <NOTHING> |  (e1 = EXP() {exps.add(e1);})
-            (<AND> e1 = EXP() {exps.add(e1);})* )
-           t = <ID>
-              {
-                     e2 = new IdentifierExpression(t.image);
-                  returnedExp = new FunctionCall(e2, exps);
-             })
-//          | returnedExp = EXP()
-             ) ")" )
-
-   | returnedExp = ARRAY()
-   | returnedExp = LIT()
-   //| returnedExp = OBJECT()
-   | t = <ID> {returnedExp = new IdentifierExpression(t.image);})
-   {return returnedExp;}
-}
-
 Literal LIT(): {
     Token t;
 }
@@ -345,44 +382,6 @@ Literal LIT(): {
   {return new StringLiteral(t.image);}
 }
 
-ArrayConstructor ARRAY():{
-    Expression e;
-    List<Expression> es = new ArrayList<Expression>();
-}
-{
-    ("[" ( (<BR>)* e = EXP() {es.add(e);}) ("," (<BR>)* e = EXP() {es.add(e);} (<BR>)*)* "]")
-    {return new ArrayConstructor(es);}
-}
-/*
-ObjectExpression OBJECT(): {
-    ObjectExpression o = new ObjectExpression();
-    Token t;
-    Expression e = null;
-    Function f = null;
-}
-{ "{" (<BR>)* (":" t = <ID>  e = EXP()
-    ( "," (<BR>)* ":" <ID> ( EXP()))* (<BR>)*)? "}" (<TO>  <BE>  <ID>)?
-      ","  (<ID> )? <TRAINING>  <BEGINS>
-    {return o;}
-}
-*/
-
-FunctionCall FUNCALL(): {
-    Token functionName = null;
-    List<Expression> args = new ArrayList<Expression>();
-    Token objectName = null;
-}
-{
-    (<ON> (objectName = <ID>".")? "(" args = ARGS() ")" (functionName = <ID>))
-    {
-        if (objectName != null)
-        {
-            return new FunctionCall(new IdentifierExpression(objectName.image + "." + functionName.image), args);
-        } else {
-            return new FunctionCall(new IdentifierExpression(functionName.image), args);
-        }
-    }
-}
 String RELOP(): {
     Token s;
 }
@@ -436,34 +435,4 @@ String UPDATE(): {
     {return s.image;}
 }
 
-List<Expression> ARGS(): {
-    List<Expression> args = new ArrayList<Expression>();
-}
-{
-    (ARGS1(args) ("," ARGS1(args))*)?
-    {return args;}
-}
 
-void ARGS1(List<Expression> args): {
-    Expression e;
-}
-{
-   (LOOKAHEAD(<ON>) e = FUNCALL()
-   | e = EXP())
-   { args.add(e);}
-}
-
-Range RANGE(): {
-    Expression l = null;
-    Expression h = null;
-    Token t;
-}
-{
-    (t = <NUMLIT> {l = new NumberLiteral(t.image);}
-    |t = <ID> {l = new IdentifierExpression(t.image);}
-    | FUNCALL())
-    <TO> (t = <NUMLIT> {h = new NumberLiteral(t.image);}
-    | t = <ID> {h = new IdentifierExpression(t.image);}
-    | FUNCALL())
-    {return new Range(l, h);}
-}

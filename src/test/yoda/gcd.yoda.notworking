@@ -1,7 +1,0 @@
-
-{
-    {give back x} if (= 0 (% x y))
-
-    else {give back (y, (% x y))gcd}
-
-} given x and y, gcd gives

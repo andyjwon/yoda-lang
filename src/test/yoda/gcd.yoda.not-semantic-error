@@ -1,0 +1,7 @@
+
+{
+    {give back x you must} if (= 0 (% x y) is?)
+
+    else {give back (on y and (% x y) gcd) you must}
+
+} given x and y, gcd gives

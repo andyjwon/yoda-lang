@@ -1,4 +1,4 @@
 
-on (8) square
-on (7, 4) plus
-on (8, on (2, 11) square) root
+(on 8 square)
+(on 7 and 4 plus)
+(on 8 and (on 2 and 11 square) root)
