@@ -137,12 +137,7 @@ Statement ASSIGNMENT(): {
     IdentifierExpression i;
 }
 {
-    (( op = INCOP() t = <ID>
-    {i = new IdentifierExpression(t.image);
-        e = new UnaryExpression(op, i);
-        targets.add(i);
-        sources.add(e);} )
-    | (e = EXP(){sources.add(e);} (<AND> e = EXP() {sources.add(e);})*
+    ((e = EXP(){sources.add(e);} (<AND> e = EXP() {sources.add(e);})*
         ","  t = <ID> {i = new IdentifierExpression(t.image);
         targets.add(i);}(  <AND> t = <ID> {targets.add(i);})*  (<BECOME> | <BECOMES>)))
     {return new AssignmentStatement(i, e);}
@@ -186,7 +181,7 @@ Variable CONSTDEC(): {
 }
 {
     ((e = EXP() ) "," (t = <ID>)  <MUST>  <BE>)
-    {return new Variable(t.image, e, constant, false);}
+    {return new Variable(t.image, e, constant);}
 }
 
 Expression EXP(): {
@@ -213,6 +208,8 @@ Expression EXP(): {
 
    | returnedExp = ARRAY()
    | returnedExp = LIT()
+// TODO Array lookup not defined properly!
+   | LOOKAHEAD(<ID> "[") t = <ID> {returnedExp = new IdentifierExpression(t.image);} "[" ("-")? <NUMLIT> "]"
    | t = <ID> {returnedExp = new IdentifierExpression(t.image);})
    {return returnedExp;}
 }
