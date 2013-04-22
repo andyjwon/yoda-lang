@@ -1,0 +1,12 @@
+{
+    0, a begins
+    1, b begins
+    a, t begins
+    {
+        (- n 1), n becomes
+        a, t becomes
+        b, a becomes
+        (+ b t), b becomes
+    } while (> 0 n is?)
+    give back a you must
+} given n, fib gives

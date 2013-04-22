@@ -1,0 +1,8 @@
+{
+    0, sum begins
+    0, i begins
+    {
+        (+ sum i), sum becomes
+    } as through 0 to x i runs
+    give back sum you must
+} given x, summation gives

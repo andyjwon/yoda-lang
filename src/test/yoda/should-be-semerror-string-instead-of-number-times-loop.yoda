@@ -1,0 +1,5 @@
+0, a begins
+1, b begins
+{
+    (+ a b) you print
+} "hello" times
