@@ -74,11 +74,12 @@ public class Variable extends Declaration {
     public void analyze(Log log, SymbolTable table, Subroutine owner, boolean inLoop) {
 
         // If initializer is not present, then there had better be a type.
+/* AW: I don't think we need this because our language is dynamically typed
         if (initializer == null && typename == null) {
             log.error("intializer.or.type.required");
             type = Type.ARBITRARY;
         }
-
+*/
         // The declaration may or may not have a type name.  Look it up if it does.
         if (typename != null) {
             type = table.lookupType(typename, log);
@@ -86,7 +87,7 @@ public class Variable extends Declaration {
 
         // If an initializer is present, analyze it and check types.
         if (initializer != null) {
-            initializer.analyze(log, table, owner, inLoop);
+                initializer.analyze(log, table, owner, inLoop);
             if (typename == null) {
                 // Here is the type inference part
                 type = initializer.type;
