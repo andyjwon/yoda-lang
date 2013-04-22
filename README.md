@@ -169,49 +169,6 @@ Function call
     (on (on 8 and (- 2 (on 11 square)) plus) square)        square(plus(8, 2 - square(11)))
     (+ (on 155 and 71 bmi) (on nothing zero)) you print     console.log(bmi(155, 71) + zero());
 
-Procedure declaration (function that does not return anything)
-
-    {                                                       var greet_her = function (name) {
-      (+ "Hello, " name ) you print                           console.log("Hello, " + name);
-    } given name, greet_her does                            };
-
-    {                                                       var greet = function () {
-      "Hello" you print                                       console.log("Hello");
-    } given nothing, greet does                             };
-
-    {                                                       var counter = function () {
-      "one" you print                                         console.log("one");
-      "two" you print                                         console.log("two");
-      "three" you print                                       console.log("three");
-    } given nothing, counter does                           };
-
-    {                                                       var echo = function (s, n) {
-      {s you print} as through 0 to n repeat1 runs          for (var _1 = 0; _1 < n; _1++) {
-    } given s and n, echo does                                  console.log(s);
-                                                              }
-                                                            }
-
-Procedure call
-
-    ("Alice")greet_her                                      greet_her("Alice");
-
-    (on nothing greet)                                      greet();
-
-    (on "NO" and 5 echo)                                    echo("NO", 5);
-
-Function as parameter
-
-    {give back ((x)f)f you must } given f and x, twice gives  var twice = function (x) {
-    
-                                                            return f(f(x));
-                                                            };
-
-Anonymous function
-
-    {give back (* 3 x ) you must} given x                   function (x) {return 3 * x;}
-
-    ({give back (* x x ) you must} given x, 9)twice         twice(function (x) {return x * x;}, 9)
-
 Conditional Expressions
 
     {3 you print} if (> 2 x is?)                            if (x > 2) {console.log(3);}
@@ -244,9 +201,9 @@ For loops
 
     [spot, sparky, spike], pet_list begins                  var pet_list = [spot, sparky, spike]
     {                                                       for (var _1 = 0; _1 < pet_list.length; _1++) {
-      (on dog bark);                                             var dog = pet_list[i];
-      (on dog run);                                              dog.bark();
-      (on dog sit);                                              dog.run();
+      (on dog bark)                                             var dog = pet_list[i];
+      (on dog run)                                              dog.bark();
+      (on dog sit)                                              dog.run();
     } as through pet_list dog runs                            dog.sit();
                                                             }
 
