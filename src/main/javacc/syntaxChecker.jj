@@ -142,10 +142,6 @@ Statement ASSIGNMENT(): {
         e = new UnaryExpression(op, i);
         targets.add(i);
         sources.add(e);} )
-    | (op = UPDATE() t = <ID> e = EXP()
-    {i = new IdentifierExpression(t.image);
-        targets.add(i);
-        sources.add(e);})
     | (e = EXP(){sources.add(e);} (<AND> e = EXP() {sources.add(e);})*
         ","  t = <ID> {i = new IdentifierExpression(t.image);
         targets.add(i);}(  <AND> t = <ID> {targets.add(i);})*  (<BECOME> | <BECOMES>)))
@@ -423,15 +419,6 @@ String INCOP(): {
 {
     s = "++"
     | s = "--"
-    {return s.image;}
-}
-
-String UPDATE(): {
-    Token s;
-}
-{
-    s = "+="
-    | s = "-="
     {return s.image;}
 }
 
