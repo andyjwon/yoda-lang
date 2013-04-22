@@ -1,7 +1,7 @@
 {
   (* 5 4) you print
-} 10 times
+} (/ 10 5) times
 
 {
   (* 5 4) you print
-} 24 times
+} (* 24 7) times
