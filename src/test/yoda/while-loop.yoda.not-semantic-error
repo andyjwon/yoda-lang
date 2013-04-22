@@ -1,7 +1,0 @@
-<(-_-)> on last line "?" is causing an error
-
-
-{                                                       
-  {(+ (* 3 n ) 1 ),n becomes} if(= 0 (% n 2) is?) 
-  else {(/ n 2 ), n becomes}                          
-} while (!= 1 n is?) 

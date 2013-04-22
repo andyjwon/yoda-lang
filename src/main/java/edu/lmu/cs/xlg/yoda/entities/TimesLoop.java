@@ -26,7 +26,6 @@ public class TimesLoop extends Statement {
     @Override
     public void analyze(Log log, SymbolTable table, Subroutine owner, boolean inLoop) {
         count.analyze(log, table, owner, inLoop);
-        count.assertInteger("times loop", log);
         body.analyze(log, table, owner, true);
     }
 }
