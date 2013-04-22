@@ -67,6 +67,7 @@ TOKEN: {
     | <ID: ((["a"-"z"] | ["A"-"Z"])+(["-"] | ["_"] | ["a"-"z"] | ["A"-"Z"] | ["0"-"9"])*)>
     | <NUMLIT: (("0x" | "0b" | "0o")? (["0"-"9"])+("."(["0"-"9"])*)?)>
     | <STRLIT: ("\"" (~["\""] | ("\\\""))* "\"") >
+    | <BOOLLIT: ("true" | "false")>
     | <BR: ("\n" | "\r" | "\r\n" )>
 
 }
@@ -373,6 +374,9 @@ Literal LIT(): {
   |
   t = <STRLIT>
   {return new StringLiteral(t.image);}
+  |
+  t = <BOOLLIT>
+  {return new BooleanLiteral(t.image);}
 }
 
 String RELOP(): {
