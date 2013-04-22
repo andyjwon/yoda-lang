@@ -1,0 +1,8 @@
+17 and 20, n and m begin
+{
+    {
+      {(+ (* 3 n ) 1 ),n becomes} if(= 0 (% n 2) is?)
+      else {(/ n 2 ), n becomes}
+      (- m 1), m becomes
+    } while (!= 1 n is?)
+} while (> 0 m is?)
