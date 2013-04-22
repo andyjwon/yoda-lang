@@ -1,7 +1,5 @@
 package edu.lmu.cs.xlg.yoda.entities;
 
-import java.util.List;
-
 import edu.lmu.cs.xlg.util.Log;
 
 /**
@@ -21,7 +19,7 @@ public class RelationalExpression extends Expression {
         this.left = left;
         this.right = right;
     }
-    
+
     /**
      * Returns the operator as a string.
      */
