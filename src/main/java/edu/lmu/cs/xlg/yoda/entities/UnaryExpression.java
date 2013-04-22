@@ -35,21 +35,5 @@ public class UnaryExpression extends Expression {
     @Override
     public void analyze(Log log, SymbolTable table, Subroutine owner, boolean inLoop) {
         operand.analyze(log, table, owner, inLoop);
-
-        if ("not".equals(op)) {
-            operand.assertBoolean(op, log);
-            type = Type.TRUTH_VALUE;
-
-        } else if ("-".equals(op)) {
-            operand.assertArithmetic(op, log);
-            type = operand.getType();
-
-        } else if ("length".equals(op)) {
-            operand.assertArrayOrString(op, log);
-            type = Type.WHOLE_NUMBER;
-
-        } else {
-            throw new RuntimeException("Internal error in unary expression analysis");
-        }
     }
 }
