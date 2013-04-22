@@ -7,8 +7,8 @@ import edu.lmu.cs.xlg.util.Log;
  */
 public class BooleanLiteral extends Literal {
 
-    public static final BooleanLiteral TRUE = new BooleanLiteral("yes");
-    public static final BooleanLiteral FALSE = new BooleanLiteral("no");
+    public static final BooleanLiteral TRUE = new BooleanLiteral("true");
+    public static final BooleanLiteral FALSE = new BooleanLiteral("false");
 
     /**
      * Constructs a boolean literal.  The constructor is private because the only two instances
