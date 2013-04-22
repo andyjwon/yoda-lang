@@ -1,0 +1,5 @@
+79, grade begins
+
+{give back "A" you must} if (>= 90 grade is?)       
+else {give back "B" you must} if (>= 80 grade is?)  
+else {give back "C" you must} if (>= 70 grade is?)  
