@@ -34,88 +34,62 @@ public class ArbitraryArityExpression extends Expression {
         return operands;
     }
 
+
     @Override
-    public void analyze(Log log, SymbolTable table, Subroutine owner,
-            boolean inLoop) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    /*@Override
     public void analyze(Log log, SymbolTable table, Subroutine owner, boolean inLoop) {
-        left.analyze(log, table, owner, inLoop);
-        right.analyze(log, table, owner, inLoop);
-
-        // string * int
-        if (op.equals("*") && left.getType() == Type.STRING) {
-            right.assertInteger("*", log);
-            type = Type.STRING;
-
-        // num op num (for arithmetic op)
-        } else if (op.matches("[-*+/]")) {
-            left.assertArithmetic(op, log);
-            right.assertArithmetic(op, log);
-            type = (left.type == Type.NUMBER || right.type == Type.NUMBER)
-                ? Type.NUMBER : Type.WHOLE_NUMBER;
-
-        // int op int returning int (for shifts and mod)
-        } else if (op.matches("<<|>>")) {
-            left.assertInteger(op, log);
-            right.assertInteger(op, log);
-            type = Type.WHOLE_NUMBER;
-
-        // char/num/str op char/num/str (for greater/less inequalities)
-        } else if (op.matches("<|<=|>|>=")) {
-            if (left.type == Type.CHARACTER) {
-                right.assertChar(op, log);
-            } else if (left.type == Type.STRING) {
-                right.assertString(op, log);
-            } else if (left.type.isArithmetic()){
-                left.assertArithmetic(op, log);
-                right.assertArithmetic(op, log);
+        for (int i = 0; i < operands.size(); i++) {
+            operands.get(i).analyze(log, table, owner, inLoop);
+            if (op.matches("<|<=|>|>=|=|!=")) {
+                break;
+            // ( + [string | num]  [string | num]* )
             }
-            type = Type.TRUTH_VALUE;
+            else if (op.equals("+")) {
+                int getType = operands.get(i).assertArithmeticOrString("+", log);
+                if ( getType == 1){
+                    type = Type.NUMBER;
+                }
+                else if (getType == 2) {
+                    type = Type.STRING;
+                }
 
-        // equals or not equals on primitives
-        } else if (op.matches("=|≠")) {
-            if (!(left.type.isPrimitive() &&
-                    (left.isCompatibleWith(right.type) || right.isCompatibleWith(left.type)))) {
-                log.error("eq.type.error", op, left.type, right.type);
+            // ( [-*/^] num num* )
+            } else if (op.matches("[-*/^]")) {
+                operands.get(i).assertArithmetic(op, log);
+                type = operands.get(i).type == Type.NUMBER ? Type.NUMBER : Type.WHOLE_NUMBER;
+
+            // (% int int+ ) returning int (for mod)
+            } else if (op.matches("%")) {
+                operands.get(i).assertInteger(op, log);
+                type = Type.WHOLE_NUMBER;
+
+            // ( & bool bool)
+            // ( | bool bool)
+            } else if (op.matches("[|&]")) {
+                operands.get(i).assertBoolean(op, log);
+                type = Type.TRUTH_VALUE;
             }
-            type = Type.TRUTH_VALUE;
-
-        // bool and bool
-        // bool or bool
-        } else if (op.matches("and|or")) {
-            left.assertBoolean(op, log);
-            right.assertBoolean(op, log);
-            type = Type.TRUTH_VALUE;
-
-        // char in string
-        // t in t list
-        } else if (op.matches("in")) {
-            right.assertArrayOrString("in", log);
-            if (right.getType() == Type.STRING) {
-                left.assertChar("in", log);
-            } else {
-                assert(left.getType().canBeAssignedTo(
-                    ArrayType.class.cast(right.getType()).getBaseType()));
+            else {
+                throw new RuntimeException("Internal error in binary expression analysis");
             }
-            type = Type.TRUTH_VALUE;
-
-        // ref is ref
-        // ref is not ref
-        } else if (op.matches("is") || op.matches("is not")) {
-            if (!left.getType().isReference() && !right.getType().isReference()) {
-                log.error("non.reference", op);
-            }
-            if (left.getType() != right.getType()) {
-                log.error("type.mismatch", op);
-            }
-            type = Type.TRUTH_VALUE;
-
-        } else {
-            throw new RuntimeException("Internal error in binary expression analysis");
         }
-    }*/
+        // ( op [char|num]  [char|num] ) (for greater/less inequalities)
+        if (op.matches("<|<=|>|>=")) {
+            if (operands.get(0).type == Type.CHARACTER) {
+                operands.get(1).assertChar(op, log);
+            } else if (operands.get(0).type.isArithmetic()){
+                operands.get(0).assertArithmetic(op, log);
+                operands.get(1).assertArithmetic(op, log);
+            }
+            type = Type.TRUTH_VALUE;
+    
+        // equals or not equals on primitives
+        } else if (op.matches("=|!=")) {
+            if (!(operands.get(0).type.isPrimitive() &&
+                    (operands.get(0).isCompatibleWith(operands.get(1).type) ||
+                        operands.get(1).isCompatibleWith(operands.get(0).type)))) {
+                log.error("eq.type.error", op, operands.get(0).type, operands.get(1).type);
+            }
+            type = Type.TRUTH_VALUE;
+        }
+    }
 }

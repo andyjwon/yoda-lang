@@ -65,6 +65,17 @@ public abstract class Expression extends Entity {
             log.error("non.arithmetic.or.char", context, type);
         }
     }
+    
+    int assertArithmeticOrString(String context, Log log) {
+        if (type == Type.WHOLE_NUMBER || type == Type.NUMBER) {
+            return 1;
+        }
+        else if (type == Type.STRING) {
+            return 2;
+        }
+        log.error("non.arithmetic.or.char", context, type);
+        return 0;
+    }
 
     void assertInteger(String context, Log log) {
         if (!(type == Type.WHOLE_NUMBER)) {
