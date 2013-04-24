@@ -50,10 +50,6 @@ public abstract class Expression extends Entity {
     // Helpers for semantic analysis, called from the analyze methods of other expressions.  These
     // are by no means necessary, but they are very convenient.
 
-    void assertAssignableTo(Type otherType, Log log, String errorKey) {
-        // Intentionally empty. Sorry Dr. Toal ;-)
-    }
-
     void assertArithmetic(String context, Log log) {
         if (!(type == Type.WHOLE_NUMBER || type == Type.NUMBER)) {
             log.error("non.arithmetic", context);

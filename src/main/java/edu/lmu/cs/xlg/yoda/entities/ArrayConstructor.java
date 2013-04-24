@@ -37,30 +37,6 @@ public class ArrayConstructor extends Expression {
             types.add(e.getType());
         }
 
-        // Now see if we can make any sense out of the set of types we've just built.
-        if (types.isEmpty()) {
-            type = Type.ARBITRARY_ARRAY;
-
-        } else {
-            type = null;
-            for (Type t: types) {
-                if (type == null) {
-                    // First type, tentatively assign it as the expression's type
-                    type = t;
-                } else if (type.canBeAssignedTo(t)) {
-                    // The new type is (the same or) more general, take this one
-                    type = t;
-                } else if (t.canBeAssignedTo(type)) {
-                    // We're good, the type we have so far is the most general, keep it.
-                } else {
-                    // Conflict among the different types, no good.  Log the error and assign
-                    // the arbitrary type to prevent spurious errors.
-                    log.error("bad.array.expression");
-                    type = Type.ARBITRARY;
-                    return;
-                }
-            }
-            type = type.array();
-        }
+       
     }
 }

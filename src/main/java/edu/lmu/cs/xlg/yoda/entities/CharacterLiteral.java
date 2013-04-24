@@ -17,6 +17,6 @@ public class CharacterLiteral extends Literal {
 
     @Override
     public void analyze(Log log, SymbolTable table, Subroutine owner, boolean inLoop) {
-        this.type = Type.CHARACTER;
+        //Intentionally blank
     }
 }

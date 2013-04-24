@@ -40,9 +40,6 @@ public class ConditionalLoop extends Statement {
         if (step != null) {
             step.analyze(log, table, owner, inLoop);
         }
-        if (step != null) {
-            step.assertInteger("range loop", log);
-        }
         body.createTable(table);
         body.getTable().insert(iterator, log);
         body.analyze(log, table, owner, true);

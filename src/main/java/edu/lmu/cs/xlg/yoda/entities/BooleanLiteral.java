@@ -20,6 +20,6 @@ public class BooleanLiteral extends Literal {
 
     @Override
     public void analyze(Log log, SymbolTable table, Subroutine owner, boolean inLoop) {
-        this.type = Type.TRUTH_VALUE;
+        //Intentionally blank
     }
 }
