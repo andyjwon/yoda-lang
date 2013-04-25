@@ -63,10 +63,10 @@ public class YodaToJavaScriptTranslator {
         .put(Function.SQRT, "Math.sqrt")
         .build();
 
-    public void translateProgram(Program program, PrintWriter writer) {
+    public void translateScript(Script script, PrintWriter writer) {
         this.writer = writer;
         emit("(function () {");
-        translateBlock(program);
+        translateBlock(script);
         emit("}());");
     }
 
@@ -80,31 +80,28 @@ public class YodaToJavaScriptTranslator {
 
     private void translateStatement(Statement s) {
 
-        if (s instanceof Declaration) {
-            translateDeclaration(Declaration.class.cast(s));
+        if (s instanceof WhileLoop) {
+            translateWhileLoop(WhileLoop.class.cast(s));
 
-        } else if (s instanceof AssignmentStatement) {
-            translateAssignmentStatement(AssignmentStatement.class.cast(s));
+        } else if (s instanceof ConditionalLoop) {
+            translateConditionalLoop(ConditionalLoop.class.cast(s));
 
-        } else if (s instanceof IncrementStatement) {
-            translateIncrementStatement(IncrementStatement.class.cast(s));
+        } else if (s instanceof ConditionalStatement) {
+            translateConditionalStatement(ConditionalStatement.class.cast(s));
 
-        } else if (s instanceof CallStatement) {
-            translateCallStatement(CallStatement.class.cast(s));
+        } else if (s instanceof TimesLoop) {
+            translateTimesLoop(TimesLoop.class.cast(s));
 
-        } else if (s instanceof BreakStatement) {
-            emit("break;");
+        } else if (s instanceof Procedure) {
+            translateProcedure(Procedure.class.cast(s));
 
-        } else if (s instanceof ReturnStatement) {
-            translateReturnStatement(ReturnStatement.class.cast(s));
+        } else if (s instanceof Function) {
+            translateFunction(Function.class.cast(s));
 
         } else if (s instanceof PrintStatement) {
             translatePrintStatement(PrintStatement.class.cast(s));
 
-        } else if (s instanceof IfStatement) {
-            translateIfStatement(IfStatement.class.cast(s));
-
-        } else if (s instanceof WhileStatement) {
+        } else if (s instanceof Variable) {
             translateWhileStatement(WhileStatement.class.cast(s));
 
         } else if (s instanceof ClassicForStatement) {

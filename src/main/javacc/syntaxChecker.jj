@@ -174,14 +174,20 @@ Statement CONDITIONAL(): {
     {return new ConditionalStatement(arms, elseBlock);}
 }
 
-Variable CONSTDEC(): {
+DecStatement CONSTDEC(): {
     Token t;
     Expression e;
     boolean constant = true;
+    List<Variable> vars = new ArrayList<Variable>();
+    Variable v;
 }
 {
     ((e = EXP() ) "," (t = <ID>)  <MUST>  <BE>)
-    {return new Variable(t.image, e, constant);}
+    {
+        v = new Variable(t.image, e, constant);
+        vars.add(v);
+        return new DecStatement(vars);
+    }
 }
 
 Expression EXP(): {
