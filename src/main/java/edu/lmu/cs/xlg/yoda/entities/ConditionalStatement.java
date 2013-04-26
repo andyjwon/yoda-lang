@@ -26,7 +26,6 @@ public class ConditionalStatement extends Statement {
         @Override
         public void analyze(Log log, SymbolTable table, Subroutine owner, boolean inLoop) {
             condition.analyze(log, table, owner, inLoop);
-            condition.assertBoolean("condition", log);
             block.analyze(log, table, owner, inLoop);
         }
     }

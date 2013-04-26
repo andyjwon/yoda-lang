@@ -96,6 +96,13 @@ public class SymbolTable extends Entity {
             return parent.lookup(name, log);
         }
     }
+    
+    public void isDeclared(String name, Log log) {
+        Entity value = map.get(name);
+        if(value != null) {
+            log.error("already.declared",name);
+        }
+    }
 
     /**
      * Looks up a procedure in this table, or if not found, searches along its ancestor chain.

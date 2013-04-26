@@ -19,9 +19,13 @@ public class DecStatement extends Statement {
         return variables;
     }
 
+    
 	@Override
 	public void analyze(Log log, SymbolTable table, Subroutine owner,
 			boolean inLoop) {
-		// TODO Auto-generated method stub
+	    for (Variable variable : variables) {
+	        table.isDeclared(variable.getName(), log);
+	        variable.analyze(log, table, owner, inLoop);
+	    }
 	}
 }

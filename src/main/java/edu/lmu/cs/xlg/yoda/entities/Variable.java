@@ -4,9 +4,7 @@ import edu.lmu.cs.xlg.util.Log;
 
 public class Variable extends Declaration {
 
-    private String typename;
     private Expression initializer;
-    private Type type;
     private boolean constant;
     private boolean derived;
 
@@ -42,7 +40,6 @@ public class Variable extends Declaration {
      */
     public Variable(String name, Type type) {
         super(name);
-        this.typename = type.getName();
         this.initializer = null;
     }
     public Variable(String name) {
@@ -52,14 +49,6 @@ public class Variable extends Declaration {
 
     public Expression getInitializer() {
         return initializer;
-    }
-
-    public String getTypename() {
-        return typename;
-    }
-
-    public Type getType() {
-        return type;
     }
 
     public boolean isConstant() {
@@ -72,11 +61,12 @@ public class Variable extends Declaration {
 
     @Override
     public void analyze(Log log, SymbolTable table, Subroutine owner, boolean inLoop) {
-
-        // If an initializer is present, analyze it and check types.
+        assertInitialized(initializer, log);
+        // If an initializer is present and analyze it.
         if (initializer != null) {
-                initializer.analyze(log, table, owner, inLoop);
+            initializer.analyze(log, table, owner, inLoop);
         }
+        
     }
 }
 

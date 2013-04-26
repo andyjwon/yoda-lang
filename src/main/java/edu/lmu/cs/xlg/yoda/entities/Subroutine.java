@@ -59,9 +59,6 @@ public abstract class Subroutine extends Declaration {
         while (pi.hasNext()) {
             Expression arg = ai.next();
             Variable parameter = pi.next();
-            if (!arg.isCompatibleWith(parameter.getType())) {
-                log.error("parameter.type.mismatch", parameter.getName());
-            }
         }
     }
 
