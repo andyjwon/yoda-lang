@@ -33,37 +33,39 @@ SKIP: { " " | "\t"
 
 TOKEN: {
     "(" | ")" | "{" | "}" | "+" | "*" | ":=" | "|" | "&" | "," | ":" | "."
-    | <IF: ("if")>
-    | <TO: ("to")>
-    | <BY: ("by")>
     | <AND: ("and")>
-    | <PERHAPS: ("perhaps")>
-    | <HMM: ("hmm")>
-    | <HMMQ: ("hmm?")>
-    | <IS: ("is?")>
-    | <ELSE: ("else")>
-    | <FROM: ("from")>
-    | <DOES: ("does")>
-    | <RUNS: ("runs")>
-    | <WHILE: ("while")>
-    | <BEGIN: ("begin")>
-    | <BEGINS: ("begins")>
-    | <GIVEN: ("given")>
-    | <GIVES: ("gives")>
-    | <GET: ("get")>
-    | <TIMES: ("times")>
+    | <AS: ("as")>
+    | <BE: ("be")>
     | <BECOME: ("become")>
     | <BECOMES: ("becomes")>
-    | <NOTHING: ("nothing")>
-    | <THROUGH: ("through")>
-    | <AS: ("as")>
-    | <TRAINING: ("training")>
-    | <MUST: ("must")>
-    | <BE: ("be")>
-    | <YOU: ("you")>
-    | <PRINT: ("print")>
+    | <BEGIN: ("begin")>
+    | <BEGINS: ("begins")>
+    | <BY: ("by")>
+    | <DOES: ("does")>
+    | <ELSE: ("else")>
+    | <FALSE: ("false")>
+    | <FROM: ("from")>
+    | <GET: ("get")>
     | <GIVEBACK: ("give back")>
+    | <GIVEN: ("given")>
+    | <GIVES: ("gives")>
+    | <HMM: ("hmm")>
+    | <HMMQ: ("hmm?")>
+    | <IF: ("if")>
+    | <IS: ("is?")>
+    | <MUST: ("must")>
+    | <NOTHING: ("nothing")>
     | <ON: ("on")>
+    | <PERHAPS: ("perhaps")>
+    | <PRINT: ("print")>
+    | <RUNS: ("runs")>
+    | <TIMES: ("times")>
+    | <THROUGH: ("through")>
+    | <TO: ("to")>
+    | <TRAINING: ("training")>
+    | <TRUE: ("true")>
+    | <WHILE: ("while")>
+    | <YOU: ("you")>
     | <ID: ((["a"-"z"] | ["A"-"Z"])+(["-"] | ["_"] | ["a"-"z"] | ["A"-"Z"] | ["0"-"9"])*)>
     | <NUMLIT: ((("0x")(["0"-"9"] | ["A"-"F"] | ["a"-"f"])+("."(["0"-"9"] | ["A"-"F"] | ["a"-"f"])*)?)
                | (("0b")(["0"-"1"])+("."(["0"-"1"])*)?)
@@ -377,17 +379,17 @@ Literal LIT(): {
     Token t;
 }
 {
+  t = <TRUE>
+  {return BooleanLiteral.TRUE;}
+  |
+  t = <FALSE>
+  {return BooleanLiteral.FALSE;}
+  |
   t = <NUMLIT>
   {return new NumberLiteral(t.image);}
   |
   t = <STRLIT>
   {return new StringLiteral(t.image);}
-  |
-  "true"
-  {return BooleanLiteral.TRUE;}
-  |
-  "false"
-  {return BooleanLiteral.FALSE;}
 }
 
 String RELOP(): {
