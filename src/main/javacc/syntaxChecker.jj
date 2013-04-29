@@ -133,19 +133,17 @@ ArrayConstructor ARRAY():{
 }
 
 Statement ASSIGNMENT(): {
-    List<String> tokens = new ArrayList<String>();
     List<Expression> targets = new ArrayList<Expression>();
     List<Expression> sources = new ArrayList<Expression>();
     Token t;
     Expression e;
-    String op = null;
     IdentifierExpression i;
 }
 {
     ((e = EXP(){sources.add(e);} (<AND> e = EXP() {sources.add(e);})*
         ","  t = <ID> {i = new IdentifierExpression(t.image);
-        targets.add(i);}(  <AND> t = <ID> {targets.add(i);})*  (<BECOME> | <BECOMES>)))
-    {return new AssignmentStatement(i, e);}
+        targets.add(i);}(<AND> t = <ID> {targets.add(i);})*  (<BECOME> | <BECOMES>)))
+    {return new AssignmentStatement(targets, sources);}
 }
 
 Block BLOCK(): {
@@ -183,15 +181,11 @@ DecStatement CONSTDEC(): {
     Token t;
     Expression e;
     boolean constant = true;
-    List<Variable> vars = new ArrayList<Variable>();
-    Variable v;
 }
 {
     ((e = EXP() ) "," (t = <ID>)  <MUST>  <BE>)
     {
-        v = new Variable(t.image, e, constant);
-        vars.add(v);
-        return new DecStatement(vars);
+        return new DecStatement(t.image, e, constant);
     }
 }
 
@@ -342,12 +336,9 @@ FunctionCall PROCCALL(): {
 
 DecStatement VARDEC(): {
     List<String> tokens = new ArrayList<String>();
-    List<Variable> variables = new ArrayList<Variable>();
-    Token t;
     List<Expression> exps = new ArrayList<Expression>();
+    Token t;
     Expression e;
-    boolean constant = false;
-    boolean derived = false;
 }
 {
     (
@@ -357,21 +348,10 @@ DecStatement VARDEC(): {
       (t = <ID>) {tokens.add(t.image);}
       (<AND> (t = <ID>) {tokens.add(t.image);})*
       (<BEGIN> | <BEGINS>)
-    |
-      <FROM> e = EXP() {exps.add(e);}
-      ","
-      (t = <ID>) {tokens.add(t.image);}
-      {derived = true;}
-      <BEGINS>
     )
 
     {
-      // ???: REVISIT LANGUAGE DESIGN
-      for (int i = 0; i < tokens.size(); i++) {
-        variables.add(new Variable(tokens.get(i),
-          i < exps.size() ? exps.get(i) : null, constant, derived));
-      }
-      return new DecStatement(variables);
+      return new DecStatement(tokens, exps);
     }
 }
 

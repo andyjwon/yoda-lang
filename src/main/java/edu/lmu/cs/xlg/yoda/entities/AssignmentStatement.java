@@ -10,38 +10,38 @@ import edu.lmu.cs.xlg.util.Log;
  */
 public class AssignmentStatement extends Statement {
 
-    private List<Expression> target;
-    private List<Expression> source;
+    private List<Expression> targets;
+    private List<Expression> sources;
 
     public AssignmentStatement(Expression target, Expression source) {
-    	this.target = new ArrayList<Expression>();
-        this.source = new ArrayList<Expression>();
-        this.target.add(target);
-        this.source.add(source);
+        this.targets = new ArrayList<Expression>();
+        this.sources = new ArrayList<Expression>();
+        this.targets.add(target);
+        this.sources.add(source);
     }
 
-    public AssignmentStatement(List<Expression> target, List<Expression> source) {
-        this.target = target;
-        this.source = source;
+    public AssignmentStatement(List<Expression> targets, List<Expression> sources) {
+        this.targets = targets;
+        this.sources = sources;
     }
 
     public List<Expression> getTarget() {
-        return target;
+        return targets;
     }
 
     public List<Expression> getSource() {
-        return source;
+        return sources;
     }
 
     @Override
     public void analyze(Log log, SymbolTable table, Subroutine owner, boolean inLoop) {
-        for (Expression t : target) {
+        for (Expression t : targets) {
             t.analyze(log, table, owner, inLoop);
 
             if (!t.isWritableLValue()) {
                 log.error("non.writable.in.assignment.statement");
             }
-            for (Expression s : source) {
+            for (Expression s : sources) {
                 s.analyze(log, table, owner, inLoop);
             }
         }

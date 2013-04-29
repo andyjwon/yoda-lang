@@ -16,10 +16,10 @@ public abstract class Declaration extends Statement {
     public String getName() {
         return name;
     }
-    
+
     void assertInitialized(Expression initializer, Log log) {
         if (initializer == null) {
-            log.error("mismatched.assignment", initializer);
+            log.error("mismatched.declaration", initializer);
         }
     }
 }
