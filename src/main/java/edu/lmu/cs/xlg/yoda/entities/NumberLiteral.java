@@ -30,11 +30,24 @@ public class NumberLiteral extends Literal {
     public void analyze(Log log, SymbolTable table, Subroutine owner, boolean inLoop) {
         type = Type.NUMBER;
         String lexeme = getLexeme();
+        int length = lexeme.length();
         try {
             if (lexeme.contains("^")) {
                 lexeme = lexeme.replaceAll("(x|\\xd7)10\\^", "E");
             }
-            value = Double.valueOf(lexeme);
+            if (length > 2) {
+                char base = lexeme.charAt(1);
+                if (base == 'b' || base == 'x' || base == 'o') {
+                    lexeme = lexeme.substring(2, length);
+                    if (base == 'x') {
+                        lexeme = lexeme.replaceAll("[a-fA-F]", "");
+                    }
+                } else {
+                    value = Double.valueOf(lexeme);
+                }
+            } else {
+                value = Double.valueOf(lexeme);
+            }
         } catch (NumberFormatException e) {
             log.error("bad_number", getLexeme());
         }
