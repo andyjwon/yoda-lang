@@ -61,12 +61,11 @@ public class Variable extends Declaration {
 
     @Override
     public void analyze(Log log, SymbolTable table, Subroutine owner, boolean inLoop) {
-        assertInitialized(initializer, log);
         // If an initializer is present and analyze it.
         if (initializer != null) {
             initializer.analyze(log, table, owner, inLoop);
         }
-        
+
     }
 }
 

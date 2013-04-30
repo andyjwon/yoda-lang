@@ -85,8 +85,7 @@ Script SCRIPT(): {
     (<BR>)*
 
     s = STMT() {statements.add(s);}
-// TODO: Error here... please fix
-    (LOOKAHEAD((<BR>)+ STMT()) (<BR>)+ STMT() {statements.add(s);})*
+    (LOOKAHEAD((<BR>)+ STMT()) (<BR>)+ s = STMT() {statements.add(s);})*
 
     (<BR>)* <EOF>
     {return new Script(statements);}

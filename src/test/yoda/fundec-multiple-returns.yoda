@@ -1,6 +1,6 @@
-120, max begins
 
 {
+  120, max begins
   {give back 13 you must} if (< 2 max is?)
   give back 5 you must
 } given n, is_prime gives
