@@ -41,7 +41,8 @@ public class RangeLoop extends Statement {
         if (step != null) {
             step.analyze(log, table, owner, inLoop);
         }
- 
+        range.analyze(log, table, owner, inLoop);
+
         body.createTable(table);
         body.getTable().insert(iterator, log);
         body.analyze(log, table, owner, true);
