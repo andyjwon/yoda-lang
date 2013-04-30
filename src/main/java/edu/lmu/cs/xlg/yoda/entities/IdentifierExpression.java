@@ -36,9 +36,9 @@ public class IdentifierExpression extends Expression {
     public void analyze(Log log, SymbolTable table, Subroutine owner, boolean inLoop) {
         referent = table.lookup(name, log);
         if (referent instanceof Variable) {
-            
+
         } else if (referent instanceof Function) {
-          
+
         } else {
             log.error("bad.expression");
         }

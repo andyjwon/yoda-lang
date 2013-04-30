@@ -19,7 +19,7 @@ public class ArbitraryArityExpression extends Expression {
         this.op = op;
         this.operands= operands;
     }
-    
+
     /**
      * Returns the operator as a string.
      */
