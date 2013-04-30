@@ -2,6 +2,12 @@
 
 A long time ago in a galaxy far, far away...
 
+# Mascot
+[Yoda mascot](./yodaMascot.jpg)
+
+# Theme Song
+[Yoda theme-song](http://www.youtube.com/watch?v=WWTI93xI41w)
+
 ### DESCRIPTION
 The general feel and use of the Yoda language is meant to mimic the speech patterns of the Jedi Master Yoda from Star Wars.
 Although Yoda's speech patterns can be inconsistent, his sentences typically follow an object-subject-verb word order.
