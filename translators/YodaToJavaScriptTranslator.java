@@ -86,6 +86,9 @@ public class YodaToJavaScriptTranslator {
         } else if (s instanceof ConditionalLoop) {
             translateConditionalLoop(ConditionalLoop.class.cast(s));
 
+        } else if (s instanceof RangeLoop) {
+            translateRangeLoop(RangeLoop.class.cast(s));
+
         } else if (s instanceof ConditionalStatement) {
             translateConditionalStatement(ConditionalStatement.class.cast(s));
 
@@ -101,11 +104,20 @@ public class YodaToJavaScriptTranslator {
         } else if (s instanceof PrintStatement) {
             translatePrintStatement(PrintStatement.class.cast(s));
 
-        } else if (s instanceof Variable) {
-            translateWhileStatement(WhileStatement.class.cast(s));
+        } else if (s instanceof DecStatement) {
+            translateDecStatement(DecStatement.class.cast(s));
 
-        } else if (s instanceof ClassicForStatement) {
-            translateClassicForStatement(ClassicForStatement.class.cast(s));
+        } else if (s instanceof AssignmentStatement) {
+            translateAssignmentStatement(AssignmentStatement.class.cast(s));
+
+        } else if (s instanceof ReturnStatement) {
+            translateReturnStatement(ReturnStatement.class.cast(s));
+
+        } else if (s instanceof FunctionCall) {
+            translateFunctionCall(FunctionCall.class.cast(s));
+
+        } else if (s instanceof Expression) {
+            translateExpression(Expression.class.cast(s));
 
         } else {
             throw new RuntimeException("Unknown statement class: " + s.getClass().getName());
@@ -191,28 +203,22 @@ public class YodaToJavaScriptTranslator {
         emit("}");
     }
 
-    private void translateWhileStatement(WhileStatement s) {
+    private void translateWhileLoop(WhileLoop s) {
         emit("while (%s) {", translateExpression(s.getCondition()));
         translateBlock(s.getBody());
         emit("}");
     }
 
-    private void translateClassicForStatement(ClassicForStatement s) {
+    private void translateConditionalLoop(ConditionalLoop s) {
         String init = "", test = "", each = "";
-        if (s.getInit() != null) {
-            init = String.format("var %s = %s", variable(s.getIndexVariable()), s.getInit());
+        if (s.getIterator() != null) {
+            init = String.format("%s", s.getIterator());
         }
-        if (s.getTest() != null) {
-            test = translateExpression(s.getTest());
+        if (s.getCondition() != null) {
+            test = translateExpression(s.getCondition());
         }
-        if (s.getEach() instanceof AssignmentStatement) {
-            AssignmentStatement e = AssignmentStatement.class.cast(s.getEach());
-            String left = translateExpression(e.getLeft());
-            String right = translateExpression(e.getRight());
-            each = String.format("%s = %s", left, right);
-        } else if (s.getEach() instanceof IncrementStatement) {
-            IncrementStatement e = IncrementStatement.class.cast(s.getEach());
-            each = String.format("%s%s", variable(e.getTarget()), e.getOp());
+        if (s.getStep() != null) {
+            each = translateExpression(s.getStep());
         }
         emit("for (%s; %s; %s) {", init, test, each);
         translateBlock(s.getBody());
