@@ -22,18 +22,12 @@ public class SubscriptExpression extends Expression {
 
     @Override
     boolean isWritableLValue() {
-        return collection.type instanceof ArrayType && collection.isWritableLValue();
+        return collection.isWritableLValue();
     }
 
     @Override
     public void analyze(Log log, SymbolTable table, Subroutine owner, boolean inLoop) {
         collection.analyze(log, table, owner, inLoop);
         index.analyze(log, table, owner, inLoop);
-
-        collection.assertArrayOrString("[]", log);
-        index.assertInteger("[]", log);
-        type = (collection.type == Type.STRING) ? Type.CHARACTER
-            : collection.type instanceof ArrayType ? ArrayType.class.cast(collection.type).getBaseType()
-            : Type.ARBITRARY;
     }
 }

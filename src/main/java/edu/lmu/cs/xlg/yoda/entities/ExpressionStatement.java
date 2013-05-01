@@ -16,7 +16,7 @@ public class ExpressionStatement extends Statement{
 	@Override
 	public void analyze(Log log, SymbolTable table, Subroutine owner,
 			boolean inLoop) {
-		// TODO Auto-generated method stub
+		e.analyze(log, table, owner, inLoop);
 		
 	}
 

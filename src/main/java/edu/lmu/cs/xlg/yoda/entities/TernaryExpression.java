@@ -28,7 +28,9 @@ public class TernaryExpression extends Expression {
 
     @Override
     public void analyze(Log log, SymbolTable table, Subroutine owner, boolean inLoop) {
-        // TODO Auto-generated method stub
+        condition.analyze(log, table, owner, inLoop);
+        trueExpression.analyze(log, table, owner, inLoop);
+        falseExpression.analyze(log, table, owner, inLoop);
 
     }
 }

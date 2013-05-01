@@ -18,6 +18,6 @@ public class NullLiteral extends Literal {
      */
     @Override
     public void analyze(Log log, SymbolTable table, Subroutine owner, boolean inLoop) {
-        type = Type.NULL_TYPE;
+    	//Intentionally blank
     }
 }

@@ -28,7 +28,6 @@ public class NumberLiteral extends Literal {
      */
     @Override
     public void analyze(Log log, SymbolTable table, Subroutine owner, boolean inLoop) {
-        type = Type.NUMBER;
         String lexeme = getLexeme();
         int length = lexeme.length();
         try {

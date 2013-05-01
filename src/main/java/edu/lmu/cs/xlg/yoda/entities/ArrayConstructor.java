@@ -1,8 +1,6 @@
 package edu.lmu.cs.xlg.yoda.entities;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import edu.lmu.cs.xlg.util.Log;
 
@@ -29,14 +27,5 @@ public class ArrayConstructor extends Expression {
         for (Expression e: expressions) {
             e.analyze(log, table, owner, inLoop);
         }
-
-        // Now let's compute the type of the array expression. Begin by creating a set of all of
-        // the types of each of the expressions in the array itself.
-        Set<Type> types = new HashSet<Type>();
-        for (Expression e: expressions) {
-            types.add(e.getType());
-        }
-
-       
     }
 }

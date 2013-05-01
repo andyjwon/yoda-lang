@@ -1,6 +1,5 @@
 package edu.lmu.cs.xlg.yoda.entities;
 
-import java.util.Iterator;
 import java.util.List;
 
 import edu.lmu.cs.xlg.util.Log;
@@ -53,13 +52,6 @@ public abstract class Subroutine extends Declaration {
             return;
         }
 
-        // Check each parameter against the corresponding argument.
-        Iterator<Expression> ai = args.iterator();
-        Iterator<Variable> pi = parameters.iterator();
-        while (pi.hasNext()) {
-            Expression arg = ai.next();
-            Variable parameter = pi.next();
-        }
     }
 
     /**

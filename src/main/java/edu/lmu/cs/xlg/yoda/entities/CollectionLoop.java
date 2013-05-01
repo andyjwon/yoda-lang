@@ -37,13 +37,8 @@ public class CollectionLoop extends Statement {
     @Override
     public void analyze(Log log, SymbolTable table, Subroutine owner, boolean inLoop) {
         collection.analyze(log, table, owner, inLoop);
-        collection.assertArrayOrString("loop", log);
         body.createTable(table);
-        Type iteratorType = collection.getType() instanceof ArrayType ?
-                ArrayType.class.cast(collection.getType()).getBaseType() :
-                collection.getType() == Type.STRING ? Type.CHARACTER :
-                Type.ARBITRARY;
-        iterator = new Variable(iteratorName, iteratorType);
+        iterator = new Variable(iteratorName);
         body.getTable().insert(iterator, log);
         body.analyze(log, table, owner, true);
     }
