@@ -48,7 +48,6 @@ public class DecStatement extends Statement {
             variables.add(new Variable(targets.get(i), sources.get(i), constant));
         }
         for (Variable variable : variables) {
-            table.isDeclared(variable.getName(), log);
             variable.analyze(log, table, owner, inLoop);
         }
     }
