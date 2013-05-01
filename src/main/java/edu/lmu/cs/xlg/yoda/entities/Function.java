@@ -12,7 +12,7 @@ public class Function extends Subroutine {
     public Function(String name, List<Variable> parameters, Block body) {
         super(name, parameters, body);
     }
-
+    
     @Override
     public void analyzeSignature(Log log, SymbolTable table, Subroutine owner, boolean inLoop) {
         super.analyzeSignature(log, table, owner, inLoop);

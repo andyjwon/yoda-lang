@@ -37,7 +37,5 @@ public class FunctionCall extends Expression {
             return;
         }
 
-        Function f = (Function)((IdentifierExpression)function).getReferent();
-        f.assertCanBeCalledWith(args, log);
     }
 }

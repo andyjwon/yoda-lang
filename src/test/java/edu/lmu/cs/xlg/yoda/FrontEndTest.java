@@ -51,7 +51,6 @@ public class FrontEndTest {
             params.add(new Object[] { name });
         }
         
-        System.out.println(filenames[4]);
         return params;
     }
 
