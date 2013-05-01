@@ -36,9 +36,6 @@ import edu.lmu.cs.xlg.yoda.entities.ReturnStatement;
 import edu.lmu.cs.xlg.yoda.entities.SimpleVariableReference;
 import edu.lmu.cs.xlg.yoda.entities.Statement;
 import edu.lmu.cs.xlg.yoda.entities.StringLiteral;
-import edu.lmu.cs.xlg.yoda.entities.StructAggregate;
-import edu.lmu.cs.xlg.yoda.entities.StructField;
-import edu.lmu.cs.xlg.yoda.entities.StructType;
 import edu.lmu.cs.xlg.yoda.entities.SubscriptedVariable;
 import edu.lmu.cs.xlg.yoda.entities.Type;
 import edu.lmu.cs.xlg.yoda.entities.Variable;
@@ -129,24 +126,13 @@ public class YodaToJavaScriptTranslator {
             translateVariableDeclaration(Variable.class.cast(s.getDeclarable()));
         } else if (s.getDeclarable() instanceof Function) {
             translateFunctionDeclaration(Function.class.cast(s.getDeclarable()));
-        } else if (s.getDeclarable() instanceof Type) {
-            // Intentionally empty; type declarations do not get translated in JavaScript
         } else {
             throw new RuntimeException("Unknown declaration: " + s.getClass().getName());
         }
     }
 
     private void translateVariableDeclaration(Variable v) {
-        String initializer;
-        if (v.getInitializer() == null) {
-            initializer = initialValues.get(v.getType());
-            if (initializer == null) {
-                initializer = "null";
-            }
-        } else {
-            initializer = translateExpression(v.getInitializer());
-        }
-        emit ("var %s = %s;", variable(v), initializer);
+        String initializer = translateExpression(v.getInitializer());
     }
 
     private void translateFunctionDeclaration(Function f) {
@@ -317,16 +303,6 @@ public class YodaToJavaScriptTranslator {
             expressions.add(translateExpression(arg));
         }
         return "[" + Joiner.on(", ").join(expressions) + "]";
-    }
-
-    private String translateStructAggregate(StructAggregate e) {
-        Iterator<StructField> fields = StructType.class.cast(e.getType()).getFields().iterator();
-        Iterator<Expression> values = e.getArgs().iterator();
-        List<String> pairs = new ArrayList<String>();
-        while (fields.hasNext() && values.hasNext()) {
-            pairs.add(property(fields.next().getName()) + ": " + translateExpression(values.next()));
-        }
-        return "{" + Joiner.on(", ").join(pairs) + "}";
     }
 
     private String translateVariableExpression(VariableExpression v) {
