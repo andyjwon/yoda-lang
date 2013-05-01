@@ -37,7 +37,6 @@ import edu.lmu.cs.xlg.yoda.entities.SimpleVariableReference;
 import edu.lmu.cs.xlg.yoda.entities.Statement;
 import edu.lmu.cs.xlg.yoda.entities.StringLiteral;
 import edu.lmu.cs.xlg.yoda.entities.SubscriptedVariable;
-import edu.lmu.cs.xlg.yoda.entities.Type;
 import edu.lmu.cs.xlg.yoda.entities.Variable;
 import edu.lmu.cs.xlg.yoda.entities.VariableExpression;
 import edu.lmu.cs.xlg.yoda.entities.WhileStatement;
@@ -228,10 +227,6 @@ public class YodaToJavaScriptTranslator {
             return translateStringLiteral(StringLiteral.class.cast(e));
         } else if (e instanceof ArrayAggregate) {
             return translateArrayAggregate(ArrayAggregate.class.cast(e));
-        } else if (e instanceof StructAggregate) {
-            return translateStructAggregate(StructAggregate.class.cast(e));
-        } else if (e instanceof EmptyArray) {
-            return translateEmptyArray(EmptyArray.class.cast(e));
         } else if (e instanceof PrefixExpression) {
             return translatePrefixExpression(PrefixExpression.class.cast(e));
         } else if (e instanceof PostfixExpression) {

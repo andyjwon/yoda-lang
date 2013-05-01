@@ -274,14 +274,14 @@ Statement PRINTSTMT(): {
     {return new PrintStatement(e);}
 }
 
-Procedure PROCDEC(): {
+Function PROCDEC(): {
     Token t;
     Block b;
     List<Variable> params = new ArrayList<Variable>();
 }
 {
     ((b = BLOCK()) <GIVEN> (PARAMS(params)) ","  (t = <ID>)  <DOES>)
-    {return new Procedure(t.image, params, b);}
+    {return new Function(t.image, params, b);}
 }
 
 Range RANGE(): {

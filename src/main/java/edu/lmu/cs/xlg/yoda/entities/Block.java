@@ -74,8 +74,11 @@ public class Block extends Entity {
         // Now just go through all the items in order and analyze everything, making sure to
         // insert variables because they have not yet been inserted.
         for (Statement s: statements) {
-            if (s instanceof Variable) {
-                table.insert((Variable)s, log);
+            if (s instanceof DecStatement) {
+            	DecStatement d = (DecStatement)s;
+            	for(String t : d.getNames()) {
+            		table.insert(new Variable(t), log);
+            	}
             }
             s.analyze(log, table, owner, inLoop);
         }

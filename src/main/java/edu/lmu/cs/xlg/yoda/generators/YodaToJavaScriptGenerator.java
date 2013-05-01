@@ -37,7 +37,6 @@ import edu.lmu.cs.xlg.yoda.entities.StringLiteral;
 import edu.lmu.cs.xlg.yoda.entities.Subroutine;
 import edu.lmu.cs.xlg.yoda.entities.SubscriptExpression;
 import edu.lmu.cs.xlg.yoda.entities.TimesLoop;
-import edu.lmu.cs.xlg.yoda.entities.Type;
 import edu.lmu.cs.xlg.yoda.entities.UnaryExpression;
 import edu.lmu.cs.xlg.yoda.entities.Variable;
 import edu.lmu.cs.xlg.yoda.entities.WhileLoop;
@@ -114,26 +113,6 @@ public class YodaToJavaScriptGenerator extends Generator {
             }
             emit(String.format("%s(%s)", procedure, StringUtils.join(arguments, ", ")));
 
-        } else if (s instanceof ModifiedStatement) {
-            ModifiedStatement m = ModifiedStatement.class.cast(s);
-            String key;
-            switch (m.getModifier().getType()) {
-                case IF:
-                    key = "if";
-                    break;
-                case WHILE:
-                    key = "while";
-                    break;
-                default:
-                    throw new RuntimeException("Internal error: unknown modifier");
-            }
-            String condition = generateExpression(m.getModifier().getCondition());
-            emit(String.format("%s (%s) {", key, condition));
-            indentLevel++;
-            generateStatement(m.getStatement());
-            indentLevel--;
-            emit("}");
-
         } else if (s instanceof ConditionalStatement) {
             generateConditionalStatement(ConditionalStatement.class.cast(s));
 
@@ -144,7 +123,7 @@ public class YodaToJavaScriptGenerator extends Generator {
 
         } else if (s instanceof TimesLoop) {
             TimesLoop loop = TimesLoop.class.cast(s);
-            Variable counter = new Variable("", Type.WHOLE_NUMBER);
+            Variable counter = new Variable("");
             String count = generateExpression(loop.getCount());
             emit(String.format("for (var %s = %s; %s > 0; %s--) {", id(counter), count, id(counter), id(counter)));
             generateBlock(loop.getBody());
@@ -154,8 +133,7 @@ public class YodaToJavaScriptGenerator extends Generator {
             CollectionLoop loop = CollectionLoop.class.cast(s);
             String index = id(loop.getIterator());
             String collection = generateExpression(loop.getCollection());
-            emit(String.format("%s%s.forEach(function (%s) {", collection,
-                    loop.getCollection().getType() == Type.STRING ? ".split('')" : "", index));
+            emit(String.format("%s%s.forEach(function (%s) {", collection, "", index));
             generateBlock(loop.getBody());
             emit("});");
 
@@ -325,33 +303,23 @@ public class YodaToJavaScriptGenerator extends Generator {
         String right = generateExpression(e.getRight());
 
         if (op.equals("+")) {
-            if (e.getLeft().isArrayOrString() || e.getRight().isArray()) {
-                if (e.getLeft().isArray()) {
-                    if (e.getRight().isArray()) {
-                        return left + ".concat(" + right + ")";
-                    } else {
-                        return left + ".push(" + right + ")";
-                    }
-                } else if (e.getRight().isArray()) {
-                    return right + ".unshift(" + left + ")";
-                } else {
-                    return left + ".concat(" + right + ")";
-                }
-            }
+           
+        	return left + ".concat(" + right + ")";   
+  
         } else if (op.equals("*")) {
-            if (e.getLeft().getType() == Type.STRING) {
-                Variable counter = new Variable("", Type.WHOLE_NUMBER);
-                Variable result = new Variable("", Type.STRING);
-                String value = generateExpression(e.getLeft());
-                String count = generateExpression(e.getRight());
-                emit(String.format("for (var %s = \"\", %s = %s; %s > 0; %s--) {", id(result), id(counter), count,
-                        id(counter), id(counter)));
-                indentLevel++;
-                emit(String.format("%s = %s.concat(%s);", id(result), id(result), value));
-                indentLevel--;
-                emit("}");
-                return id(result);
-            }
+            
+            Variable counter = new Variable("");
+            Variable result = new Variable("");
+            String value = generateExpression(e.getLeft());
+            String count = generateExpression(e.getRight());
+            emit(String.format("for (var %s = \"\", %s = %s; %s > 0; %s--) {", id(result), id(counter), count,
+                    id(counter), id(counter)));
+            indentLevel++;
+            emit(String.format("%s = %s.concat(%s);", id(result), id(result), value));
+            indentLevel--;
+            emit("}");
+            return id(result);
+            
         } else if (op.equals("and")) {
             op = "&&";
         } else if (op.equals("or")) {

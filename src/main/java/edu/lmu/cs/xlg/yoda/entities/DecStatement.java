@@ -16,10 +16,10 @@ public class DecStatement extends Statement {
     private boolean constant;
 
     public DecStatement(String target, Expression source, boolean constant) {
-        targets = new ArrayList<String>();
-        sources = new ArrayList<Expression>();
-        targets.add(target);
-        sources.add(source);
+        this.targets = new ArrayList<String>();
+        this.sources = new ArrayList<Expression>();
+        this.targets.add(target);
+        this.sources.add(source);
         this.constant = constant;
     }
 
@@ -30,7 +30,11 @@ public class DecStatement extends Statement {
     }
 
     public List<String> getNames() {
-        return targets;
+        return this.targets;
+    }
+    
+    public List<Variable> getVariables() {
+    	return this.variables;
     }
 
     @Override

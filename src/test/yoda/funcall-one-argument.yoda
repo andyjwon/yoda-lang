@@ -1,2 +1,5 @@
+{
+	"Hello" you print
+} given s, greet_her does
 
 (on "Alice" greet_her)

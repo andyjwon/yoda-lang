@@ -50,6 +50,8 @@ public class FrontEndTest {
         for (String name : filenames) {
             params.add(new Object[] { name });
         }
+        
+        System.out.println(filenames[4]);
         return params;
     }
 
