@@ -44,39 +44,7 @@ public class SymbolTable extends Entity {
      * @return the innermost visible type with that name.  If not found, or if the value found is
      * not a type object, logs an error message and returns Type.ANY.
      */
-    public Type lookupType(String name, Log log) {
 
-        if ("string".equals(name)) {
-            return Type.STRING;
-        } else if ("whole number".equals(name)) {
-            return Type.WHOLE_NUMBER;
-        } else if ("number".equals(name)) {
-            return Type.NUMBER;
-        } else if ("character".equals(name)) {
-            return Type.CHARACTER;
-        } else if ("truth value".equals(name)) {
-            return Type.TRUTH_VALUE;
-        }
-
-        if (name.endsWith(" list")) {
-            return lookupType(name.substring(0, name.length() - 5), log).array();
-        }
-
-        Object value = map.get(name);
-        if (value == null) {
-            if (parent == null) {
-                log.error("type.not.found", name);
-                return Type.ARBITRARY;
-            } else {
-                return parent.lookupType(name, log);
-            }
-        } else if (value instanceof Type) {
-            return (Type)value;
-        } else {
-            log.error("not.a.type", name);
-            return Type.ARBITRARY;
-        }
-    }
 
     /**
      * Looks up an entity in this table, or if not found, searches along its ancestor chain.

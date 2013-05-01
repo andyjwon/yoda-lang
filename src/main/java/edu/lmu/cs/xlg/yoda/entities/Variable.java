@@ -13,7 +13,7 @@ public class Variable extends Declaration {
      * not been declared.  This variable is type-compatible with everything, so its use serves to
      * prevent a flood of spurious error messages.
      */
-    public static final Variable ARBITRARY = new Variable("<arbitrary>", Type.ARBITRARY);
+    public static final Variable ARBITRARY = new Variable("<arbitrary>");
 
     /**
      * Constructs a variable.
@@ -38,10 +38,6 @@ public class Variable extends Declaration {
      * Note that this takes in a real type, rather than just a type name, because these variables
      * aren't part of a user's code and don't have to get analyzed.
      */
-    public Variable(String name, Type type) {
-        super(name);
-        this.initializer = null;
-    }
     public Variable(String name) {
         super(name);
         this.initializer = null;
