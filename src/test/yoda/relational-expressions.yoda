@@ -1,5 +1,7 @@
+1, x begins
+4, n begins
 
-(= null x is?)   
+(= 1 x is?)   
                                                 
 (< 3 4 is?)                                            
 (> 5 x is?)

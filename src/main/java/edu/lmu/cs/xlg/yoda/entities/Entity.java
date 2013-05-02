@@ -163,7 +163,9 @@ public abstract class Entity {
                 Entity.class.cast(value).traverse(v, visited);
             } else if (value instanceof Iterable<?>) {
                 for (Object child : (Iterable<?>) value) {
-                    Entity.class.cast(child).traverse(v, visited);
+                	if (child instanceof Entity) {
+                		Entity.class.cast(child).traverse(v, visited);
+                	}
                 }
             }
         }

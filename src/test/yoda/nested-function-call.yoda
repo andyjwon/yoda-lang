@@ -1,0 +1,9 @@
+{
+	give back (* x x) you must
+} given x, square gives
+
+{
+	give back (^ y (/ 1 2)) you must
+} given y, root gives
+
+(on 8 and (on 2 and 11 square) root)

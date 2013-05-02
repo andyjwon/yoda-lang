@@ -45,7 +45,7 @@ public class FrontEndTest {
                 return name.endsWith(EXTENSION);
             }
         });
-
+        System.out.println(filenames[92]);
         Collection<Object[]> params = new ArrayList<Object[]>();
         for (String name : filenames) {
             params.add(new Object[] { name });
@@ -64,7 +64,7 @@ public class FrontEndTest {
             Reader reader = new FileReader(TEST_DIRECTORY + "/" + filename);
 
             Compiler compiler = new Compiler();
-
+            //compiler.setQuiet(true);
             if (filename.startsWith("synerror")) {
                 // Expect at least one error during syntax checking
                 compiler.checkSyntax(reader);

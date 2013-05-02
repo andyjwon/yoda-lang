@@ -1,4 +1,4 @@
 {
-	("Hello," s) you print
+	(+ "Hello," s) you print
 } given s, greet_her does
-(on nothing greet)
+(on nothing greet_her)

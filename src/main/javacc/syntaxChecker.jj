@@ -154,7 +154,7 @@ Block BLOCK(): {
     (<BR>)*
 
     s = STMT() {statements.add(s);}
-    (LOOKAHEAD((<BR>)+ STMT()) (<BR>)+ STMT() {statements.add(s);})*
+    (LOOKAHEAD((<BR>)+ STMT()) (<BR>)+ s = STMT() {statements.add(s);})*
 
     (<BR>)* "}"
     {return new Block(statements);}

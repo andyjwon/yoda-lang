@@ -1,3 +1,5 @@
-(* (/ y (- 4  x ) ) 2.5 )
+7, y begins
+"cat", x begins
+false, found begins
 
 ( | ( & (= 5 3 is?) (>= 9 x is?)) ( & (!= (/ y 4 ) 1 is?) (!found)))
