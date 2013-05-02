@@ -64,7 +64,7 @@ public class FrontEndTest {
             Reader reader = new FileReader(TEST_DIRECTORY + "/" + filename);
 
             Compiler compiler = new Compiler();
-            //compiler.setQuiet(true);
+            compiler.setQuiet(true);
             if (filename.startsWith("synerror")) {
                 // Expect at least one error during syntax checking
                 compiler.checkSyntax(reader);
