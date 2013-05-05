@@ -229,16 +229,18 @@ public class YodaToJavaScriptTranslator {
             return "false";
         } else if (e instanceof StringLiteral) {
             return translateStringLiteral(StringLiteral.class.cast(e));
-        } else if (e instanceof ArrayAggregate) {
-            return translateArrayAggregate(ArrayAggregate.class.cast(e));
-        } else if (e instanceof PrefixExpression) {
-            return translatePrefixExpression(PrefixExpression.class.cast(e));
-        } else if (e instanceof PostfixExpression) {
-            return translatePostfixExpression(PostfixExpression.class.cast(e));
-        } else if (e instanceof InfixExpression) {
-            return translateInfixExpression(InfixExpression.class.cast(e));
-        } else if (e instanceof VariableExpression) {
-            return translateVariableExpression(VariableExpression.class.cast(e));
+        } else if (e instanceof ArrayConstructor) {
+            return translateArrayAggregate(ArrayConstructor.class.cast(e));
+        } else if (e instanceof UnaryExpression) {
+            return translateUnaryExpression(UnaryExpression.class.cast(e));
+        } else if (e instanceof ArbitraryArityExpression) {
+            return translateArbitraryArityExpression(ArbitraryArityExpression.class.cast(e));
+        } else if (e instanceof RelationalExpression) {
+            return translateRelationalExpression(RelationalExpression.class.cast(e));
+        } else if (e instanceof IdentifierExpression) {
+            return translateIdentifierExpression(IdentifierExpression.class.cast(e));
+        } else if (e instanceof TernaryExpression) {
+        	return translateTernaryExpression(TernaryExpression.class.cast(e));
         } else {
             throw new RuntimeException("Unknown entity class: " + e.getClass().getName());
         }
