@@ -141,7 +141,11 @@ public class YodaToJavaScriptTranslator {
     }
 
     private void translateAssignmentStatement(AssignmentStatement s) {
-        emit("%s = %s;", translateExpression(s.getLeft()), translateExpression(s.getRight()));
+    	List<Expression> targets = s.getTarget();
+    	List<Expression> sources = s.getSources();
+    	for (int i = 0; i < targets.size(); i++) {
+    		emit("%s = %s;", translateExpression(targets.get(i)), translateExpression(sources.get(i)));
+    	}
     }
 
     private void translateIncrementStatement(IncrementStatement s) {
@@ -166,11 +170,11 @@ public class YodaToJavaScriptTranslator {
         }
     }
 
-    private void translateIfStatement(IfStatement s) {
+    private void translateConditionalStatement(ConditionalStatement s) {
         String lead = "if";
-        for (Case c: s.getCases()) {
-            emit("%s (%s) {", lead, translateExpression(c.getCondition()));
-            translateBlock(c.getBody());
+        for (Arm a: s.getArms()) {
+            emit("%s (%s) {", lead, translateExpression(a.getCondition()));
+            translateBlock(a.getBlock());
             lead = "} else if";
         }
         if (s.getElsePart() != null) {
