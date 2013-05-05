@@ -11,7 +11,7 @@ import edu.lmu.cs.xlg.yoda.entities.Entity;
 import edu.lmu.cs.xlg.yoda.entities.Script;
 
 /**
- * An generator that translates a Yoda script into some other form.  The result of the
+ * A generator that translates a Yoda script into some other form.  The result of the
  * translation is written to a writer.
  */
 public abstract class Generator {

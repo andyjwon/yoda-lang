@@ -138,7 +138,7 @@ public class Compiler {
         Script script = checkSemantics(reader);
         if (log.getErrorCount() == 0) {
             script.optimize();
-            //Generator.getGenerator("js").generate(script, writer);
+            Generator.getGenerator("js").generate(script, writer);
         }
     }
 

@@ -22,7 +22,6 @@ import edu.lmu.cs.xlg.yoda.entities.Expression;
 import edu.lmu.cs.xlg.yoda.entities.FunctionCall;
 import edu.lmu.cs.xlg.yoda.entities.IdentifierExpression;
 import edu.lmu.cs.xlg.yoda.entities.Literal;
-import edu.lmu.cs.xlg.yoda.entities.ModifiedStatement;
 import edu.lmu.cs.xlg.yoda.entities.NullLiteral;
 import edu.lmu.cs.xlg.yoda.entities.NumberLiteral;
 import edu.lmu.cs.xlg.yoda.entities.PlainLoop;
@@ -303,11 +302,11 @@ public class YodaToJavaScriptGenerator extends Generator {
         String right = generateExpression(e.getRight());
 
         if (op.equals("+")) {
-           
-        	return left + ".concat(" + right + ")";   
-  
+
+            return left + ".concat(" + right + ")";
+
         } else if (op.equals("*")) {
-            
+
             Variable counter = new Variable("");
             Variable result = new Variable("");
             String value = generateExpression(e.getLeft());
@@ -319,7 +318,7 @@ public class YodaToJavaScriptGenerator extends Generator {
             indentLevel--;
             emit("}");
             return id(result);
-            
+
         } else if (op.equals("and")) {
             op = "&&";
         } else if (op.equals("or")) {
@@ -337,11 +336,12 @@ public class YodaToJavaScriptGenerator extends Generator {
         }
         return String.format("(%s %s %s)", left, op, right);
     }
-    
+
     /**
      * Returns JavaScript source for the given Yoda arbitrary arity expression.
      */
     private String generateArbitraryArityExpression(ArbitraryArityExpression e) {
+        // TODO
         return "";
     }
 
