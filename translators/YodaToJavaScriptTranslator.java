@@ -285,7 +285,7 @@ public class YodaToJavaScriptTranslator {
         return results;
     }
 
-    private String translateInfixExpression(InfixExpression e) {
+    private String translateRelationalExpression(RelationalExpression e) {
         // All yoda binary operators look exactly the same as their JavaScript counterparts!
         String left = translateExpression(e.getLeft());
         String right = translateExpression(e.getRight());
@@ -296,9 +296,9 @@ public class YodaToJavaScriptTranslator {
         return String.format("Array()", translateExpression(e.getBound()));
     }
 
-    private String translateArrayAggregate(ArrayAggregate e) {
+    private String translateArrayConstructor(ArrayConstructor e) {
         List<String> expressions = new ArrayList<String>();
-        for (Expression arg : e.getArgs()) {
+        for (Expression arg : e.getExpressions()) {
             expressions.add(translateExpression(arg));
         }
         return "[" + Joiner.on(", ").join(expressions) + "]";
