@@ -3,7 +3,7 @@
 A long time ago in a galaxy far, far away...
 
 # Mascot
-[Yoda mascot](./yodaMascot.jpg)
+![Yoda mascot](http://my.cs.lmu.edu/~awon/yodaMascot-border.jpg "Yoda Mascot")
 
 # Theme Song
 [Yoda theme-song](http://www.youtube.com/watch?v=WWTI93xI41w)
@@ -16,27 +16,27 @@ in Yoda-Lang should sound like Yoda himself is talking.
 
 ### DESIGN CHOICES
 Scope
-    
+
     Yoda-Lang uses a specific style of scoping drawn from the wisdom of Master Yoda. When asked what is in a mysterious cave,
-    Yoda responds "Only what you take with you." In this way, variables must be brought in to a lower scope as a parameter in 
+    Yoda responds "Only what you take with you." In this way, variables must be brought in to a lower scope as a parameter in
     order to be used.
 
 Booleans and Arithmetic
-    
+
     Yoda-Lang uses a unique syntax pattern for boolean expressions and arithmetic. Like the rest of the language, the point is
     to make it sound like Yoda is talking. Thus, our Boolean expressions follow the pattern (operator operand operand is?).
-    I.e. "greater than 3, y is?" Similarly, arithmetic follows the pattern (operator operand operand are). I.e. 
+    I.e. "greater than 3, y is?" Similarly, arithmetic follows the pattern (operator operand operand are). I.e.
     "added 3 and y are."
-    
+
 Exceptions
 
     Yoda-Lang does not use exceptions because "do or do not, there is no try."
-    
+
 Typing
-    
+
     Yoda-Lang uses strong, dynamic typing. While those who follow the light side of the force and those who follow
     the dark side cannot cooperate, it is easy for the light to fall to darkness.
-    
+
 ### EXAMPLES
 
 Yoda on the left; JavaScript on the right.
@@ -264,7 +264,7 @@ Binary, Octal, and Hex Literals
     0x, 0b, 0o                                              0x, parseInt("1001", 2), parseInt("1001", 8)
 
 
-                  
-                  
-                  
+
+
+
 May the Force be with you.
