@@ -261,30 +261,28 @@ public class YodaToJavaScriptTranslator {
         return result.toString();
     }
 
-    private String translatePrefixExpression(PrefixExpression e) {
+    private String translateUnaryExpression(UnaryExpression e) {
         String op = e.getOp();
         String operand = translateExpression(e.getOperand());
-        if ("!~-".indexOf(op) >= 0 || "++".equals(op) || "--".equals(op)) {
+        if ("!".equals(op)) {
             return String.format("%s%s", op, operand);
-        } else if ("string".equals(e.getOp())) {
-            return String.format("JSON.stringify(%s)", operand);
-        } else if ("length".equals(op)) {
-            return String.format("(%s).length", operand);
-        } else if ("int".equals(op) || "char".equals(op)) {
-            return operand;
         } else {
             throw new RuntimeException("Unknown prefix operator: " + e.getOp());
         }
     }
 
-    private String translatePostfixExpression(PostfixExpression e) {
+    private List<String> translateArbitraryArityExpression(ArbitraryArityExpression e) {
         String op = e.getOp();
-        String operand = translateExpression(e.getOperand());
-        if ("++".equals(op) || "--".equals(op)) {
-            return String.format("%s%s", operand, op);
-        } else {
-            throw new RuntimeException("Unknown postfix operator: " + e.getOp());
+        List<Expression> operands = e.getOperand();
+        List<String> results = new ArrayList<String>();
+        String left;
+        String right;
+        for(int i = 0; i < operands.size(); i += 2) {
+        	left = translateExpression(operands.get(i));
+        	right = translateExpression(operands.get(i + 1));
+        	results.add(String.format("%s %s %s", left, op, right));
         }
+        return results;
     }
 
     private String translateInfixExpression(InfixExpression e) {
