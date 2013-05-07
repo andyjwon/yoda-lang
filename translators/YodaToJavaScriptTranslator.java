@@ -9,38 +9,6 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 
 import edu.lmu.cs.xlg.yoda.entities.*;
-/*
-import edu.lmu.cs.xlg.yoda.entities.ArrayConstructor;
-import edu.lmu.cs.xlg.yoda.entities.AssignmentStatement;
-import edu.lmu.cs.xlg.yoda.entities.Block;
-import edu.lmu.cs.xlg.yoda.entities.BooleanLiteral;
-import edu.lmu.cs.xlg.yoda.entities.CallStatement;
-import edu.lmu.cs.xlg.yoda.entities.CharacterLiteral;
-import edu.lmu.cs.xlg.yoda.entities.ConditionalLoop;
-import edu.lmu.cs.xlg.yoda.entities.Declaration;
-//import edu.lmu.cs.xlg.yoda.entities.EmptyArray;
-import edu.lmu.cs.xlg.yoda.entities.Entity;
-import edu.lmu.cs.xlg.yoda.entities.Expression;
-import edu.lmu.cs.xlg.yoda.entities.Function;
-import edu.lmu.cs.xlg.yoda.entities.ConditionalStatement;
-//import edu.lmu.cs.xlg.yoda.entities.IncrementStatement;
-import edu.lmu.cs.xlg.yoda.entities.InfixExpression;
-import edu.lmu.cs.xlg.yoda.entities.IntegerLiteral;
-import edu.lmu.cs.xlg.yoda.entities.NullLiteral;
-import edu.lmu.cs.xlg.yoda.entities.PostfixExpression;
-import edu.lmu.cs.xlg.yoda.entities.PrefixExpression;
-import edu.lmu.cs.xlg.yoda.entities.PrintStatement;
-import edu.lmu.cs.xlg.yoda.entities.Program;
-import edu.lmu.cs.xlg.yoda.entities.RealLiteral;
-import edu.lmu.cs.xlg.yoda.entities.ReturnStatement;
-import edu.lmu.cs.xlg.yoda.entities.SimpleVariableReference;
-import edu.lmu.cs.xlg.yoda.entities.Statement;
-import edu.lmu.cs.xlg.yoda.entities.StringLiteral;
-import edu.lmu.cs.xlg.yoda.entities.SubscriptedVariable;
-import edu.lmu.cs.xlg.yoda.entities.Variable;
-import edu.lmu.cs.xlg.yoda.entities.VariableExpression;
-import edu.lmu.cs.xlg.yoda.entities.WhileStatement;
-*/
 
 /**
  * A translator from yoda semantic graphs to JavaScript.
