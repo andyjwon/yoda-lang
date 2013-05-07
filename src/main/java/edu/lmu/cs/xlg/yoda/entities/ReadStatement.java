@@ -20,7 +20,7 @@ public class ReadStatement extends Statement {
     @Override
     public void analyze(Log log, SymbolTable table, Subroutine owner, boolean inLoop) {
         expression.analyze(log, table, owner, inLoop);
-        if (!expression.isWritableLValue()) {
+        if (!expression.isWritableValue()) {
             log.error("non.writable.in.read.statement");
         }
     }

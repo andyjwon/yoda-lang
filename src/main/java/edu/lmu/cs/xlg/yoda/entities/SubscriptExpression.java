@@ -2,12 +2,12 @@ package edu.lmu.cs.xlg.yoda.entities;
 
 import edu.lmu.cs.xlg.util.Log;
 
-public class SubscriptExpression extends Expression {
+public class SubscriptExpression extends VariableExpression {
 
-    private Expression collection;
+    private IdentifierExpression collection;
     private Expression index;
 
-    public SubscriptExpression(Expression base, Expression index) {
+    public SubscriptExpression(IdentifierExpression base, Expression index) {
         this.collection = base;
         this.index = index;
     }
@@ -19,10 +19,14 @@ public class SubscriptExpression extends Expression {
     public Expression getIndex() {
         return index;
     }
+    
+    public String getName() {
+    	return collection.getName();
+    }
 
     @Override
-    boolean isWritableLValue() {
-        return collection.isWritableLValue();
+    public boolean isWritableValue() {
+        return collection.isWritableValue();
     }
 
     @Override

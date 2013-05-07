@@ -130,8 +130,12 @@ public class YodaToJavaScriptTranslator {
         }
     }
 
-    private void translateVariableDeclaration(Variable v) {
-        String initializer = translateExpression(v.getInitializer());
+    private void translateVariableDeclaration(DecStatement d) {
+        List<String> targets = d.getNames();
+        List<Expression> sources = d.getSources();
+        for (int i = 0; i < targets.size(); i++) {
+        	emit("var %s = %s;", variable(targets.get(i)),translateExpression(sources.get(i)));
+        }
     }
 
     private void translateFunctionDeclaration(Function f) {
@@ -305,29 +309,20 @@ public class YodaToJavaScriptTranslator {
     }
 
     private String translateVariableExpression(VariableExpression v) {
-        if (v instanceof SimpleVariableReference) {
-            return variable(SimpleVariableReference.class.cast(v).getReferent());
-        } else if (v instanceof SubscriptedVariable) {
-            return translateSubscriptedVariable(SubscriptedVariable.class.cast(v));
-        } else if (v instanceof DottedVariable) {
-            return translateDottedVariable(DottedVariable.class.cast(v));
-        } else if (v instanceof CallExpression) {
-            return translateCallExpression(CallExpression.class.cast(v));
+    	Entity e = v.getReferent();
+        if (e instanceof IdentifierExpression) {
+            return variable(Identifier.class.cast(v).getName());
+        } else if (v instanceof SubscriptExpression) {
+            return translateSubscriptExpression(SubscriptExpression.class.cast(v));
         } else {
             throw new RuntimeException("Unknown variable expression class: " + v.getClass().getName());
         }
     }
 
-    private String translateSubscriptedVariable(SubscriptedVariable v) {
-        String sequence = translateVariableExpression(v.getSequence());
+    private String translateSubscriptExpression(SubscriptExpression v) {
+        String collection = translateExpression(v.getName());
         String index = translateExpression(v.getIndex());
-        return String.format("%s[%s]", sequence, index);
-    }
-
-    private String translateDottedVariable(DottedVariable v) {
-        String struct = translateVariableExpression(v.getStruct());
-        String fieldName = property(v.getFieldName());
-        return String.format("%s[%s]", struct, fieldName);
+        return String.format("%s[%s]", collection, index);
     }
 
     private String translateCallExpression(CallExpression e) {

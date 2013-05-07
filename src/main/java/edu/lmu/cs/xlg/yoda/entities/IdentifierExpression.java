@@ -6,7 +6,7 @@ import edu.lmu.cs.xlg.util.Log;
  * An expression consisting of a single identifier, a referencing occurrence to a variable or a
  * function.
  */
-public class IdentifierExpression extends Expression {
+public class IdentifierExpression extends VariableExpression {
 
     private String name;
     private Entity referent;
@@ -28,7 +28,7 @@ public class IdentifierExpression extends Expression {
      * if its referent is a variable and not marked constant.
      */
     @Override
-    public boolean isWritableLValue() {
+    public boolean isWritableValue() {
        return referent instanceof Variable && !Variable.class.cast(referent).isConstant();
     }
 
