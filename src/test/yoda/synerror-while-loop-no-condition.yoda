@@ -1,7 +1,8 @@
-<(-_-)> on last line "?" is causing an error
+
 
 17, n begins
 {
   {(+ (* 3 n ) 1 ),n becomes} if(= 0 (% n 2) is?)
   else {(/ n 2 ), n becomes}
-} while
+} while                                       <(-_-)> There is no boolean expression
+                                              <(-_-)> here to finish the while loop

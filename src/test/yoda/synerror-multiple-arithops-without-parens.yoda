@@ -1,1 +1,4 @@
-(+ 9 + 1 + 3 - 5) you print
+(+ 9 + 1 + 3 - 5 7) you print                 <(-_-)> Expressions must be wrapped in parens
+
+                                            <(-_-)> This should be:
+                                            <(-_-)> (+ 9 (+ 1 (+ 3 (- 5 7))))

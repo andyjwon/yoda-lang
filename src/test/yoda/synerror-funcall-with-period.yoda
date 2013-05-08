@@ -1,4 +1,5 @@
 
-dog.()bark
+dog.()bark          <(-_-)> Method calls don't exist in Yoda-lang so the call
+                    <(-_-)> should simply be (on nothing bark) with no dog
 
-dog().bark
+dog().bark          <(-_-)> Here the function seems to be dog, so (on nothing dog)

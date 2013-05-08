@@ -1,2 +1,4 @@
-{x you print} as through 1 to x runs <(-_-)> need to finish the range because "x" 
-                                     <(-_-)> is determined as upper bound in this case 
+{x you print} as through 1 to x runs <(-_-)> Need to finish the range because x 
+                                     <(-_-)> is determined as upper bound in this case
+                                     <(-_-)> Should be "as through 1 to m x runs"
+                                     <(-_-)> where m is just some number or variable reference
