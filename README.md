@@ -115,12 +115,6 @@ Last element (indices start at 0 from the left, -1 from the right)
 
     p[-1]                                                   p[a.length - 1]
 
-Slice, first index inclusive, last index exclusive
-
-    a[3:6]                                                  a.slice(3,6)
-    a[1:]                                                   a.slice(1)
-    a[1:-1]                                                 a.slice(1, a.length - 1)
-
 String Literals
 
     "hi"                                                    "hi"
@@ -246,22 +240,9 @@ Closure
 
 
 
-
-Math
-
-    (on 3 abs)                                              Math.abs(3);
-    (on 2.3 floor)                                          Math.floor(2.3);
-    (on 2 cos)                                              Math.cos(2);
-    (on nothing PI)                                         Math.PI
-    (on x and 2 power)                                      Math.pow(x, 2);
-    (on x sqrt)                                             Math.sqrt(x);
-
-
-
-
 Binary, Octal, and Hex Literals
 
-    0x, 0b, 0o                                              0x, parseInt("1001", 2), parseInt("1001", 8)
+    0x, 0b, 0o
 
 
 
