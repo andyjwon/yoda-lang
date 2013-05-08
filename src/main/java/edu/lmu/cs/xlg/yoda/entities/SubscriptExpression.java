@@ -2,7 +2,7 @@ package edu.lmu.cs.xlg.yoda.entities;
 
 import edu.lmu.cs.xlg.util.Log;
 
-public class SubscriptExpression extends VariableExpression {
+public class SubscriptExpression extends Expression {
 
     private IdentifierExpression collection;
     private Expression index;
@@ -19,9 +19,9 @@ public class SubscriptExpression extends VariableExpression {
     public Expression getIndex() {
         return index;
     }
-    
+
     public String getName() {
-    	return collection.getName();
+        return collection.getName();
     }
 
     @Override

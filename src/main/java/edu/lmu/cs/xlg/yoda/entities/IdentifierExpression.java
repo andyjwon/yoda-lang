@@ -6,7 +6,7 @@ import edu.lmu.cs.xlg.util.Log;
  * An expression consisting of a single identifier, a referencing occurrence to a variable or a
  * function.
  */
-public class IdentifierExpression extends VariableExpression {
+public class IdentifierExpression extends Expression {
 
     private String name;
     private Entity referent;
