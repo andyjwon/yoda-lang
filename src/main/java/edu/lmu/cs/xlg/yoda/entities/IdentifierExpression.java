@@ -29,7 +29,8 @@ public class IdentifierExpression extends Expression {
      */
     @Override
     public boolean isWritableValue() {
-       return referent instanceof Variable && !Variable.class.cast(referent).isConstant();
+       System.out.println(Variable.class.cast(referent).isConstant());
+       return (referent instanceof Variable && !Variable.class.cast(referent).isConstant());
     }
 
     @Override

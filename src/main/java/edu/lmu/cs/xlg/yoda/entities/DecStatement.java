@@ -21,6 +21,7 @@ public class DecStatement extends Statement {
         this.targets.add(target);
         this.sources.add(source);
         this.constant = constant;
+        System.out.println("DECSTATEMENT " + this.constant);
     }
 
     public DecStatement(List<String> targets, List<Expression> sources) {
@@ -31,6 +32,10 @@ public class DecStatement extends Statement {
 
     public List<String> getNames() {
         return this.targets;
+    }
+    
+    public List<Expression> getSources() {
+    	return this.sources;
     }
     
     public List<Variable> getVariables() {

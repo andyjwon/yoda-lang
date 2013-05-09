@@ -1,4 +1,4 @@
-package edu.lmu.cs.xlg.translators;
+package edu.lmu.cs.xlg.yoda.generators;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -13,19 +13,11 @@ import edu.lmu.cs.xlg.yoda.entities.*;
 /**
  * A translator from yoda semantic graphs to JavaScript.
  */
-public class YodaToJavaScriptTranslator {
+public class YodaToJavaScriptTranslator extends Generator{
 
     private PrintWriter writer;
     private int indentPadding = 4;
     private int indentLevel = 0;
-
-    private ImmutableMap<Function, String> builtIns = ImmutableMap.<Function, String>builder()
-        .put(Function.ATAN, "Math.atan2")
-        .put(Function.COS, "Math.cos")
-        .put(Function.LN, "Math.log")
-        .put(Function.SIN, "Math.sin")
-        .put(Function.SQRT, "Math.sqrt")
-        .build();
 
     public void translateScript(Script script, PrintWriter writer) {
         this.writer = writer;
@@ -275,6 +267,13 @@ public class YodaToJavaScriptTranslator {
         }
         return "[" + Joiner.on(", ").join(expressions) + "]";
     }
+    
+    private String translateTernaryExpression(TernaryExpression t) {
+    	String condition = translateExpression(t.getCondition());
+    	String trueExpression = translateExpression(t.getTrueExpression());
+    	String falseExpression = translateExpression(t.getFalseExpression());
+    	return String.format("(%s ? %s : %s);", condition, trueExpression, falseExpression);
+    }
 
     private String translateVariableExpression(VariableExpression v) {
     	Entity e = v.getReferent();
@@ -292,7 +291,7 @@ public class YodaToJavaScriptTranslator {
         String index = translateExpression(v.getIndex());
         return String.format("%s[%s]", collection, index);
     }
-
+    /*
     private String translateCallExpression(CallExpression e) {
 
         if (Function.PI.equals(e.getFunction())) {
@@ -313,7 +312,7 @@ public class YodaToJavaScriptTranslator {
         }
         return String.format("%s(%s)", function, args);
     }
-
+	*/
     private String translateExpressionList(List<Expression> list) {
         List<String> expressions = new ArrayList<String>();
         for (Expression e : list) {

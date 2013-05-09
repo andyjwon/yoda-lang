@@ -37,7 +37,10 @@ public class AssignmentStatement extends Statement {
     public void analyze(Log log, SymbolTable table, Subroutine owner, boolean inLoop) {
         for (Expression t : targets) {
             t.analyze(log, table, owner, inLoop);
-
+            
+            if(t instanceof IdentifierExpression) {
+            	System.out.println("YO " + IdentifierExpression.class.cast(t).isWritableValue());
+            }
             if (!t.isWritableValue()) {
                 log.error("non.writable.in.assignment.statement");
             }
