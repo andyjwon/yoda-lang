@@ -21,7 +21,6 @@ public class DecStatement extends Statement {
         this.targets.add(target);
         this.sources.add(source);
         this.constant = constant;
-        System.out.println("DECSTATEMENT " + this.constant);
     }
 
     public DecStatement(List<String> targets, List<Expression> sources) {

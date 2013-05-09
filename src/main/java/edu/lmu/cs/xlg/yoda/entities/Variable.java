@@ -48,7 +48,6 @@ public class Variable extends Declaration {
     }
 
     public boolean isConstant() {
-    	System.out.println("Is constant? " + constant);
         return constant;
     }
 
