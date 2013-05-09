@@ -1,5 +1,6 @@
 72, grade begins
-{give back "A" you must} if
+{give back "A" you must} if                             <(-_-)> This if statement needs
+                                                        <(-_-)> some sort of boolean expression
 else {give back "B" you must} if (>= 80 grade is?)
 else {give back "C" you must} if (>= 70 grade is?)
 else {give back "D" you must} if (>= 60 grade is?)

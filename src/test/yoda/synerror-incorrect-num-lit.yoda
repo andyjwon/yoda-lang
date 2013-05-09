@@ -1,2 +1,4 @@
 321, hex begins
-432x2, hex becomes
+432x2, hex becomes              <(-_-)> x is not a valid number literal digit, no
+                                <(-_-)> matter what the number system, we only allow
+                                <(-_-)> decimal, binary, octal and hex.

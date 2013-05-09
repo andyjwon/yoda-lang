@@ -3,3 +3,6 @@
 
 
 (((= 5 3 is?) & (>= 9 x is?)) | ((!= (/ y 4 ) 1 is?) & (!found)))
+
+<(-_-)> The above expression should be
+<(-_-)> (| (& (= 5 3 is?) (>= 9 x is?)) (& (!= (/ y 4 ) 1 is?) (!found)))

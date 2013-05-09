@@ -33,6 +33,10 @@ public class DecStatement extends Statement {
         return this.targets;
     }
     
+    public List<Expression> getSources() {
+    	return this.sources;
+    }
+    
     public List<Variable> getVariables() {
     	return this.variables;
     }

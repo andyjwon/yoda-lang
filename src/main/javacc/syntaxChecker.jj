@@ -141,7 +141,8 @@ Statement ASSIGNMENT(): {
 {
     ((e = EXP(){sources.add(e);} (<AND> e = EXP() {sources.add(e);})*
         ","  t = <ID> {i = new IdentifierExpression(t.image);
-        targets.add(i);}(<AND> t = <ID> {targets.add(i);})*  (<BECOME> | <BECOMES>)))
+        targets.add(i);}(<AND> t = <ID> {i = new IdentifierExpression(t.image);
+        targets.add(i);})*  (<BECOME> | <BECOMES>)))
     {return new AssignmentStatement(targets, sources);}
 }
 

@@ -11,7 +11,7 @@ import edu.lmu.cs.xlg.yoda.entities.Entity;
 import edu.lmu.cs.xlg.yoda.entities.Script;
 
 /**
- * An generator that translates a Yoda script into some other form.  The result of the
+ * A generator that translates a Yoda script into some other form.  The result of the
  * translation is written to a writer.
  */
 public abstract class Generator {
@@ -37,7 +37,7 @@ public abstract class Generator {
      */
     public static Generator getGenerator(String name) {
         if ("js".equals(name)) {
-            return new YodaToJavaScriptGenerator();
+            return new YodaToJavaScriptTranslator();
         } else {
             return null;
         }
@@ -51,7 +51,7 @@ public abstract class Generator {
      * @param writer
      *     Writer for the target program.
      */
-    public abstract void generate(Script script, PrintWriter writer);
+    public abstract void translateScript(Script script, PrintWriter writer);
 
     /**
      * Returns the id for the given entity, creating the id if the entity doesn't already
@@ -73,14 +73,5 @@ public abstract class Generator {
     /**
      * Write a line of target code to the output.
      */
-    void emit(String line) {
-        int pad = indentPadding * indentLevel;
 
-        // printf does not allow "%0s" as a format specifier, darn it.
-        if (pad == 0) {
-            writer.println(line);
-        } else {
-            writer.printf("%" + pad + "s%s\n", "", line);
-        }
-    }
 }

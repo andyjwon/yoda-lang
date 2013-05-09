@@ -1,1 +1,2 @@
-{(+ 3 5)} given x, y, function gives
+{(+ 3 5)} given x, y, function gives        <(-_-)> Arguments are separated by "and" not commas
+                                            <(-_-)> This should be given x and y function gives

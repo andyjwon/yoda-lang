@@ -4,10 +4,10 @@ import edu.lmu.cs.xlg.util.Log;
 
 public class SubscriptExpression extends Expression {
 
-    private Expression collection;
+    private IdentifierExpression collection;
     private Expression index;
 
-    public SubscriptExpression(Expression base, Expression index) {
+    public SubscriptExpression(IdentifierExpression base, Expression index) {
         this.collection = base;
         this.index = index;
     }
@@ -20,9 +20,13 @@ public class SubscriptExpression extends Expression {
         return index;
     }
 
+    public String getName() {
+        return collection.getName();
+    }
+
     @Override
-    boolean isWritableLValue() {
-        return collection.isWritableLValue();
+    public boolean isWritableValue() {
+        return collection.isWritableValue();
     }
 
     @Override

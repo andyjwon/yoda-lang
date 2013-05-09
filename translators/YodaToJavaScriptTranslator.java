@@ -1,4 +1,4 @@
-package edu.lmu.cs.xlg.translators;
+package edu.lmu.cs.xlg.yoda.generators;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -9,55 +9,15 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 
 import edu.lmu.cs.xlg.yoda.entities.*;
-/*
-import edu.lmu.cs.xlg.yoda.entities.ArrayConstructor;
-import edu.lmu.cs.xlg.yoda.entities.AssignmentStatement;
-import edu.lmu.cs.xlg.yoda.entities.Block;
-import edu.lmu.cs.xlg.yoda.entities.BooleanLiteral;
-import edu.lmu.cs.xlg.yoda.entities.CallStatement;
-import edu.lmu.cs.xlg.yoda.entities.CharacterLiteral;
-import edu.lmu.cs.xlg.yoda.entities.ConditionalLoop;
-import edu.lmu.cs.xlg.yoda.entities.Declaration;
-//import edu.lmu.cs.xlg.yoda.entities.EmptyArray;
-import edu.lmu.cs.xlg.yoda.entities.Entity;
-import edu.lmu.cs.xlg.yoda.entities.Expression;
-import edu.lmu.cs.xlg.yoda.entities.Function;
-import edu.lmu.cs.xlg.yoda.entities.ConditionalStatement;
-//import edu.lmu.cs.xlg.yoda.entities.IncrementStatement;
-import edu.lmu.cs.xlg.yoda.entities.InfixExpression;
-import edu.lmu.cs.xlg.yoda.entities.IntegerLiteral;
-import edu.lmu.cs.xlg.yoda.entities.NullLiteral;
-import edu.lmu.cs.xlg.yoda.entities.PostfixExpression;
-import edu.lmu.cs.xlg.yoda.entities.PrefixExpression;
-import edu.lmu.cs.xlg.yoda.entities.PrintStatement;
-import edu.lmu.cs.xlg.yoda.entities.Program;
-import edu.lmu.cs.xlg.yoda.entities.RealLiteral;
-import edu.lmu.cs.xlg.yoda.entities.ReturnStatement;
-import edu.lmu.cs.xlg.yoda.entities.SimpleVariableReference;
-import edu.lmu.cs.xlg.yoda.entities.Statement;
-import edu.lmu.cs.xlg.yoda.entities.StringLiteral;
-import edu.lmu.cs.xlg.yoda.entities.SubscriptedVariable;
-import edu.lmu.cs.xlg.yoda.entities.Variable;
-import edu.lmu.cs.xlg.yoda.entities.VariableExpression;
-import edu.lmu.cs.xlg.yoda.entities.WhileStatement;
-*/
 
 /**
  * A translator from yoda semantic graphs to JavaScript.
  */
-public class YodaToJavaScriptTranslator {
+public class YodaToJavaScriptTranslator extends Generator{
 
     private PrintWriter writer;
     private int indentPadding = 4;
     private int indentLevel = 0;
-
-    private ImmutableMap<Function, String> builtIns = ImmutableMap.<Function, String>builder()
-        .put(Function.ATAN, "Math.atan2")
-        .put(Function.COS, "Math.cos")
-        .put(Function.LN, "Math.log")
-        .put(Function.SIN, "Math.sin")
-        .put(Function.SQRT, "Math.sqrt")
-        .build();
 
     public void translateScript(Script script, PrintWriter writer) {
         this.writer = writer;
@@ -130,8 +90,12 @@ public class YodaToJavaScriptTranslator {
         }
     }
 
-    private void translateVariableDeclaration(Variable v) {
-        String initializer = translateExpression(v.getInitializer());
+    private void translateVariableDeclaration(DecStatement d) {
+        List<String> targets = d.getNames();
+        List<Expression> sources = d.getSources();
+        for (int i = 0; i < targets.size(); i++) {
+        	emit("var %s = %s;", variable(targets.get(i)),translateExpression(sources.get(i)));
+        }
     }
 
     private void translateFunctionDeclaration(Function f) {
@@ -141,7 +105,11 @@ public class YodaToJavaScriptTranslator {
     }
 
     private void translateAssignmentStatement(AssignmentStatement s) {
-        emit("%s = %s;", translateExpression(s.getLeft()), translateExpression(s.getRight()));
+    	List<Expression> targets = s.getTarget();
+    	List<Expression> sources = s.getSources();
+    	for (int i = 0; i < targets.size(); i++) {
+    		emit("%s = %s;", translateExpression(targets.get(i)), translateExpression(sources.get(i)));
+    	}
     }
 
     private void translateIncrementStatement(IncrementStatement s) {
@@ -166,11 +134,11 @@ public class YodaToJavaScriptTranslator {
         }
     }
 
-    private void translateIfStatement(IfStatement s) {
+    private void translateConditionalStatement(ConditionalStatement s) {
         String lead = "if";
-        for (Case c: s.getCases()) {
-            emit("%s (%s) {", lead, translateExpression(c.getCondition()));
-            translateBlock(c.getBody());
+        for (Arm a: s.getArms()) {
+            emit("%s (%s) {", lead, translateExpression(a.getCondition()));
+            translateBlock(a.getBlock());
             lead = "} else if";
         }
         if (s.getElsePart() != null) {
@@ -225,16 +193,18 @@ public class YodaToJavaScriptTranslator {
             return "false";
         } else if (e instanceof StringLiteral) {
             return translateStringLiteral(StringLiteral.class.cast(e));
-        } else if (e instanceof ArrayAggregate) {
-            return translateArrayAggregate(ArrayAggregate.class.cast(e));
-        } else if (e instanceof PrefixExpression) {
-            return translatePrefixExpression(PrefixExpression.class.cast(e));
-        } else if (e instanceof PostfixExpression) {
-            return translatePostfixExpression(PostfixExpression.class.cast(e));
-        } else if (e instanceof InfixExpression) {
-            return translateInfixExpression(InfixExpression.class.cast(e));
-        } else if (e instanceof VariableExpression) {
-            return translateVariableExpression(VariableExpression.class.cast(e));
+        } else if (e instanceof ArrayConstructor) {
+            return translateArrayAggregate(ArrayConstructor.class.cast(e));
+        } else if (e instanceof UnaryExpression) {
+            return translateUnaryExpression(UnaryExpression.class.cast(e));
+        } else if (e instanceof ArbitraryArityExpression) {
+            return translateArbitraryArityExpression(ArbitraryArityExpression.class.cast(e));
+        } else if (e instanceof RelationalExpression) {
+            return translateRelationalExpression(RelationalExpression.class.cast(e));
+        } else if (e instanceof IdentifierExpression) {
+            return translateIdentifierExpression(IdentifierExpression.class.cast(e));
+        } else if (e instanceof TernaryExpression) {
+        	return translateTernaryExpression(TernaryExpression.class.cast(e));
         } else {
             throw new RuntimeException("Unknown entity class: " + e.getClass().getName());
         }
@@ -255,33 +225,31 @@ public class YodaToJavaScriptTranslator {
         return result.toString();
     }
 
-    private String translatePrefixExpression(PrefixExpression e) {
+    private String translateUnaryExpression(UnaryExpression e) {
         String op = e.getOp();
         String operand = translateExpression(e.getOperand());
-        if ("!~-".indexOf(op) >= 0 || "++".equals(op) || "--".equals(op)) {
+        if ("!".equals(op)) {
             return String.format("%s%s", op, operand);
-        } else if ("string".equals(e.getOp())) {
-            return String.format("JSON.stringify(%s)", operand);
-        } else if ("length".equals(op)) {
-            return String.format("(%s).length", operand);
-        } else if ("int".equals(op) || "char".equals(op)) {
-            return operand;
         } else {
             throw new RuntimeException("Unknown prefix operator: " + e.getOp());
         }
     }
 
-    private String translatePostfixExpression(PostfixExpression e) {
+    private List<String> translateArbitraryArityExpression(ArbitraryArityExpression e) {
         String op = e.getOp();
-        String operand = translateExpression(e.getOperand());
-        if ("++".equals(op) || "--".equals(op)) {
-            return String.format("%s%s", operand, op);
-        } else {
-            throw new RuntimeException("Unknown postfix operator: " + e.getOp());
+        List<Expression> operands = e.getOperand();
+        List<String> results = new ArrayList<String>();
+        String left;
+        String right;
+        for(int i = 0; i < operands.size(); i += 2) {
+        	left = translateExpression(operands.get(i));
+        	right = translateExpression(operands.get(i + 1));
+        	results.add(String.format("%s %s %s", left, op, right));
         }
+        return results;
     }
 
-    private String translateInfixExpression(InfixExpression e) {
+    private String translateRelationalExpression(RelationalExpression e) {
         // All yoda binary operators look exactly the same as their JavaScript counterparts!
         String left = translateExpression(e.getLeft());
         String right = translateExpression(e.getRight());
@@ -292,40 +260,38 @@ public class YodaToJavaScriptTranslator {
         return String.format("Array()", translateExpression(e.getBound()));
     }
 
-    private String translateArrayAggregate(ArrayAggregate e) {
+    private String translateArrayConstructor(ArrayConstructor e) {
         List<String> expressions = new ArrayList<String>();
-        for (Expression arg : e.getArgs()) {
+        for (Expression arg : e.getExpressions()) {
             expressions.add(translateExpression(arg));
         }
         return "[" + Joiner.on(", ").join(expressions) + "]";
     }
+    
+    private String translateTernaryExpression(TernaryExpression t) {
+    	String condition = translateExpression(t.getCondition());
+    	String trueExpression = translateExpression(t.getTrueExpression());
+    	String falseExpression = translateExpression(t.getFalseExpression());
+    	return String.format("(%s ? %s : %s);", condition, trueExpression, falseExpression);
+    }
 
     private String translateVariableExpression(VariableExpression v) {
-        if (v instanceof SimpleVariableReference) {
-            return variable(SimpleVariableReference.class.cast(v).getReferent());
-        } else if (v instanceof SubscriptedVariable) {
-            return translateSubscriptedVariable(SubscriptedVariable.class.cast(v));
-        } else if (v instanceof DottedVariable) {
-            return translateDottedVariable(DottedVariable.class.cast(v));
-        } else if (v instanceof CallExpression) {
-            return translateCallExpression(CallExpression.class.cast(v));
+    	Entity e = v.getReferent();
+        if (e instanceof IdentifierExpression) {
+            return variable(Identifier.class.cast(v).getName());
+        } else if (v instanceof SubscriptExpression) {
+            return translateSubscriptExpression(SubscriptExpression.class.cast(v));
         } else {
             throw new RuntimeException("Unknown variable expression class: " + v.getClass().getName());
         }
     }
 
-    private String translateSubscriptedVariable(SubscriptedVariable v) {
-        String sequence = translateVariableExpression(v.getSequence());
+    private String translateSubscriptExpression(SubscriptExpression v) {
+        String collection = translateExpression(v.getName());
         String index = translateExpression(v.getIndex());
-        return String.format("%s[%s]", sequence, index);
+        return String.format("%s[%s]", collection, index);
     }
-
-    private String translateDottedVariable(DottedVariable v) {
-        String struct = translateVariableExpression(v.getStruct());
-        String fieldName = property(v.getFieldName());
-        return String.format("%s[%s]", struct, fieldName);
-    }
-
+    /*
     private String translateCallExpression(CallExpression e) {
 
         if (Function.PI.equals(e.getFunction())) {
@@ -346,7 +312,7 @@ public class YodaToJavaScriptTranslator {
         }
         return String.format("%s(%s)", function, args);
     }
-
+	*/
     private String translateExpressionList(List<Expression> list) {
         List<String> expressions = new ArrayList<String>();
         for (Expression e : list) {
