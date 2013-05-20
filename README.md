@@ -52,24 +52,22 @@ Variable Declaration
 
 Parallel Declaration
 
-    3 and 5, x and y begin                                  var _1 = 3;
-                                                            var _2 = 5;
-                                                            x = _1;
-                                                            y = _2;
+    3 and 5, x and y begin                                  var x = 3;
+                                                            var y = 5;
 
 Constants (compile-time error to update)
 
-    "disbelief", REASON_FOR_FAILURE must be                 var REASON_FOR_FAILURE = "disbelief"
+    "disbelief", REASON_FOR_FAILURE must be                 /* No constants in JavaScript */
 
 Assignment is not initialization
 
     1, x begins                                             var x = 1;
-    (+ x 1 ), x becomes                                     x = x + 1;
+    (+ x 1), x becomes                                      x = x + 1;
     x you print                                             console.log(x);
 
 Parallel Assignment
 
-    3 and 5 and 7 and 11, x and y and z and a become        x = 3; y = 5; z = 7; a = 11;
+    3 and 5 and 7 and 11, x and y and z and a become        var x = 3, y = 5, z = 7, a = 11;
 
 Arithmetic Expression
 
@@ -97,7 +95,7 @@ Booleans
     (> 5 x is?)
     (!= 1 n is?)
     (((= 5 3 is?) & (>= 9 x is?)) |                         3 === 5 & x >= 9 | 1 != y / 4 & !found
-     ((!= (/ y 4 are) 1 is?) & (!found)))
+    ((!= (/ y 4 are) 1 is?) & (!found)))
 
 Falsehood
 
@@ -109,7 +107,7 @@ Arrays
     p[0] you print                                          console.log(p[0]);
     p, q begins                                             var q = p;
     [4, true, "000", q], a begins                           var a = [4, true, "000", q];
-    (on a length), you print                                   console.log(a.length);
+    (on a length), you print                                console.log(a.length);
 
 Last element (indices start at 0 from the left, -1 from the right)
 

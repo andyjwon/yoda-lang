@@ -16,7 +16,7 @@ import edu.lmu.cs.xlg.yoda.syntax.Parser;
  *
  * <p>This class contains a static <code>main</code> method allowing you to run the compiler
  * from the command line, as well as a few methods to compile, or even run specific phases of
- * the compiler, from any other application..</p>
+ * the compiler, from any other application.</p>
  */
 public class Compiler {
 

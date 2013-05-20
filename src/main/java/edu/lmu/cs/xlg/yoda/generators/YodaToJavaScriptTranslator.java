@@ -2,18 +2,16 @@ package edu.lmu.cs.xlg.yoda.generators;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import com.google.common.base.Joiner;
-import com.google.common.collect.ImmutableMap;
 
 import edu.lmu.cs.xlg.yoda.entities.*;
 
 /**
  * A translator from yoda semantic graphs to JavaScript.
  */
-public class YodaToJavaScriptTranslator extends Generator{
+public class YodaToJavaScriptTranslator extends Generator {
 
     private PrintWriter writer;
     private int indentPadding = 4;
@@ -28,7 +26,7 @@ public class YodaToJavaScriptTranslator extends Generator{
 
     private void translateBlock(Block block) {
         indentLevel++;
-        for (Statement s: block.getStatements()) {
+        for (Statement s : block.getStatements()) {
             translateStatement(s);
         }
         indentLevel--;
@@ -66,8 +64,8 @@ public class YodaToJavaScriptTranslator extends Generator{
         } else if (s instanceof ReturnStatement) {
             translateReturnStatement(ReturnStatement.class.cast(s));
 
-        }  else if (s instanceof ExpressionStatement) {
-        	Expression e = ExpressionStatement.class.cast(s).getE();
+        } else if (s instanceof ExpressionStatement) {
+            Expression e = ExpressionStatement.class.cast(s).getE();
             emit("%s;", translateExpression(e));
 
         } else {
@@ -76,10 +74,8 @@ public class YodaToJavaScriptTranslator extends Generator{
     }
 
     private void translateVariableDeclaration(DecStatement d) {
-        List<String> targets = d.getNames();
-        List<Expression> sources = d.getSources();
         for (Variable v : d.getVariables()) {
-        	emit("var %s = %s;", variable(v),translateExpression(v.getInitializer()));
+            emit("var %s = %s;", variable(v), translateExpression(v.getInitializer()));
         }
     }
 
@@ -90,11 +86,11 @@ public class YodaToJavaScriptTranslator extends Generator{
     }
 
     private void translateAssignmentStatement(AssignmentStatement s) {
-    	List<Expression> targets = s.getTarget();
-    	List<Expression> sources = s.getSource();
-    	for (int i = 0; i < targets.size(); i++) {
-    		emit("%s = %s;", translateExpression(targets.get(i)), translateExpression(sources.get(i)));
-    	}
+        List<Expression> targets = s.getTarget();
+        List<Expression> sources = s.getSource();
+        for (int i = 0; i < targets.size(); i++) {
+            emit("%s = %s;", translateExpression(targets.get(i)), translateExpression(sources.get(i)));
+        }
     }
 
     private void translateCallStatement(CallStatement s) {
@@ -115,7 +111,7 @@ public class YodaToJavaScriptTranslator extends Generator{
 
     private void translateConditionalStatement(ConditionalStatement s) {
         String lead = "if";
-        for (ConditionalStatement.Arm a: s.getArms()) {
+        for (ConditionalStatement.Arm a : s.getArms()) {
             emit("%s (%s) {", lead, translateExpression(a.getCondition()));
             translateBlock(a.getBlock());
             lead = "} else if";
@@ -123,20 +119,20 @@ public class YodaToJavaScriptTranslator extends Generator{
         if (s.getElsePart() != null) {
             emit("} else {");
             translateBlock(s.getElsePart());
-            
+
         }
         emit("}");
     }
-    
-    private void translateRangeLoop (RangeLoop r) {
-    	Range range = r.getRange();
+
+    private void translateRangeLoop(RangeLoop r) {
+        Range range = r.getRange();
         String init = "", test = "", each = "";
         if (r.getIterator() != null) {
             init = String.format("var %s = %s", r.getIterator(), range.getLow());
             test = String.format("%s <= %s", r.getIterator(), range.getHigh());
         }
         if (r.getStep() != null) {
-           each = translateExpression(r.getStep());
+            each = translateExpression(r.getStep());
         }
         emit("for (%s; %s; %s) {", init, test, each);
         translateBlock(r.getBody());
@@ -144,18 +140,19 @@ public class YodaToJavaScriptTranslator extends Generator{
     }
 
     private void translateTimesLoop(TimesLoop t) {
-    	Expression count = t.getCount();
-    	Variable constructor = new Variable("Gerald");
+        Expression count = t.getCount();
+        Variable constructor = new Variable("Gerald");
         String init = "", test = "", each = "";
-        
+
         init = String.format("%s = 0", constructor);
         test = String.format("%s < %s", constructor, count);
         each = String.format("%s++", constructor);
-        
+
         emit("for (%s; %s; %s) {", init, test, each);
         translateBlock(t.getBody());
         emit("}");
     }
+
     private void translateWhileLoop(WhileLoop s) {
         emit("while (%s) {", translateExpression(s.getCondition()));
         translateBlock(s.getBody());
@@ -200,11 +197,11 @@ public class YodaToJavaScriptTranslator extends Generator{
         } else if (e instanceof IdentifierExpression) {
             return translateIdentifierExpression(IdentifierExpression.class.cast(e));
         } else if (e instanceof SubscriptExpression) {
-        	return translateSubscriptExpression(SubscriptExpression.class.cast(e));
+            return translateSubscriptExpression(SubscriptExpression.class.cast(e));
         } else if (e instanceof TernaryExpression) {
-        	return translateTernaryExpression(TernaryExpression.class.cast(e));
+            return translateTernaryExpression(TernaryExpression.class.cast(e));
         } else if (e instanceof FunctionCall) {
-        	return translateFunctionCall(FunctionCall.class.cast(e));
+            return translateFunctionCall(FunctionCall.class.cast(e));
         } else {
             throw new RuntimeException("Unknown entity class: " + e.getClass().getName());
         }
@@ -212,12 +209,12 @@ public class YodaToJavaScriptTranslator extends Generator{
 
     private String translateStringLiteral(StringLiteral s) {
         StringBuilder result = new StringBuilder("\"");
-        for (int codepoint: s.getValues()) {
+        for (int codepoint : s.getValues()) {
             if (isDisplayable(codepoint)) {
-                result.append((char)codepoint);
+                result.append((char) codepoint);
             } else {
-                for (char c: Character.toChars(codepoint)) {
-                    result.append(String.format("\\u%04x", (int)c));
+                for (char c : Character.toChars(codepoint)) {
+                    result.append(String.format("\\u%04x", (int) c));
                 }
             }
         }
@@ -240,10 +237,10 @@ public class YodaToJavaScriptTranslator extends Generator{
         String current;
         List<Expression> operands = e.getOperands();
         StringBuilder result = new StringBuilder("");
-        result.append(String.format("(%s ",translateExpression(operands.get(0))));
-        for(int i = 1; i < operands.size(); i += 1) {
-        	current = translateExpression(operands.get(i));
-        	result.append(String.format("%s %s", op, current));
+        result.append(String.format("(%s ", translateExpression(operands.get(0))));
+        for (int i = 1; i < operands.size(); i += 1) {
+            current = translateExpression(operands.get(i));
+            result.append(String.format("%s %s", op, current));
         }
         result.append(")");
         return result.toString();
@@ -251,12 +248,12 @@ public class YodaToJavaScriptTranslator extends Generator{
 
     private String translateRelationalExpression(RelationalExpression e) {
         // All yoda binary operators look exactly the same as their JavaScript counterparts!
-    	String op;
-    	if (e.getOp().equals("=")) {
-    		op = "===";
-    	} else {
-    		op = e.getOp();
-    	}
+        String op;
+        if (e.getOp().equals("=")) {
+            op = "===";
+        } else {
+            op = e.getOp();
+        }
         String left = translateExpression(e.getLeft());
         String right = translateExpression(e.getRight());
         return String.format("(%s %s %s)", right, op, left);
@@ -269,12 +266,12 @@ public class YodaToJavaScriptTranslator extends Generator{
         }
         return "[" + Joiner.on(", ").join(expressions) + "]";
     }
-    
+
     private String translateTernaryExpression(TernaryExpression t) {
-    	String condition = translateExpression(t.getCondition());
-    	String trueExpression = translateExpression(t.getTrueExpression());
-    	String falseExpression = translateExpression(t.getFalseExpression());
-    	return String.format("(%s ? %s : %s);", condition, trueExpression, falseExpression);
+        String condition = translateExpression(t.getCondition());
+        String trueExpression = translateExpression(t.getTrueExpression());
+        String falseExpression = translateExpression(t.getFalseExpression());
+        return String.format("(%s ? %s : %s);", condition, trueExpression, falseExpression);
     }
 
     private String translateIdentifierExpression(IdentifierExpression v) {
@@ -290,37 +287,28 @@ public class YodaToJavaScriptTranslator extends Generator{
         String index = translateExpression(v.getIndex());
         return String.format("%s[%s]", collection, index);
     }
-    
 
     private String translateFunctionCall(FunctionCall f) {
 
         String function = variable(f.getReferent());
         String args = translateExpressionList(f.getArgs());
-        
+
         return String.format("%s(%s)", function, args);
     }
+
     /*
-    private String translateCallExpression(CallExpression e) {
-
-        if (Function.PI.equals(e.getFunction())) {
-            return "Math.PI";
-        } else if (Function.SUBSTRING.equals(e.getFunction())) {
-            return String.format("(%s).substring(%s, %s)",
-                translateExpression(e.getArgs().get(0)),
-                translateExpression(e.getArgs().get(1)),
-                translateExpression(e.getArgs().get(2)));
-        } else if (Function.GET_STRING.equals(e.getFunction())) {
-            return "fs.readFileSync('/dev/stdin')";
-        }
-
-        String function = variable(e.getFunction());
-        String args = translateExpressionList(e.getArgs());
-        if (builtIns.containsKey(e.getFunction())) {
-            function = builtIns.get(e.getFunction());
-        }
-        return String.format("%s(%s)", function, args);
-    }
-	*/
+     * private String translateCallExpression(CallExpression e) {
+     *
+     * if (Function.PI.equals(e.getFunction())) { return "Math.PI"; } else if
+     * (Function.SUBSTRING.equals(e.getFunction())) { return String.format("(%s).substring(%s, %s)",
+     * translateExpression(e.getArgs().get(0)), translateExpression(e.getArgs().get(1)),
+     * translateExpression(e.getArgs().get(2))); } else if (Function.GET_STRING.equals(e.getFunction())) { return
+     * "fs.readFileSync('/dev/stdin')"; }
+     *
+     * String function = variable(e.getFunction()); String args = translateExpressionList(e.getArgs()); if
+     * (builtIns.containsKey(e.getFunction())) { function = builtIns.get(e.getFunction()); } return
+     * String.format("%s(%s)", function, args); }
+     */
     private String translateExpressionList(List<Expression> list) {
         List<String> expressions = new ArrayList<String>();
         for (Expression e : list) {
@@ -346,7 +334,7 @@ public class YodaToJavaScriptTranslator extends Generator{
             if (isDisplayable(c)) {
                 result.append(c);
             } else {
-                result.append(String.format("\\u%04x", (int)c));
+                result.append(String.format("\\u%04x", (int) c));
             }
         }
         result.append("\"");
@@ -358,10 +346,9 @@ public class YodaToJavaScriptTranslator extends Generator{
     }
 
     /**
-     * Returns whether or not we should show a particular character in the JavaScript output.
-     * We only show characters we are guaranteed to see, that is, the non-control ASCII
-     * characters, except the double quote character itself, since we are always going to
-     * render string literals and property names inside double quotes.
+     * Returns whether or not we should show a particular character in the JavaScript output. We only show characters we
+     * are guaranteed to see, that is, the non-control ASCII characters, except the double quote character itself, since
+     * we are always going to render string literals and property names inside double quotes.
      */
     private boolean isDisplayable(int c) {
         return 20 <= c && c <= 126 && c != '"';
