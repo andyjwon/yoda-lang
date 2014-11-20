@@ -48,7 +48,7 @@ One line complete hello world script
 Variable Declaration
 
     "strong", force begins                                  var force = strong;
-    800, years_training_jedi begins                         var years_training_jedi = 100;
+    800, years_training_jedi begins                         var years_training_jedi = 800;
 
 Parallel Declaration
 
